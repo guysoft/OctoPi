@@ -47,7 +47,18 @@ pushd /home/pi
   #taken from octoprint website:
   sudo usermod -a -G tty pi
   sudo usermod -a -G dialout pi
-      
+  
+  #Get Cura slicer
+  apt-get install -y python-wxgtk2.8
+  git clone https://github.com/daid/Cura.git
+  pushd Cura
+    git clone https://github.com/Ultimaker/CuraEngine.git
+    pushd CuraEngine
+      make
+    popd
+    { echo '#!/bin/sh'; echo 'PYTHONPATH=. python2 -m Cura.cura $@'; } >> cura.sh
+  popd
+  
   #mjpg-streamer
   sudo apt-get -y install subversion libjpeg8-dev imagemagick libav-tools cmake
   sudo -u pi git clone https://github.com/jacksonliam/mjpg-streamer.git
