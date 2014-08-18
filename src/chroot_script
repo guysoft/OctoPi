@@ -111,6 +111,14 @@ echo "# enable raspicam" >> /boot/config.txt
 echo "start_x=1" >> /boot/config.txt
 echo "gpu_mem=128" >> /boot/config.txt
 
+#Add arduino tools due to popular demand
+sudo pip install ino
+sudo apt-get -y install arduino
+pushd Marlin-Marlin-v1
+    ln -s Marlin src
+    ino build -m mega2560
+popd
+
 #unpack root in the end, so etc file are not overwritten, might need to add two roots int he future
 unpackRoot
 
