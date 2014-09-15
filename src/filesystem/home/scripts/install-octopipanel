@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo ""
+echo "Installing OctoPiPanel on this installation of OctoPi, do not turn off your Pi during this process!"
+echo ""
+
+cd ~
+sudo apt-get install --yes python-pip git screen
+git clone https://github.com/jonaslorander/OctoPiPanel.git
+cd OctoPiPanel
+sudo pip install -r requirements.txt
+
+echo ""
+echo "Start OctoPiPanel by typing 'sudo python ~/OctoPiPanel/OctoPiPanel.py &' inside a screen session."
+echo "After setting your OctoPrint URL and API-key in ~/OctoPiPanel/OctoPiPanel.cfg."
+echo ""
+
+
