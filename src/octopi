@@ -12,8 +12,12 @@ pushd $OCTOPI_WORKSPACE
   IMG_PATH=`ls | grep .img`
 
   # mount root and boot partition
-  sudo mount -o loop,offset=$((512*122880)) $IMG_PATH $MOUNT_PATH
-  sudo mount -o loop,offset=$((512*8192)) $IMG_PATH $MOUNT_PATH/boot
+  if [ $DISTRO="udoo" ]; then
+      sudo mount -o loop,offset=$((512*16065)) $IMG_PATH $MOUNT_PATH
+  else
+      sudo mount -o loop,offset=$((512*122880)) $IMG_PATH $MOUNT_PATH
+      sudo mount -o loop,offset=$((512*8192)) $IMG_PATH $MOUNT_PATH/boot
+  fi
 
   #Edit pi filesystem
   pushd $MOUNT_PATH

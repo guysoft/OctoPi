@@ -8,11 +8,17 @@ fixLd(){
   sed -i 's@/usr/lib/arm-linux-gnueabihf/libcofi_rpi.so@\#/usr/lib/arm-linux-gnueabihf/libcofi_rpi.so@' /etc/ld.so.preload
 }
 
+
+USERNAME=pi
+if [ $DISTRO="udoo" ]; then
+    USERNAME=debian
+fi
+
 unpackHome(){
   shopt -s dotglob
-  cp -av /filesystem/home/* /home/pi
+  cp -av /filesystem/home/* /home/${USERNAME}
   shopt -u dotglob
-  chown -hR pi:pi /home/pi
+  chown -hR ${USERNAME}:${USERNAME} /home/${USERNAME}
 }
 
 unpackRoot(){
@@ -37,40 +43,40 @@ apt-get remove -y --purge scratch squeak-plugins-scratch squeak-vm wolfram-engin
 #apt-get octoprint virtualenv
 apt-get -y install python-virtualenv python-dev git python-numpy screen libts-bin
 
-pushd /home/pi
+pushd /home/${USERNAME}
   
   #build virtualenv
-  sudo -u pi virtualenv --system-site-packages oprint
+  sudo -u ${USERNAME} virtualenv --system-site-packages oprint
   
   #OctoPrint
-  sudo -u pi git clone https://github.com/foosel/OctoPrint.git
+  sudo -u ${USERNAME} git clone https://github.com/foosel/OctoPrint.git
   pushd OctoPrint
-    sudo -u pi /home/pi/oprint/bin/python setup.py install
+    sudo -u ${USERNAME} /home/${USERNAME}/oprint/bin/python setup.py install
   popd
 
   #OctoPiPanel
-  sudo -u pi git clone https://github.com/jonaslorander/OctoPiPanel.git
+  sudo -u ${USERNAME} git clone https://github.com/jonaslorander/OctoPiPanel.git
   pushd OctoPiPanel
-    sudo -u pi /home/pi/oprint/bin/pip install -r requirements.txt
+    sudo -u ${USERNAME} /home/pi/oprint/bin/pip install -r requirements.txt
   popd
 
-  #Make sure user pi has access to serial ports
-  sudo usermod -a -G tty pi
-  sudo usermod -a -G dialout pi
+  #Make sure user ${USERNAME} has access to serial ports
+  sudo usermod -a -G tty ${USERNAME}
+  sudo usermod -a -G dialout ${USERNAME}
       
   #mjpg-streamer
   sudo apt-get -y install subversion libjpeg8-dev imagemagick libav-tools cmake
-  sudo -u pi git clone https://github.com/jacksonliam/mjpg-streamer.git
+  sudo -u ${USERNAME} git clone https://github.com/jacksonliam/mjpg-streamer.git
   pushd mjpg-streamer
     mv mjpg-streamer-experimental/* .
-    sudo -u pi make
+    sudo -u ${USERNAME} make
   popd
   
   #Add pyserial that can handle non-standard baud rates
-  sudo -u pi svn co http://pyserial.svn.sourceforge.net/svnroot/pyserial/trunk pyserial
+  sudo -u ${USERNAME} svn co http://pyserial.svn.sourceforge.net/svnroot/pyserial/trunk pyserial
   pushd pyserial
       pushd pyserial
-          sudo -u pi /home/pi/oprint/bin/python setup.py install
+          sudo -u ${USERNAME} /home/${USERNAME}/oprint/bin/python setup.py install
       popd
   popd
   
@@ -84,12 +90,12 @@ pushd /home/pi
   export HAPROXY_VERSION=1.5-dev19
   sudo apt-get -y install ssl-cert libssl-dev libpcre3-dev checkinstall
   rm /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/certs/ssl-cert-snakeoil.pem
-  sudo -u pi wget http://haproxy.1wt.eu/download/1.5/src/devel/haproxy-${HAPROXY_VERSION}.tar.gz
-  sudo -u pi tar xzvf haproxy-${HAPROXY_VERSION}.tar.gz
+  sudo -u ${USERNAME} wget http://haproxy.1wt.eu/download/1.5/src/devel/haproxy-${HAPROXY_VERSION}.tar.gz
+  sudo -u ${USERNAME} tar xzvf haproxy-${HAPROXY_VERSION}.tar.gz
   rm haproxy-${HAPROXY_VERSION}.tar.gz
-  sudo -u pi mv `ls | grep haproxy | head -n 1` haproxy-ss
+  sudo -u ${USERNAME} mv `ls | grep haproxy | head -n 1` haproxy-ss
   pushd haproxy-ss
-    sudo -u pi make TARGET=linux2628 USE_LINUX_SPLICE=1 USE_LINUX_TPROXY=1 USE_PCRE=1 USE_OPENSSL=1
+    sudo -u ${USERNAME} make TARGET=linux2628 USE_LINUX_SPLICE=1 USE_LINUX_TPROXY=1 USE_PCRE=1 USE_OPENSSL=1
     mkdir -p /usr/local/share/man/man1 /usr/local/doc /usr/local/doc/haproxy
     sudo checkinstall --default --pkgname haproxy --pkgversion 1.5
   popd
@@ -113,14 +119,14 @@ popd
 
 sed -i 's@exit 0@@' /etc/rc.local
 
-echo "/home/pi/scripts/genCert" >> /etc/rc.local
-echo "sudo -u pi /home/pi/scripts/webcamDaemon &" >> /etc/rc.local
+echo "/home/"${USERNAME}"/scripts/genCert" >> /etc/rc.local
+echo "sudo -u "${USERNAME}" /home/"${USERNAME}"/scripts/webcamDaemon &" >> /etc/rc.local
 echo "/usr/local/sbin/haproxy -f /etc/haproxy/haproxy.cfg" >> /etc/rc.local
 echo "exit 0" >> /etc/rc.local
 
 #automatic startup
-echo "pi ALL=NOPASSWD: /sbin/shutdown" > /etc/sudoers.d/octoprint-shutdown
-echo "pi ALL=NOPASSWD: /sbin/service" > /etc/sudoers.d/octoprint-service
+echo ""${USERNAME}" ALL=NOPASSWD: /sbin/shutdown" > /etc/sudoers.d/octoprint-shutdown
+echo ""${USERNAME}" ALL=NOPASSWD: /sbin/service" > /etc/sudoers.d/octoprint-service
 
 #reach printer by name
 sudo apt-get -y install avahi-daemon
