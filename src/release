@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
+# Remember to "sudo apt-get install zsync", it's almost never installed by default.
 pushd workspace
-	
-FILENAME=$(basename `ls . |  grep .img | tail -n 1` .img)  
-OCTOPI_FILENAME=$(echo $FILENAME-`cat ../filesystem/root/etc/octopi_version` | sed 's/raspbian/octopi/')
-mv ${FILENAME}.img $OCTOPI_FILENAME.img
-zip $OCTOPI_FILENAME.zip $OCTOPI_FILENAME.img
+
+FILENAME=$(basename $(ls . |  grep .img | tail -n 1) .img)  
+OCTOPI_FILENAME=$(echo ${FILENAME}-$(cat ../filesystem/root/etc/octopi_version) | sed 's/raspbian/octopi/')
+mv "${FILENAME}.img" "${OCTOPI_FILENAME}.img"
+gzip -c --rsyncable "${OCTOPI_FILENAME}.img > "${OCTOPI_FILENAME}.img.gz"
+zsyncmake -Z -b 2048 "${OCTOPI_FILENAME}.img.gz" -o "${OCTOPI_FILENAME}.img.gz.zsync" -u "$({basename "$OCTOPI_FILENAME}.img.gz")" ||
+    echo "Something went wrong or zsync not found!"
+sha1sum "${OCTOPI_FILENAME}.img.gz" > "${OCTOPI_FILENAME}.img.gz.sha1"
 
 popd
