@@ -19,6 +19,10 @@ function execute_chroot_script() {
   cp $SCRIPT_PATH/common.sh common.sh
   chmod 755 common.sh
   
+  #echo 0 > /proc/sys/vm/mmap_min_addr
+  #export QEMU_RESERVED_VA=0x45f5e100
+  #export QEMU_RESERVED_VA=0xf7000000
+  #ulimit -v
   chroot . usr/bin/qemu-arm-static /bin/bash /chroot_script
   
   #cleanup

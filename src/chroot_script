@@ -16,10 +16,10 @@ apt-get remove -y --purge scratch squeak-plugins-scratch squeak-vm wolfram-engin
 #apt-get octoprint virtualenv
 apt-get -y --force-yes install python-virtualenv python-dev git python-numpy screen libts-bin
 
-pushd /home/pi
+pushd /home/${OVERRIDE_USER}
   
   #build virtualenv
-  sudo -u pi virtualenv --system-site-packages oprint
+  sudo -u ${OVERRIDE_USER} virtualenv --system-site-packages oprint
   
   if [ -n $OVERRIDE_OCTOPRINT ]
   then
@@ -27,7 +27,7 @@ pushd /home/pi
     gitclone https://github.com/foosel/OctoPrint.git
     pushd OctoPrint
       git checkout $OCTOPRINT_BRANCH
-      sudo -u pi /home/pi/oprint/bin/python setup.py install
+      sudo -u ${OVERRIDE_USER} /home/${OVERRIDE_USER}/oprint/bin/python setup.py install
     popd
   fi
 
@@ -35,26 +35,26 @@ pushd /home/pi
   gitclone https://github.com/jonaslorander/OctoPiPanel.git
   pushd OctoPiPanel
     git checkout $OCTOPIPANEL_BRANCH
-    sudo -u pi /home/pi/oprint/bin/pip install -r requirements.txt
+    sudo -u ${OVERRIDE_USER} /home/${OVERRIDE_USER}/oprint/bin/pip install -r requirements.txt
   popd
 
   #Make sure user pi has access to serial ports
-  sudo usermod -a -G tty pi
-  sudo usermod -a -G dialout pi
+  sudo usermod -a -G tty ${OVERRIDE_USER}
+  sudo usermod -a -G dialout ${OVERRIDE_USER}
       
   #mjpg-streamer
   sudo apt-get -y --force-yes install subversion libjpeg8-dev imagemagick libav-tools cmake libv4l-dev
   gitclone https://github.com/jacksonliam/mjpg-streamer.git
   pushd mjpg-streamer
     mv mjpg-streamer-experimental/* .
-    sudo -u pi make
+    sudo -u ${OVERRIDE_USER} make
   popd
   
   #Add pyserial that can handle non-standard baud rates
-  sudo -u pi svn co http://pyserial.svn.sourceforge.net/svnroot/pyserial/trunk pyserial
+  sudo -u ${OVERRIDE_USER} svn co http://pyserial.svn.sourceforge.net/svnroot/pyserial/trunk pyserial
   pushd pyserial
       pushd pyserial
-          sudo -u pi /home/pi/oprint/bin/python setup.py install
+          sudo -u ${OVERRIDE_USER} /home/${OVERRIDE_USER}/oprint/bin/python setup.py install
       popd
   popd
   
@@ -68,12 +68,12 @@ pushd /home/pi
   export HAPROXY_VERSION=1.5.8
   sudo apt-get -y --force-yes install ssl-cert libssl-dev libpcre3-dev checkinstall
   rm /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/certs/ssl-cert-snakeoil.pem
-  sudo -u pi wget http://www.haproxy.org/download/1.5/src/haproxy-${HAPROXY_VERSION}.tar.gz
-  sudo -u pi tar xzvf haproxy-${HAPROXY_VERSION}.tar.gz
+  sudo -u ${OVERRIDE_USER} wget http://www.haproxy.org/download/1.5/src/haproxy-${HAPROXY_VERSION}.tar.gz
+  sudo -u ${OVERRIDE_USER} tar xzvf haproxy-${HAPROXY_VERSION}.tar.gz
   rm haproxy-${HAPROXY_VERSION}.tar.gz
-  sudo -u pi mv `ls | grep haproxy | head -n 1` haproxy-ss
+  sudo -u ${OVERRIDE_USER} mv `ls | grep haproxy | head -n 1` haproxy-ss
   pushd haproxy-ss
-    sudo -u pi make TARGET=linux2628 USE_LINUX_SPLICE=1 USE_LINUX_TPROXY=1 USE_PCRE=1 USE_OPENSSL=1
+    sudo -u ${OVERRIDE_USER} make TARGET=linux2628 USE_LINUX_SPLICE=1 USE_LINUX_TPROXY=1 USE_PCRE=1 USE_OPENSSL=1
     mkdir -p /usr/local/share/man/man1 /usr/local/doc /usr/local/doc/haproxy
     sudo checkinstall --default --pkgname haproxy --pkgversion 1.5
   popd
@@ -97,14 +97,14 @@ popd
 
 sed -i 's@exit 0@@' /etc/rc.local
 
-echo "/home/pi/scripts/genCert" >> /etc/rc.local
-echo "sudo -u pi /home/pi/scripts/webcamDaemon &" >> /etc/rc.local
+echo "/home/${OVERRIDE_USER}/scripts/genCert" >> /etc/rc.local
+echo "sudo -u ${OVERRIDE_USER} /home/${OVERRIDE_USER}/scripts/webcamDaemon &" >> /etc/rc.local
 echo "/usr/local/sbin/haproxy -f /etc/haproxy/haproxy.cfg" >> /etc/rc.local
 echo "exit 0" >> /etc/rc.local
 
 #automatic startup
-echo "pi ALL=NOPASSWD: /sbin/shutdown" > /etc/sudoers.d/octoprint-shutdown
-echo "pi ALL=NOPASSWD: /sbin/service" > /etc/sudoers.d/octoprint-service
+echo "${OVERRIDE_USER} ALL=NOPASSWD: /sbin/shutdown" > /etc/sudoers.d/octoprint-shutdown
+echo "${OVERRIDE_USER} ALL=NOPASSWD: /sbin/service" > /etc/sudoers.d/octoprint-service
 
 #reach printer by name
 sudo apt-get -y --force-yes install avahi-daemon

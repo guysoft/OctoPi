@@ -16,27 +16,27 @@ function restoreLd(){
 function gitclone(){
 if [ "$GIT_REPO_OVERRIDE" != "" ] ; then
     REPO=$GIT_REPO_OVERRIDE`echo $1 | awk -F '/' '{print $(NF)}'`
-    sudo -u pi git clone $REPO
+    sudo -u ${OVERRIDE_USER} git clone $REPO
     REPO_DIR_NAME=$(echo ${REPO} | sed 's%^.*/\([^/]*\)\.git$%\1%g')
     pushd ${REPO_DIR_NAME}
-        sudo -u pi git remote set-url origin $1
+        sudo -u ${OVERRIDE_USER} git remote set-url origin $1
     popd
 else
-    sudo -u pi git clone $1
+    sudo -u ${OVERRIDE_USER} git clone $1
 fi
 }
 
 function unpackHome(){
   shopt -s dotglob
-  cp -v -r --preserve=mode,timestamps /filesystem/home/* /home/pi
+  cp -v -r --preserve=mode,timestamps /filesystem/home/* /home/${OVERRIDE_USER}
   shopt -u dotglob
-  chown -hR pi:pi /home/pi
+  chown -hR pi:pi /home/${OVERRIDE_USER}
 }
 
 function unpackRoot(){
   shopt -s dotglob
   cp -v -r --preserve=mode,timestamps /filesystem/root/* /
-  shopt -u dotglob
+  shopt -u dostglob
 }
 
 function unpackBoot(){

@@ -24,6 +24,7 @@ fi
 [ -n "$CHROOT_SCRIPT_PATH" ] || export CHROOT_SCRIPT_PATH=$SCRIPT_PATH/chroot_script
 [ -n "$MOUNT_PATH" ] || export MOUNT_PATH=$OCTOPI_WORKSPACE/mount
 [ -n "$OVERRIDE_HOSTNAME" ] || export OVERRIDE_HOSTNAME=octopi
+[ -n "$OVERRIDE_USER" ] || export OVERRIDE_USER=pi
 
 echo "================================================================"
 echo "Using the following config:"
@@ -34,5 +35,5 @@ echo "OCTOPI_WORKSPACE = $OCTOPI_WORKSPACE"
 echo "CHROOT_SCRIPT_PATH = $CHROOT_SCRIPT_PATH"
 echo "MOUNT_PATH = $MOUNT_PATH"
 echo "OVERRIDE_HOSTNAME = $OVERRIDE_HOSTNAME"
+echo "OVERRIDE_USER = $OVERRIDE_USER"
 echo "================================================================"
-
