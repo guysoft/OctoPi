@@ -27,6 +27,9 @@ fi
 ###############################################################################
 # All our config settings must start with OCTOPI_
 
+[ -n "$OCTOPI_PRESCRIPT"] || OCTOPI_PRESCRIPT=
+[ -n "$OCTOPI_POSTSCRIPT"] || OCTOPI_POSTSCRIPT=
+
 [ -n "$OCTOPI_SCRIPT_PATH" ] || OCTOPI_SCRIPT_PATH=$CONFIG_DIR
 [ -n "$OCTOPI_IMAGE_PATH" ] || OCTOPI_IMAGE_PATH=$OCTOPI_SCRIPT_PATH/image
 
