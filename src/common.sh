@@ -107,6 +107,13 @@ function unmount_image() {
   sudo umount $mount_path
 }
 
+function cleanup() {
+    # make sure that all child processed die when we die
+    local pids=$(jobs -pr)
+    [ -n "$pids" ] && kill $pids
+    exit 0
+}
+
 function install_fail_on_error_trap() {
   set -e
   trap 'previous_command=$this_command; this_command=$BASH_COMMAND' DEBUG
@@ -117,4 +124,9 @@ function install_chroot_fail_on_error_trap() {
   set -e
   trap 'previous_command=$this_command; this_command=$BASH_COMMAND' DEBUG
   trap 'if [ $? -ne 0 ]; then echo -e "\nexit $? due to $previous_command \nBUILD FAILED!"; fi;' EXIT
+}
+
+function install_cleanup_trap() {
+  set -e
+  trap "cleanup" SIGINT SIGTERM
 }

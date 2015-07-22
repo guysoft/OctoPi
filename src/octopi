@@ -28,6 +28,7 @@ function execute_chroot_script() {
 mkdir -p $OCTOPI_WORKSPACE
 mkdir -p $OCTOPI_MOUNT_PATH
 
+install_cleanup_trap
 install_fail_on_error_trap $OCTOPI_MOUNT_PATH
 unmount_image $OCTOPI_MOUNT_PATH || true
 
