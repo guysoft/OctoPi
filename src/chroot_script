@@ -31,11 +31,8 @@ pushd /home/pi
     apt-get remove -y python-serial
 
     #pyserial that can handle non-standard baud rates
-    sudo -u pi svn co http://pyserial.svn.sourceforge.net/svnroot/pyserial/trunk pyserial
-    pushd pyserial/pyserial
-      sudo -u pi /home/pi/oprint/bin/python setup.py install
-    popd
-    
+    sudo -u pi /home/pi/oprint/bin/pip install pyserial==2.7
+
     #pybonjour (for mdns discovery)
     sudo -u pi /home/pi/oprint/bin/pip install pybonjour
 
