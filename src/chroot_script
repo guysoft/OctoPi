@@ -117,6 +117,15 @@ pushd /home/pi
     adduser --system --disabled-password --disabled-login --home /var/lib/haproxy \
             --no-create-home --quiet --force-badname --group haproxy
   fi
+
+  if [ "$OCTOPI_INCLUDE_WIRINGPI" == "yes" ]
+  then
+    echo "--- Installing WiringPi"
+    gitclone OCTOPI_WIRINGPI_REPO wiringPi
+    pushd wiringPi
+      sudo -u pi ./build
+    popd
+  fi
   
 popd
 
