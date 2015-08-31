@@ -18,6 +18,7 @@ pushd ${OCTOPIPATH}
     export OCTOPI_OCTOPIPANEL_REPO_BUILD='http://localhost/git/OctoPiPanel.git/'
     export OCTOPI_FBCP_REPO_BUILD='http://localhost/git/rpi-fbcp.git/'
     export OCTOPI_MJPGSTREAMER_REPO_BUILD='http://localhost/git/mjpg-streamer.git/'
+    export OCTOPI_WIRINGPI_REPO_BUILD='http://localhost/git/wiringPi.git/'
     
     ${OCTOPIPATH}/src/build $1
     pushd src

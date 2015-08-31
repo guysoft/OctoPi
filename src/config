@@ -71,6 +71,11 @@ fi
 [ -n "$OCTOPI_HAPROXY_ARCHIVE" ] || OCTOPI_HAPROXY_ARCHIVE=http://www.haproxy.org/download/1.5/src/haproxy-$OCTOPI_HAPROXY_VERSION.tar.gz
 [ -n "$OCTOPI_INCLUDE_HAPROXY" ] || OCTOPI_INCLUDE_HAPROXY=yes
 
+# WiringPi
+[ -n "$OCTOPI_WIRINGPI_REPO_SHIP" ] || OCTOPI_WIRINGPI_REPO_SHIP=git://git.drogon.net/wiringPi
+[ -n "$OCTOPI_WIRINGPI_REPO_BUILD" ] || OCTOPI_WIRINGPI_REPO_BUILD=
+[ -n "$OCTOPI_WIRINGPI_REPO_BRANCH" ] || OCTOPI_WIRINGPI_REPO_BRANCH=master
+[ -n "$OCTOPI_INCLUDE_WIRINGPI" ] || OCTOPI_INCLUDE_WIRINGPI=yes
 
 ###############################################################################
 # Rewrite any build urls that are not yet set if we have a repository mirror
