@@ -12,6 +12,7 @@ rm ${OCTOPIPATH}/src/workspace/*.zip
 
 pushd ${OCTOPIPATH}
     umount ${OCTOPIPATH}/src/workspace/mount/boot
+    umount ${OCTOPIPATH}/src/workspace/mount/dev
     umount ${OCTOPIPATH}/src/workspace/mount
     git pull origin devel
     export OCTOPI_OCTOPRINT_REPO_BUILD='http://localhost/git/OctoPrint.git/'
