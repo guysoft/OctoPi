@@ -13,7 +13,8 @@ unpack /filesystem/home/root /root root
 unpack /filesystem/boot /boot
 apt-get update
 
-apt-get remove -y --purge scratch squeak-plugins-scratch squeak-vm wolfram-engine python-minecraftpi minecraft-pi sonic-pi oracle-java8-jdk
+apt-get remove -y --purge scratch squeak-plugins-scratch squeak-vm wolfram-engine python-minecraftpi minecraft-pi sonic-pi oracle-java8-jdk bluej greenfoot libreoffice-common libreoffice-core freepats
+apt-get autoremove -y
 
 #apt-get octoprint virtualenv
 apt-get -y --force-yes install python2.7 python-virtualenv python-dev git screen libts-bin subversion cmake checkinstall avahi-daemon libavahi-compat-libdnssd1
@@ -37,7 +38,8 @@ pushd /home/pi
     popd
     
     #pybonjour (for mdns discovery)
-    sudo -u pi /home/pi/oprint/bin/pip install pybonjour
+    #sudo -u pi /home/pi/oprint/bin/pip install pybonjour
+    sudo -u pi /home/pi/oprint/bin/pip install https://pybonjour.googlecode.com/files/pybonjour-1.1.1.tar.gz
 
     #OctoPrint
     gitclone OCTOPI_OCTOPRINT_REPO OctoPrint
@@ -120,10 +122,14 @@ pushd /home/pi
             --no-create-home --quiet --force-badname --group haproxy
   fi
 
-  #make script executable
-  pushd scripts
-    chmod 755 webcamDaemon
-  popd
+  if [ "$OCTOPI_INCLUDE_WIRINGPI" == "yes" ]
+  then
+    echo "--- Installing WiringPi"
+    gitclone OCTOPI_WIRINGPI_REPO wiringPi
+    pushd wiringPi
+      sudo -u pi ./build
+    popd
+  fi
   
 popd
 
@@ -153,8 +159,12 @@ echo "start_x=1" >> /boot/config.txt
 echo "gpu_mem=128" >> /boot/config.txt
 
 # allow network configuration via /boot/octopi-network.txt
-sed -i "s@wpa-conf@# wpa-conf@g" /etc/network/interfaces
-sed -i "s@iface wlan@# iface wlan@g" /etc/network/interfaces
+sed -i "s@iface wlan0 @iface wlan0-raspbian @g" /etc/network/interfaces
+sed -i "s@iface wlan1 @iface wlan1-raspbian @g" /etc/network/interfaces
+echo "mapping wlan0" >> /etc/network/interfaces
+echo "  script /root/bin/map_iface" >> /etc/network/interfaces
+echo "mapping wlan1" >> /etc/network/interfaces
+echo "  script /root/bin/map_iface" >> /etc/network/interfaces
 echo "source /boot/octopi-network.txt" >> /etc/network/interfaces
 
 #unpack root in the end, so etc file are not overwritten, might need to add two roots int he future
@@ -205,16 +215,13 @@ fi
 
 if [ "$OCTOPI_INCLUDE_MJPGSTREAMER" == "yes" ]
 then
-  # create logging directory for webcam service
-  mkdir -p /var/log/webcamd
-  chown pi:pi /var/log/webcamd
-
-  # add webcamDaemon script to rc.local
-  sed -i 's@exit 0@@' /etc/rc.local
-  echo "sudo -u pi -s /bin/bash -c \"exec /home/pi/scripts/webcamDaemon > /var/log/webcamd/webcam.log 2>&1\" &" >> /etc/rc.local
-  echo "exit 0" >> /etc/rc.local
+  # make webcamd autostart
+  update-rc.d webcamd defaults
 else
-  rm /etc/logrotate.d/webcamDaemon
+  rm /etc/logrotate.d/webcamd
+  rm /etc/init.d/webcamd
+  rm /etc/default/webcamd
+  rm /root/bin/webcamd
 fi
 
 ### OctoPiPanel
