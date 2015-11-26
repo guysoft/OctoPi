@@ -173,6 +173,9 @@ unpack /filesystem/root /
 #####################################################################
 ### setup services
 
+### Disable GUI at start
+systemctl disable lightdm.service
+
 ### OctoPrint
 
 if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
