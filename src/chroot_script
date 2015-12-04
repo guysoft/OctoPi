@@ -28,21 +28,27 @@ pushd /home/pi
   sudo -u pi /home/pi/oprint/bin/pip install --upgrade pip
 
   # we also want pyopenssl so we have a secure SSL context available
-  sudo -u pi /home/pi/oprint/bin/pip install pyopenssl ndg-httpsclient pyasn1 cryptography
+  # since that stuff takes ages to compile during build, we do a somewhat dirty
+  # trick here by installing the raspbian versions, copying the libs over
+  # to our virtualenv and then purging the raspbian versions again
+  apt-get -y --force-yes install python-openssl python-cryptography
+  from=/usr/lib/python2.7/dist-packages
+  to=/home/pi/oprint/lib/python2.7/site-packages
+  for pattern in "cffi*" "cryptography*" "OpenSSL*" "ply*" "pycparser*" "pyOpenSSL*" "six*"
+  do
+    cp -v -r --preserve=mode,timestamps $from/$pattern $to/
+  done
+  apt-get remove -y --purge python-openssl python-cryptography
+  apt-get autoremove -y
+  chown -R pi.pi /home/pi/oprint
+  sudo -u pi /home/pi/oprint/bin/pip install ndg-httpsclient pyasn1
 
   # OctoPrint & pyserial
   if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
   then
     echo "--- Installing OctoPrint"
 
-    #pyserial that can handle non-standard baud rates
-    sudo -u pi svn co http://pyserial.svn.sourceforge.net/svnroot/pyserial/trunk pyserial
-    pushd pyserial/pyserial
-      sudo -u pi /home/pi/oprint/bin/python setup.py install
-    popd
-    
     #pybonjour (for mdns discovery)
-    #sudo -u pi /home/pi/oprint/bin/pip install pybonjour
     sudo -u pi /home/pi/oprint/bin/pip install https://pybonjour.googlecode.com/files/pybonjour-1.1.1.tar.gz
 
     #OctoPrint
