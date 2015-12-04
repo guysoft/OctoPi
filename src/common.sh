@@ -24,7 +24,7 @@ function pause() {
 function gitclone(){
   # call like this: gitclone OCTOPI_OCTOPRINT_REPO someDirectory -- this will do:
   #
-  #   sudo -u pi git clone -b $OCTOPI_OCTOPRINT_REPO_BRANCH $OCTOPI_OCTOPRINT_REPO_BUILD someDirectory
+  #   sudo -u pi git clone -b $OCTOPI_OCTOPRINT_REPO_BRANCH --depth $OCTOPI_OCTOPRINT_REPO_DEPTH $OCTOPI_OCTOPRINT_REPO_BUILD someDirectory
   # 
   # and if $OCTOPI_OCTOPRINT_REPO_BUILD != $OCTOPI_OCTOPRINT_REPO_SHIP also:
   #
@@ -38,11 +38,23 @@ function gitclone(){
   repo_build_var=$1_BUILD
   repo_ship_var=$1_SHIP
   repo_branch_var=$1_BRANCH
+  repo_depth_var=$1_DEPTH
   
   repo_dir=$2
   if [ ! -n "$repo_dir" ]
   then
     repo_dir=$(echo ${REPO} | sed 's%^.*/\([^/]*\)\(\.git\)?$%\1%g')
+  fi
+
+  repo_depth=${!repo_depth_var}
+  if [ -n "$repo_depth" ]
+  then
+    depth=$repo_depth
+  else
+    if [ "$#" -gt 2 ]
+    then
+      depth=$3
+    fi
   fi
 
   build_repo=${!repo_build_var}
@@ -54,12 +66,18 @@ function gitclone(){
     build_repo=$ship_repo
   fi
 
+  clone_params=
   if [ -n "$branch" ]
   then
-    sudo -u pi git clone -b $branch "$build_repo" "$repo_dir"
-  else
-    sudo -u pi git clone "$build_repo" "$repo_dir"
+    clone_params="-b $branch"
   fi
+
+  if [ -n "$depth" ]
+  then
+    clone_params="$clone_params --depth $depth"
+  fi
+
+  sudo -u pi git clone $clone_params "$build_repo" "$repo_dir"
 
   if [ "$build_repo" != "$ship_repo" ]
   then
