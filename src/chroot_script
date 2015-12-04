@@ -22,7 +22,8 @@ unpack /filesystem/home/root /root root
 unpack /filesystem/boot /boot
 apt-get update
 
-apt-get remove -y --purge scratch squeak-plugins-scratch squeak-vm wolfram-engine python-minecraftpi minecraft-pi sonic-pi oracle-java8-jdk bluej greenfoot libreoffice-common libreoffice-core freepats
+# in case we are building from a regular raspbian image instead of the lite one...
+apt-get remove -y --purge scratch squeak-plugins-scratch squeak-vm wolfram-engine python-minecraftpi minecraft-pi sonic-pi oracle-java8-jdk bluej greenfoot libreoffice-common libreoffice-core freepats nodered
 apt-get autoremove -y
 
 #apt-get octoprint virtualenv
