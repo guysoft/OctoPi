@@ -180,6 +180,8 @@ unpack /filesystem/root /
 ### Disable GUI at start
 systemctl disable lightdm.service
 
+update-rc.d prepare_resize defaults
+
 ### OctoPrint
 
 if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
