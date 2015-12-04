@@ -96,10 +96,15 @@ function mount_image() {
   image_path=$1
   mount_path=$2
 
+  # dump the partition table, locate boot partition of type "c" and root
+  # partition of type "83"
+  fdisk_output=$(sfdisk -d $image_path)
+  boot_offset=$(($(echo "$fdisk_output" | grep "Id= c" | awk '{print $4-0}') * 512))
+  root_offset=$(($(echo "$fdisk_output" | grep "Id=83" | awk '{print $4-0}') * 512))
+
   # mount root and boot partition
-  # dump the partition table, locate the line 7 with the sector of seond partition
-  sudo mount -o loop,offset=$(($(sfdisk -d $image_path | sed '7q;d' | awk '{print $4-0}') * 512)) $image_path $mount_path
-  sudo mount -o loop,offset=$((512*8192)) $image_path $mount_path/boot
+  sudo mount -o loop,offset=$root_offset $image_path $mount_path/
+  sudo mount -o loop,offset=$boot_offset $image_path $mount_path/boot
   sudo mount -o bind /dev $mount_path/dev
 }
 
