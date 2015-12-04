@@ -36,8 +36,16 @@ fi
 [ -n "$OCTOPI_CHROOT_SCRIPT_PATH" ] || OCTOPI_CHROOT_SCRIPT_PATH=$OCTOPI_SCRIPT_PATH/chroot_script
 [ -n "$OCTOPI_MOUNT_PATH" ] || OCTOPI_MOUNT_PATH=$OCTOPI_WORKSPACE/mount
 
+# if set will enlarge root parition prior to build by provided size in MB
+[ -n "$OCTOPI_IMAGE_ENLARGEROOT" ] || OCTOPI_IMAGE_ENLARGEROOT=
+
+# if set will resize root partition on image after build to minimum size + 
+# provided size in MB
+[ -n "$OCTOPI_IMAGE_RESIZEROOT" ] || OCTOPI_IMAGE_RESIZEROOT=
+
 [ -n "$OCTOPI_OVERRIDE_HOSTNAME" ] || OCTOPI_OVERRIDE_HOSTNAME=octopi
 
+# a git mirror to use for git clones instead of original remotes
 [ -n "$OCTOPI_BUILD_REPO_MIRROR" ] || OCTOPI_BUILD_REPO_MIRROR=
 
 # OctoPrint repo & branch

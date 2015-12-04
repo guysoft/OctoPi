@@ -37,6 +37,13 @@ pushd $OCTOPI_WORKSPACE
   fi
   unzip $OCTOPI_ZIP_IMG
   OCTOPI_IMG_PATH=`ls | grep .img`
+  export OCTOPI_BUILDBASE=$(basename $OCTOPI_IMG_PATH)
+
+  if [ -n "$OCTOPI_IMAGE_ENLARGEROOT" ]
+  then
+    # make our image a bit larger so we don't run into size problems...
+    enlarge_ext $OCTOPI_IMG_PATH 2 $OCTOPI_IMAGE_ENLARGEROOT
+  fi
 
   # mount root and boot partition
   mount_image $OCTOPI_IMG_PATH $OCTOPI_MOUNT_PATH
@@ -66,5 +73,11 @@ pushd $OCTOPI_WORKSPACE
   # unmount first boot, then root partition
   unmount_image $OCTOPI_MOUNT_PATH
   chmod 777 $OCTOPI_IMG_PATH
+
+  if [ -n "$OCTOPI_IMAGE_RESIZEROOT" ]
+  then
+    # resize image to minimal size + provided size
+    minimize_ext $OCTOPI_IMG_PATH 2 $OCTOPI_IMAGE_RESIZEROOT
+  fi
 popd
 
