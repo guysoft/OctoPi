@@ -41,7 +41,7 @@ fi
 
 # if set will resize root partition on image after build to minimum size + 
 # provided size in MB
-[ -n "$OCTOPI_IMAGE_RESIZEROOT" ] || OCTOPI_IMAGE_RESIZEROOT=
+[ -n "$OCTOPI_IMAGE_RESIZEROOT" ] || OCTOPI_IMAGE_RESIZEROOT=200
 
 # a local directory on the build server to bind mount under /var/cache/apt
 [ -n "$OCTOPI_APT_CACHE" ] || OCTOPI_APT_CACHE=$OCTOPI_WORKSPACE/aptcache
