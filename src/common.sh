@@ -105,7 +105,7 @@ function mount_image() {
   # mount root and boot partition
   sudo mount -o loop,offset=$root_offset $image_path $mount_path/
   sudo mount -o loop,offset=$boot_offset $image_path $mount_path/boot
-  sudo mount -o bind /dev $mount_path/dev
+  sudo mount -o bind /dev/pts $mount_path/dev/pts
 }
 
 function unmount_image() {
