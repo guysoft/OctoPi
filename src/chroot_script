@@ -142,6 +142,7 @@ usermod -a -G dialout pi
 
 # store octopi commit used to build this image
 echo "$OCTOPI_COMMIT" > /etc/octopi_commit
+echo "$OCTOPI_BUILDBASE" > /etc/octopi_buildbase
 
 # allow pi user to run shutdown and service commands
 echo "pi ALL=NOPASSWD: /sbin/shutdown" > /etc/sudoers.d/octoprint-shutdown
