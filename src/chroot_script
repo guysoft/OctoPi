@@ -94,7 +94,7 @@ pushd /home/pi
   if [ "$OCTOPI_INCLUDE_MJPGSTREAMER" == "yes" ]
   then
     echo "--- Installing mjpg-streamer"
-    apt-get -y --force-yes install libjpeg8-dev imagemagick libav-tools libv4l-dev
+    apt-get -y --force-yes --no-install-recommends install libjpeg8-dev imagemagick libav-tools libv4l-dev
     gitclone OCTOPI_MJPGSTREAMER_REPO mjpg-streamer
     pushd mjpg-streamer
       mv mjpg-streamer-experimental/* .
@@ -124,31 +124,14 @@ pushd /home/pi
   if [ "$OCTOPI_INCLUDE_HAPROXY" == "yes" ]
   then
     echo "--- Installing haproxy"
-    export HAPROXY_VERSION=OCTOPI_HAPROXY_VERSION
-    sudo apt-get -y --force-yes install ssl-cert libssl-dev libpcre3-dev
+    apt-get -y --force-yes install ssl-cert haproxy
     rm /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/certs/ssl-cert-snakeoil.pem
-    sudo -u pi wget $OCTOPI_HAPROXY_ARCHIVE
-    sudo -u pi tar xzvf haproxy-$OCTOPI_HAPROXY_VERSION.tar.gz
-    rm haproxy-$OCTOPI_HAPROXY_VERSION.tar.gz
-    sudo -u pi mv `ls | grep haproxy | head -n 1` haproxy-ss
-    pushd haproxy-ss
-      sudo -u pi make TARGET=linux2628 USE_LINUX_SPLICE=1 USE_LINUX_TPROXY=1 USE_PCRE=1 USE_OPENSSL=1
-      mkdir -p /usr/local/share/man/man1 /usr/local/doc /usr/local/doc/haproxy
-      sudo checkinstall --default --pkgname haproxy --pkgversion 1.5
-    popd
-    rm -rf haproxy-ss
-
-    adduser --system --disabled-password --disabled-login --home /var/lib/haproxy \
-            --no-create-home --quiet --force-badname --group haproxy
   fi
 
   if [ "$OCTOPI_INCLUDE_WIRINGPI" == "yes" ]
   then
     echo "--- Installing WiringPi"
-    gitclone OCTOPI_WIRINGPI_REPO wiringPi
-    pushd wiringPi
-      sudo -u pi ./build
-    popd
+    apt-get install wiringpi
   fi
   
 popd
@@ -214,14 +197,9 @@ fi
 if [ "$OCTOPI_INCLUDE_HAPROXY" == "yes" ]
 then
   update-rc.d gencert defaults
-  update-rc.d haproxy defaults 99
 else
   # let's remove the configs for system services we don't need
   rm /etc/init.d/gencert
-  rm /etc/init.d/haproxy
-  rm /etc/default/haproxy
-  rm /etc/logrotate.d/haproxy
-  rm /etc/rsyslog.d/49-haproxy.conf
 
   # also we need to make OctoPrint bind to all interfaces because otherwise
   # it will be unaccessible...
