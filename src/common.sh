@@ -128,3 +128,101 @@ function install_chroot_fail_on_error_trap() {
   trap 'previous_command=$this_command; this_command=$BASH_COMMAND' DEBUG
   trap 'if [ $? -ne 0 ]; then echo -e "\nexit $? due to $previous_command \nBUILD FAILED!"; fi;' EXIT
 }
+
+function enlarge_ext() {
+  # call like this: enlarge_ext /path/to/image partition size
+  #
+  # will enlarge partition number <partition> on /path/to/image by <size> MB
+  image=$1
+  partition=$2
+  size=$3
+
+  echo "Adding $size MB to partition $partition of $image"
+  start=$(sfdisk -d $image | grep "$image$partition" | awk '{print $4-0}')
+  offset=$(($start*512))
+  dd if=/dev/zero bs=1M count=$size >> $image
+  fdisk $image <<FDISK
+p
+d
+$partition
+n
+p
+$partition
+$start
+
+p
+w
+FDISK
+
+  LODEV=$(losetup -f --show -o $offset $image)
+  trap 'losetup -d $LODEV' EXIT
+
+  e2fsck -fy $LODEV
+  resize2fs -p $LODEV
+  losetup -d $LODEV
+
+  trap - EXIT
+  echo "Resized parition $partition of $image to +$size MB"
+}
+
+function minimize_ext() {
+  image=$1
+  partition=$2
+  buffer=$3
+
+  echo "Resizing partition $partition on $image to minimal size + $buffer MB"
+  start=$(sfdisk -d $image | grep "$image$partition" | awk '{print $4-0}')
+  offset=$(($start*512))
+
+  LODEV=$(losetup -f --show -o $offset $image)
+  trap 'losetup -d $LODEV' EXIT
+
+  e2fsck -fy $LODEV
+  e2fblocksize=$(tune2fs -l $LODEV | grep -i "block size" | awk -F: '{print $2-0}')
+  e2fminsize=$(resize2fs -P $LODEV 2>/dev/null | grep -i "minimum size" | awk -F: '{print $2-0}')
+
+  e2fminsize_bytes=$(($e2fminsize * $e2fblocksize))
+  e2ftarget_bytes=$(($buffer * 1024 * 1024 + $e2fminsize_bytes))
+
+  e2fminsize_mb=$(($e2fminsize_bytes / 1024 / 1024))
+  e2fminsize_blocks=$(($e2fminsize_bytes / 512 + 1))
+  e2ftarget_mb=$(($e2ftarget_bytes / 1024 / 1024))
+  e2ftarget_blocks=$(($e2ftarget_bytes / 512 + 1))
+
+  echo "Minimum size is $e2fminsize_mb MB ($e2fminsize file system blocks, $e2fminsize_blocks blocks), resizing to $e2ftarget_mb MB ($e2ftarget_blocks blocks)"
+
+  echo "Resizing file system to $e2target_blocks blocks..."
+  resize2fs $LODEV ${e2ftarget_blocks}s
+  losetup -d $LODEV
+  trap - EXIT
+
+  new_end=$(($start + $e2ftarget_blocks))
+
+  echo "Resizing partition to end at $start + $e2ftarget_blocsk = $new_end blocks..."
+  fdisk $image <<FDISK
+p
+d
+$partition
+n
+p
+$partition
+$start
+$new_end
+p
+w
+FDISK
+
+  new_size=$((($new_end + 1) * 512))
+  echo "Truncating image to $new_size bytes..."
+  truncate --size=$new_size $image
+  fdisk -l $image
+
+  echo "Resizing filesystem ..."
+  LODEV=$(losetup -f --show -o $offset $image)
+  trap 'losetup -d $LODEV' EXIT
+
+  e2fsck -fy $LODEV
+  resize2fs -p $LODEV
+  losetup -d $LODEV
+  trap - EXIT
+}
