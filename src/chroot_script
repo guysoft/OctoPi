@@ -8,6 +8,15 @@ set -e
 
 source /common.sh
 
+if [ -n "$OCTOPI_APT_PROXY" ]
+then
+  echo "Acquire::http { Proxy \"http://$OCTOPI_APT_PROXY\"; };" > /etc/apt/apt.conf.d/02octopi_build_proxy
+fi
+
+# prevent any installed services from automatically starting (I'm looking at you haproxy)
+echo exit 101 > /usr/sbin/policy-rc.d
+chmod +x /usr/sbin/policy-rc.d
+
 unpack /filesystem/home/pi /home/pi pi
 unpack /filesystem/home/root /root root
 unpack /filesystem/boot /boot
@@ -255,3 +264,10 @@ fi
 #cleanup
 apt-get clean
 apt-get autoremove -y
+
+rm -r /usr/sbin/policy-rc.d
+
+if [ -n "$OCTOPI_APT_PROXY" ]
+then
+  rm -r /etc/apt/apt.conf.d/02octopi_build_proxy
+fi

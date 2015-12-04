@@ -112,9 +112,11 @@ function unmount_image() {
   mount_path=$1
 
   # unmount first boot, then root partition
-  sudo umount $mount_path/boot
-  sudo umount $mount_path/dev
-  sudo umount $mount_path
+  for m in $(sudo mount | grep /data/octopi/workspace/mount | awk '{print $3}' | sort -r)
+  do
+    echo "Unmounting $m..."
+    sudo umount $m
+  done
 }
 
 function install_fail_on_error_trap() {

@@ -43,6 +43,12 @@ fi
 # provided size in MB
 [ -n "$OCTOPI_IMAGE_RESIZEROOT" ] || OCTOPI_IMAGE_RESIZEROOT=
 
+# a local directory on the build server to bind mount under /var/cache/apt
+[ -n "$OCTOPI_APT_CACHE" ] || OCTOPI_APT_CACHE=$OCTOPI_WORKSPACE/aptcache
+
+# a host:port combo for a apt-proxy (such as apt-cacher-ng) to use
+[ -n "$OCTOPI_APT_PROXY" ] || OCTOPI_APT_PROXY=
+
 [ -n "$OCTOPI_OVERRIDE_HOSTNAME" ] || OCTOPI_OVERRIDE_HOSTNAME=octopi
 
 # a git mirror to use for git clones instead of original remotes
