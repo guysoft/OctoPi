@@ -130,7 +130,7 @@ function unmount_image() {
   mount_path=$1
 
   # unmount first boot, then root partition
-  for m in $(sudo mount | grep /data/octopi/workspace/mount | awk '{print $3}' | sort -r)
+  for m in $(sudo mount | grep $mount_path | awk '{print $3}' | sort -r)
   do
     echo "Unmounting $m..."
     sudo umount $m
