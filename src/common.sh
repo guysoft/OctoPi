@@ -96,11 +96,14 @@ function mount_image() {
   image_path=$1
   mount_path=$2
 
-  # dump the partition table, locate boot partition of type "c" and root
-  # partition of type "83"
+  # dump the partition table, locate boot partition and root partition
+  boot_partition=1
+  root_partition=2
   fdisk_output=$(sfdisk -d $image_path)
-  boot_offset=$(($(echo "$fdisk_output" | grep "Id= c" | awk '{print $4-0}') * 512))
-  root_offset=$(($(echo "$fdisk_output" | grep "Id=83" | awk '{print $4-0}') * 512))
+  boot_offset=$(($(echo "$fdisk_output" | grep "$image_path$boot_partition" | awk '{print $4-0}') * 512))
+  root_offset=$(($(echo "$fdisk_output" | grep "$image_path$root_partition" | awk '{print $4-0}') * 512))
+
+  echo "Mounting image $image_path on $mount_path, offset for boot partition is $boot_offset, offset for root partition is $root_offset"
 
   # mount root and boot partition
   sudo mount -o loop,offset=$root_offset $image_path $mount_path/
