@@ -41,7 +41,13 @@ fi
 
 # if set will resize root partition on image after build to minimum size + 
 # provided size in MB
-[ -n "$OCTOPI_IMAGE_RESIZEROOT" ] || OCTOPI_IMAGE_RESIZEROOT=
+[ -n "$OCTOPI_IMAGE_RESIZEROOT" ] || OCTOPI_IMAGE_RESIZEROOT=200
+
+# a local directory on the build server to bind mount under /var/cache/apt
+[ -n "$OCTOPI_APT_CACHE" ] || OCTOPI_APT_CACHE=$OCTOPI_WORKSPACE/aptcache
+
+# a host:port combo for a apt-proxy (such as apt-cacher-ng) to use
+[ -n "$OCTOPI_APT_PROXY" ] || OCTOPI_APT_PROXY=
 
 [ -n "$OCTOPI_OVERRIDE_HOSTNAME" ] || OCTOPI_OVERRIDE_HOSTNAME=octopi
 
@@ -58,9 +64,11 @@ fi
 [ -n "$OCTOPI_OCTOPIPANEL_REPO_SHIP" ] || OCTOPI_OCTOPIPANEL_REPO_SHIP=https://github.com/jonaslorander/OctoPiPanel.git
 [ -n "$OCTOPI_OCTOPIPANEL_REPO_BUILD" ] || OCTOPI_OCTOPIPANEL_REPO_BUILD=
 [ -n "$OCTOPI_OCTOPIPANEL_REPO_BRANCH" ] || OCTOPI_OCTOPIPANEL_REPO_BRANCH=master
+[ -n "$OCTOPI_OCTOPIPANEL_REPO_DEPTH" ] || OCTOPI_OCTOPIPANEL_REPO_DEPTH=1
 [ -n "$OCTOPI_FBCP_REPO_SHIP" ] || OCTOPI_FBCP_REPO_SHIP=https://github.com/tasanakorn/rpi-fbcp
 [ -n "$OCTOPI_FBCP_REPO_BUILD" ] || OCTOPI_FBCP_REPO_BUILD=$OCTOPI_FBCP_REPO_SHIP
 [ -n "$OCTOPI_FBCP_REPO_BRANCH" ] || OCTOPI_FBCP_REPO_BRANCH=
+[ -n "$OCTOPI_FBCP_REPO_DEPTH" ] || OCTOPI_FBCP_REPO_DEPTH=1
 [ -n "$OCTOPI_INCLUDE_OCTOPIPANEL" ] || OCTOPI_INCLUDE_OCTOPIPANEL=yes
 
 # CuraEngine archive & version
@@ -72,17 +80,13 @@ fi
 [ -n "$OCTOPI_MJPGSTREAMER_REPO_SHIP" ] || OCTOPI_MJPGSTREAMER_REPO_SHIP=https://github.com/jacksonliam/mjpg-streamer.git
 [ -n "$OCTOPI_MJPGSTREAMER_REPO_BUILD" ] || OCTOPI_MJPGSTREAMER_REPO_BUILD=
 [ -n "$OCTOPI_MJPGSTREAMER_REPO_BRANCH" ] || OCTOPI_MJPGSTREAMER_REPO_BRANCH=master
+[ -n "$OCTOPI_MJPGSTREAMER_REPO_DEPTH" ] || OCTOPI_MJPGSTREAMER_REPO_DEPTH=1
 [ -n "$OCTOPI_INCLUDE_MJPGSTREAMER" ] || OCTOPI_INCLUDE_MJPGSTREAMER=yes
 
 # HAProxy
-[ -n "$OCTOPI_HAPROXY_VERSION" ] || OCTOPI_HAPROXY_VERSION=1.5.8
-[ -n "$OCTOPI_HAPROXY_ARCHIVE" ] || OCTOPI_HAPROXY_ARCHIVE=http://www.haproxy.org/download/1.5/src/haproxy-$OCTOPI_HAPROXY_VERSION.tar.gz
 [ -n "$OCTOPI_INCLUDE_HAPROXY" ] || OCTOPI_INCLUDE_HAPROXY=yes
 
 # WiringPi
-[ -n "$OCTOPI_WIRINGPI_REPO_SHIP" ] || OCTOPI_WIRINGPI_REPO_SHIP=git://git.drogon.net/wiringPi
-[ -n "$OCTOPI_WIRINGPI_REPO_BUILD" ] || OCTOPI_WIRINGPI_REPO_BUILD=
-[ -n "$OCTOPI_WIRINGPI_REPO_BRANCH" ] || OCTOPI_WIRINGPI_REPO_BRANCH=master
 [ -n "$OCTOPI_INCLUDE_WIRINGPI" ] || OCTOPI_INCLUDE_WIRINGPI=yes
 
 ###############################################################################

@@ -8,15 +8,24 @@ set -e
 
 source /common.sh
 
+if [ -n "$OCTOPI_APT_PROXY" ]
+then
+  echo "Acquire::http { Proxy \"http://$OCTOPI_APT_PROXY\"; };" > /etc/apt/apt.conf.d/02octopi_build_proxy
+fi
+
+# prevent any installed services from automatically starting (I'm looking at you haproxy)
+echo exit 101 > /usr/sbin/policy-rc.d
+chmod +x /usr/sbin/policy-rc.d
+
 unpack /filesystem/home/pi /home/pi pi
 unpack /filesystem/home/root /root root
 unpack /filesystem/boot /boot
 apt-get update
 
-apt-get remove -y --purge scratch squeak-plugins-scratch squeak-vm wolfram-engine python-minecraftpi minecraft-pi sonic-pi oracle-java8-jdk bluej greenfoot libreoffice-common libreoffice-core freepats
+# in case we are building from a regular raspbian image instead of the lite one...
+apt-get remove -y --purge scratch squeak-plugins-scratch squeak-vm wolfram-engine python-minecraftpi minecraft-pi sonic-pi oracle-java8-jdk bluej greenfoot libreoffice-common libreoffice-core freepats nodered
 apt-get autoremove -y
 
-#apt-get octoprint virtualenv
 apt-get -y --force-yes install python2.7 python-virtualenv python-dev git screen libts-bin subversion cmake checkinstall avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev
 
 pushd /home/pi
@@ -28,21 +37,27 @@ pushd /home/pi
   sudo -u pi /home/pi/oprint/bin/pip install --upgrade pip
 
   # we also want pyopenssl so we have a secure SSL context available
-  sudo -u pi /home/pi/oprint/bin/pip install pyopenssl ndg-httpsclient pyasn1 cryptography
+  # since that stuff takes ages to compile during build, we do a somewhat dirty
+  # trick here by installing the raspbian versions, copying the libs over
+  # to our virtualenv and then purging the raspbian versions again
+  apt-get -y --force-yes install python-openssl python-cryptography
+  from=/usr/lib/python2.7/dist-packages
+  to=/home/pi/oprint/lib/python2.7/site-packages
+  for pattern in "cffi*" "cryptography*" "OpenSSL*" "ply*" "pycparser*" "pyOpenSSL*" "six*"
+  do
+    cp -v -r --preserve=mode,timestamps $from/$pattern $to/
+  done
+  apt-get remove -y --purge python-openssl python-cryptography
+  apt-get autoremove -y
+  chown -R pi.pi /home/pi/oprint
+  sudo -u pi /home/pi/oprint/bin/pip install ndg-httpsclient pyasn1
 
   # OctoPrint & pyserial
   if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
   then
     echo "--- Installing OctoPrint"
 
-    #pyserial that can handle non-standard baud rates
-    sudo -u pi svn co http://pyserial.svn.sourceforge.net/svnroot/pyserial/trunk pyserial
-    pushd pyserial/pyserial
-      sudo -u pi /home/pi/oprint/bin/python setup.py install
-    popd
-    
     #pybonjour (for mdns discovery)
-    #sudo -u pi /home/pi/oprint/bin/pip install pybonjour
     sudo -u pi /home/pi/oprint/bin/pip install https://pybonjour.googlecode.com/files/pybonjour-1.1.1.tar.gz
 
     #OctoPrint
@@ -78,7 +93,7 @@ pushd /home/pi
   if [ "$OCTOPI_INCLUDE_MJPGSTREAMER" == "yes" ]
   then
     echo "--- Installing mjpg-streamer"
-    apt-get -y --force-yes install libjpeg8-dev imagemagick libav-tools libv4l-dev
+    apt-get -y --force-yes --no-install-recommends install libjpeg8-dev imagemagick libav-tools libv4l-dev
     gitclone OCTOPI_MJPGSTREAMER_REPO mjpg-streamer
     pushd mjpg-streamer
       mv mjpg-streamer-experimental/* .
@@ -108,31 +123,14 @@ pushd /home/pi
   if [ "$OCTOPI_INCLUDE_HAPROXY" == "yes" ]
   then
     echo "--- Installing haproxy"
-    export HAPROXY_VERSION=OCTOPI_HAPROXY_VERSION
-    sudo apt-get -y --force-yes install ssl-cert libssl-dev libpcre3-dev
+    apt-get -y --force-yes install ssl-cert haproxy
     rm /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/certs/ssl-cert-snakeoil.pem
-    sudo -u pi wget $OCTOPI_HAPROXY_ARCHIVE
-    sudo -u pi tar xzvf haproxy-$OCTOPI_HAPROXY_VERSION.tar.gz
-    rm haproxy-$OCTOPI_HAPROXY_VERSION.tar.gz
-    sudo -u pi mv `ls | grep haproxy | head -n 1` haproxy-ss
-    pushd haproxy-ss
-      sudo -u pi make TARGET=linux2628 USE_LINUX_SPLICE=1 USE_LINUX_TPROXY=1 USE_PCRE=1 USE_OPENSSL=1
-      mkdir -p /usr/local/share/man/man1 /usr/local/doc /usr/local/doc/haproxy
-      sudo checkinstall --default --pkgname haproxy --pkgversion 1.5
-    popd
-    rm -rf haproxy-ss
-
-    adduser --system --disabled-password --disabled-login --home /var/lib/haproxy \
-            --no-create-home --quiet --force-badname --group haproxy
   fi
 
   if [ "$OCTOPI_INCLUDE_WIRINGPI" == "yes" ]
   then
     echo "--- Installing WiringPi"
-    gitclone OCTOPI_WIRINGPI_REPO wiringPi
-    pushd wiringPi
-      sudo -u pi ./build
-    popd
+    apt-get install wiringpi
   fi
   
 popd
@@ -143,6 +141,7 @@ usermod -a -G dialout pi
 
 # store octopi commit used to build this image
 echo "$OCTOPI_COMMIT" > /etc/octopi_commit
+echo "$OCTOPI_BUILDBASE" > /etc/octopi_buildbase
 
 # allow pi user to run shutdown and service commands
 echo "pi ALL=NOPASSWD: /sbin/shutdown" > /etc/sudoers.d/octoprint-shutdown
@@ -198,14 +197,9 @@ fi
 if [ "$OCTOPI_INCLUDE_HAPROXY" == "yes" ]
 then
   update-rc.d gencert defaults
-  update-rc.d haproxy defaults 99
 else
   # let's remove the configs for system services we don't need
   rm /etc/init.d/gencert
-  rm /etc/init.d/haproxy
-  rm /etc/default/haproxy
-  rm /etc/logrotate.d/haproxy
-  rm /etc/rsyslog.d/49-haproxy.conf
 
   # also we need to make OctoPrint bind to all interfaces because otherwise
   # it will be unaccessible...
@@ -249,3 +243,10 @@ fi
 #cleanup
 apt-get clean
 apt-get autoremove -y
+
+rm -r /usr/sbin/policy-rc.d
+
+if [ -n "$OCTOPI_APT_PROXY" ]
+then
+  rm -r /etc/apt/apt.conf.d/02octopi_build_proxy
+fi

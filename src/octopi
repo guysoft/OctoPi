@@ -47,6 +47,11 @@ pushd $OCTOPI_WORKSPACE
 
   # mount root and boot partition
   mount_image $OCTOPI_IMG_PATH $OCTOPI_MOUNT_PATH
+  if [ -n "$OCTOPI_APT_CACHE" ]
+  then
+    mkdir -p "$OCTOPI_APT_CACHE"
+    mount --bind "$OCTOPI_APT_CACHE" $OCTOPI_MOUNT_PATH/var/cache/apt
+  fi
 
   #Edit pi filesystem
   pushd $OCTOPI_MOUNT_PATH
