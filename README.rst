@@ -11,6 +11,11 @@ This repository contains the source script to generate the distribution out of a
 Where to get it?
 ----------------
 
+Download the latest stable build via this button:
+
+.. image:: https://i.imgur.com/NvUOGfS.png
+   :target: https://octopi.octoprint.org/latest
+
 Official mirror is `here <http://docstech.net/OctoPiMirror/>`_
 
 Nightly builds are available `here <http://docstech.net/OctoPiMirror/nightly/>`_
