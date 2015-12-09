@@ -126,6 +126,10 @@ footer {
   padding-top: @footerPadding;
   padding-bottom: @footerPadding;
   height: @footerHeight;
+  @media (max-width: 767px) {
+    height: 2 * @footerHeight;
+  }
+
   margin-top: -1 * @footerMargin;
 
   h1, h2 {
