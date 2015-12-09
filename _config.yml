@@ -1,0 +1,20 @@
+# Site settings
+title: OctoPi
+short_title: OctoPi
+email: contact@octoprint.org
+description: Print anything from anywhere, using just a RaspberryPi
+external: "https://octopi.octoprint.org"
+baseurl: "/octopi" # the subpath of your site, e.g. /blog/
+url: "https://octopi.octoprint.org" # the base hostname & protocol for your site
+twitter_username: OctoPrint3D
+github_username:  guysoft
+
+exclude: [vendor]
+
+# Build settings
+markdown: kramdown
+
+collections:
+  plugins:
+    output: true
+    permalink: /plugins/:path/

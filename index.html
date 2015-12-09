@@ -1,0 +1,143 @@
+---
+layout: default
+title: OctoPi
+---
+
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="offset2 span5 text">
+                <div class="hero-content">
+                    <h1>OctoPi</h1>
+                    <p>Print anything from anywhere, using just a RaspberryPi.</p>
+                    <div class="shameless-self-promotion">
+                        Created &amp; maintained by Guy Sheffer and the community
+                    </div>
+                </div>
+            </div>
+            <div class="span3 logo">
+                <img src="{{ site.baseurl }}/assets/img/logo.png">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div class="content row-fluid">
+        <div class="offset2 span8">
+            <h1>What is OctoPi?</h1>
+
+            <p>
+                OctoPi is a Raspberry Pi distribution for 3d printers. It includes the OctoPrint host
+                software for 3d printers out of the box and mjpg-streamer with RaspiCam support
+                for live viewing of prints and timelapse video creation. OctoPi also includes
+                OctoPiPanel, which is an LCD display app that works with OctoPrint, and scripts
+                to configure supported displays.
+            </p>
+
+            <h1>Where can I get OctoPi?</h1>
+
+            <p>
+                You can download the latest stable build via this button:
+            </p>
+
+            <p>
+                <a class="btn btn-primary btn-large" href="https://octopi.octoprint.org/latest"><i class="icon-download-alt icon-large"></i>&nbsp;&nbsp;Download&nbsp;OctoPi&nbsp;0.12</a>
+            </p>
+
+            <p>
+                <small>MD5sum: <code>a6db7912bc4cf429865a05253cbe017b</code></small>
+            </p>
+
+            <p>
+                Additional mirrors can be found here:
+            </p>
+
+            <ul>
+                <li><a href="http://docstech.net/OctoPiMirror/">Mirror #1</a> (includes nighly builds)</li>
+                <li><a href="http://mirror.tsone.net.uk/octopi/">Mirror #2</a></li>
+            </ul>
+
+            <h1>How do I set it up?</h1>
+
+            <ol>
+                <li>
+                    Download the image via the button above.
+                </li>
+                <li>
+                    Unzip the zipped image and install the contained <code>.img</code> file to an sd card
+                    <a href="https://www.raspberrypi.org/documentation/installation/installing-images/README.md">like any other Raspberry Pi image</a>
+                </li>
+                <li>
+                    Configure your WiFi by editing <code>octopi-network.txt</code>
+                    on the root of the flashed card when using it like a thumb drive
+                </li>
+                <li>
+                    Boot the Pi from the card
+                </li>
+                <li>
+                    Log into your Pi via SSH (it is located at <code>octopi.local</code>
+                    <a href="https://learn.adafruit.com/bonjour-zeroconf-networking-for-windows-and-linux/overview">if your computer supports bonjour</a>
+                    or the IP address assigned by your router), default username
+                    is "pi", default password is "raspberry", change the
+                    password using the <code>passwd</code> command and expand
+                    the filesystem of the SD card through the corresponding
+                    option when running <code>sudo raspi-config</code>.
+                </li>
+            </ol>
+
+            <p>
+                OctoPrint is located at <a href="http://octopi.local">http://octopi.local</a>
+                and also at <a href="https://octopi.local">https://octopi.local</a>.
+                Since the SSL certificate is self signed (and generated upon first boot),
+                you will get a certificate warning at the latter location, please ignore it.
+            </p>
+
+            <p>
+                If a USB webcam or the Raspberry Pi camera is detected, MJPG-streamer
+                will be started automatically as webcam server. OctoPrint on
+                OctoPi ships with correctly configured stream and snapshot URLs
+                pointing at it. If necessary, you can reach it under
+                <code>http://octopi.local/webcam/?action=stream</code> and SSL
+                respectively, or directly on its configured port 8080:
+                <code>http://octopi.local:8080/?action=stream</code>.
+            </p>
+
+            <p>
+                CuraEngine 15.04 is installed and OctoPrint ships pre-configured with
+                the correct path to utilize it for on-board-slicing. Just import
+                a Cura Slicing Profile in OctoPrint's settings and start slicing
+                directly on your Pi.
+            </p>
+
+            <h1>Are there further resource to get going?</h1>
+
+            <p>
+                Yes!
+            </p>
+
+            <ul>
+                <li>
+                    <i class="icon-youtube-sign"></i> <a href="https://www.youtube.com/watch?v=EHzN_MwunmE">3D printing guides: Getting Started with OctoPrint on the Raspberry Pi!</a>
+                    by <a href="https://www.youtube.com/channel/UCb8Rde3uRL1ohROUVg46h1A">Thomas Sanladerer</a>. Please note that OctoPi starting with
+                    version 0.12.0 now offers a different and less cumbersome way to configure your WiFi connection than what is shown in that video, see the steps above
+                    regarding <code>octopi-network.txt</code> for information on how to do it with the current release.
+                </li>
+                <li>
+                    <i class="icon-file-text"></i> <a href="https://www.raspberrypi.org/magpi/issues/36/">The MagPi issue #36</a> contains a "Getting Started" guide on pages 50-51. You can find
+                    an excerpt <a href="/assets/download/MagPi36_OctoPrint.pdf">here</a> (MagPi License: <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/">CC BY-NC-SA</a>).
+                </li>
+            </ul>
+
+            <h1>I want to build my own version of OctoPi</h1>
+
+            <p>
+                No problem, OctoPi is Open Source licensed under GPLv3.
+                You can find the scripts used to build the image
+                <a href="https://github.com/guysoft/OctoPi">in the official Github repository</a>.
+            </p>
+        </div>
+    </div>
+</div>
+

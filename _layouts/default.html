@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html lang="en" xmlns="http://www.w3.org/1999/html"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>{{ page.title }}</title>
+    {% if page.description %}<meta name="description" content="{{ page.description }}">{% endif %}
+    <meta name="author" content="{{ site.author.name }}">
+
+    <!--[if lt IE 9]>
+    <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Enable responsive viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Le styles -->
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/site.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css">
+
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="{{ site.baseurl }}/assets/img/tentacle-32x32.png">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+</head>
+
+<body>
+
+{% include navigation.html %}
+
+<div id="wrap">
+    <div id="main">
+    {{ content }}
+    </div>
+</div>
+
+{% include footer.html %}
+
+<a href="https://github.com/guysoft/OctoPi"><img style="position: absolute; top: 42px; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+<script src="{{ site.baseurl }}/assets/js/site.js"></script>
+
+</body>
+</html>
