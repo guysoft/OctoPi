@@ -59,8 +59,16 @@ pushd $OCTOPI_WORKSPACE
     #make QEMU boot (remember to return)
     fixLd
     #sed -i 's@include /etc/ld.so.conf.d/\*.conf@\#include /etc/ld.so.conf.d/\*.conf@' etc/ld.so.conf
+
+    # if an additional pre-script is defined, execute that now
+    if [ -n "$OCTOPI_PRESCRIPT" ] && [ -f $OCTOPI_PRESCRIPT/chroot_script ]; then
+      echo "Injecting environment pre script from $OCTOPI_PRESCRIPT..."
+      execute_chroot_script $OCTOPI_PRESCRIPT $OCTOPI_PRESCRIPT/chroot_script
+    fi
+
     # if building a variant, execute its pre-chroot script
     if [ -n "$VARIANT_BASE" ] && [ -f $VARIANT_BASE/pre_chroot_script ]; then
+      echo "Injecting variant pre script from $VARIANT_BASE..."
       execute_chroot_script $VARIANT_BASE $VARIANT_BASE/pre_chroot_script
     fi
  
@@ -69,9 +77,16 @@ pushd $OCTOPI_WORKSPACE
     
     # if building a variant, execute its post-chroot script
     if [ -n "$VARIANT_BASE" ] && [ -f $VARIANT_BASE/post_chroot_script ]; then
+      echo "Injecting variant post script from $VARIANT_BASE..."
       execute_chroot_script $VARIANT_BASE $VARIANT_BASE/post_chroot_script
     fi
-    
+
+    # if an additional post-script is defined, execute that now
+    if [ -n "$OCTOPI_POSTSCRIPT" ] && [ -f $OCTOPI_POSTSCRIPT/chroot_script ]; then
+      echo "Injecting environment post script from $OCTOPI_POSTSCRIPT..."
+      execute_chroot_script $OCTOPI_POSTSCRIPT $OCTOPI_POSTSCRIPT/chroot_script
+    fi
+
     restoreLd
   popd
   
