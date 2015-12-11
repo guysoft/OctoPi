@@ -52,6 +52,9 @@ fi
 # a host:port combo for a apt-proxy (such as apt-cacher-ng) to use
 [ -n "$OCTOPI_APT_PROXY" ] || OCTOPI_APT_PROXY=
 
+# an alternative pypi index url to use, e.g. a proxy such as devpi
+[ -n "$OCTOPI_PYPI_INDEX" ] || OCTOPI_PYPI_INDEX=
+
 [ -n "$OCTOPI_OVERRIDE_HOSTNAME" ] || OCTOPI_OVERRIDE_HOSTNAME=octopi
 
 # a git mirror to use for git clones instead of original remotes
