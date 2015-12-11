@@ -14,6 +14,24 @@ then
   echo "Acquire::http { Proxy \"http://$OCTOPI_APT_PROXY\"; };" > /etc/apt/apt.conf.d/02octopi_build_proxy
 fi
 
+if [ -n "$OCTOPI_PYPI_INDEX" ]
+then
+  pip_index_config="[global]\nindex-url = $OCTOPI_PYPI_INDEX"
+  easyinstall_index_config="[easy_install]\nindex-url = $OCTOPI_PYPI_INDEX"
+
+  mkdir -p /root/.pip
+  echo -e "$pip_index_config" > /root/.pip/pip.conf
+  echo -e "$easyinstall_index_config" > /root/.pydistutils.cfg
+
+  mkdir -p /home/pi/.pip
+  sudo -u pi echo -e "$pip_index_config" > /home/pi/.pip/pip.conf
+  sudo -u pi echo -e "$easyinstall_index_config" > /home/pi/.pydistutils.cfg
+
+  echo "Configured pypi index url $OCTOPI_PYPI_INDEX"
+  cat /home/pi/.pip/pip.conf
+  cat /home/pi/.pydistutils.cfg
+fi
+
 # prevent any installed services from automatically starting (I'm looking at you haproxy)
 echo exit 101 > /usr/sbin/policy-rc.d
 chmod +x /usr/sbin/policy-rc.d
@@ -250,4 +268,12 @@ rm -r /usr/sbin/policy-rc.d
 if [ -n "$OCTOPI_APT_PROXY" ]
 then
   rm -r /etc/apt/apt.conf.d/02octopi_build_proxy
+fi
+
+if [ -n "$OCTOPI_PYPI_INDEX" ]
+then
+  rm -r /root/.pip
+  rm -r /root/.pydistutils.cfg
+  rm -r /home/pi/.pip/pip.conf
+  rm -r /home/pi/.pydistutils.cfg
 fi
