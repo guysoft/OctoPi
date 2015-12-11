@@ -4,7 +4,7 @@ CONFIG_DIR=$(dirname $(realpath -s $BASH_SOURCE))
 
 if [ -n "$VARIANT_CONFIG" ] && [ -f $VARIANT_CONFIG ]
 then
-  echo "Sourceing variant config $VARIANT_CONFIG..."
+  echo "Sourcing variant config $VARIANT_CONFIG..."
   source $VARIANT_CONFIG
 fi
 
@@ -26,6 +26,9 @@ fi
 
 ###############################################################################
 # All our config settings must start with OCTOPI_
+
+[ -n "$OCTOPI_PRESCRIPT" ] || OCTOPI_PRESCRIPT=
+[ -n "$OCTOPI_POSTSCRIPT" ] || OCTOPI_POSTSCRIPT=
 
 [ -n "$OCTOPI_SCRIPT_PATH" ] || OCTOPI_SCRIPT_PATH=$CONFIG_DIR
 [ -n "$OCTOPI_IMAGE_PATH" ] || OCTOPI_IMAGE_PATH=$OCTOPI_SCRIPT_PATH/image
