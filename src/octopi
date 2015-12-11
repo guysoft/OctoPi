@@ -30,7 +30,7 @@ mkdir -p $OCTOPI_MOUNT_PATH
 
 install_cleanup_trap
 install_fail_on_error_trap $OCTOPI_MOUNT_PATH
-unmount_image $OCTOPI_MOUNT_PATH || true
+unmount_image $OCTOPI_MOUNT_PATH force || true
 
 pushd $OCTOPI_WORKSPACE
   if [ -e *.img ]; then  

@@ -131,6 +131,20 @@ function mount_image() {
 
 function unmount_image() {
   mount_path=$1
+  force=
+  if [ "$#" -gt 1 ]
+  then
+    force=$2
+  fi
+
+  if [ -n "$force" ]
+  then
+    for process in $(sudo lsof $mount_path | awk '{print $2}')
+    do
+      echo "Killing process id $process..."
+      sudo kill -9 $process
+    done
+  fi
 
   # unmount first boot, then root partition
   for m in $(sudo mount | grep $mount_path | awk '{print $3}' | sort -r)
@@ -150,7 +164,7 @@ function cleanup() {
 function install_fail_on_error_trap() {
   set -e
   trap 'previous_command=$this_command; this_command=$BASH_COMMAND' DEBUG
-  trap 'if [ $? -ne 0 ]; then echo -e "\nexit $? due to $previous_command \nBUILD FAILED!" && echo "unmounting image..." && ( unmount_image $OCTOPI_MOUNT_PATH || true ); fi;' EXIT
+  trap 'if [ $? -ne 0 ]; then echo -e "\nexit $? due to $previous_command \nBUILD FAILED!" && echo "unmounting image..." && ( unmount_image $OCTOPI_MOUNT_PATH force || true ); fi;' EXIT
 }
 
 function install_chroot_fail_on_error_trap() {
