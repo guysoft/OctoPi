@@ -47,6 +47,10 @@ apt-get autoremove -y
 
 apt-get -y --force-yes install python2.7 python-virtualenv python-dev git screen libts-bin subversion cmake checkinstall avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev
 
+echo " - Reinstall iputils-ping"
+apt-get install --reinstall iputils-ping
+
+
 pushd /home/pi
 
   #build virtualenv
@@ -188,6 +192,10 @@ echo "  script /root/bin/map_iface" >> /etc/network/interfaces
 echo "mapping wlan1" >> /etc/network/interfaces
 echo "  script /root/bin/map_iface" >> /etc/network/interfaces
 echo "source /boot/octopi-network.txt" >> /etc/network/interfaces
+
+# copy /etc/wpa_supplicant/ifupdown.sh to /etc/ifplugd/action.d/ifupdown - for wlan auto reconnect
+[ -f /etc/ifplugd/action.d/ifupdown ] && mv /etc/ifplugd/action.d/ifupdown /etc/ifplugd/action.d/ifupdown.original
+[ -f /etc/wpa_supplicant/ifupdown.sh ] && ln -s /etc/wpa_supplicant/ifupdown.sh /etc/ifplugd/action.d/ifupdown
 
 #unpack root in the end, so etc file are not overwritten, might need to add two roots int he future
 unpack /filesystem/root /
