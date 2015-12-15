@@ -188,40 +188,34 @@ FDISK
   echo "Resized parition $partition of $image to +$size MB"
 }
 
-function minimize_ext() {
+function shrink_ext() {
+  # call like this: shrink_ext /path/to/image partition size
+  #
+  # will shrink partition number <partition> on /path/to/image to <size> MB
   image=$1
   partition=$2
-  buffer=$3
-
-  echo "Resizing partition $partition on $image to minimal size + $buffer MB"
+  size=$3
+  
+  echo "Resizing file system to $size MB..."
   start=$(sfdisk -d $image | grep "$image$partition" | awk '{print $4-0}')
   offset=$(($start*512))
-
+  
   LODEV=$(losetup -f --show -o $offset $image)
   trap 'losetup -d $LODEV' EXIT
 
   e2fsck -fy $LODEV
-  e2fblocksize=$(tune2fs -l $LODEV | grep -i "block size" | awk -F: '{print $2-0}')
-  e2fminsize=$(resize2fs -P $LODEV 2>/dev/null | grep -i "minimum size" | awk -F: '{print $2-0}')
-
-  e2fminsize_bytes=$(($e2fminsize * $e2fblocksize))
-  e2ftarget_bytes=$(($buffer * 1024 * 1024 + $e2fminsize_bytes))
-
-  e2fminsize_mb=$(($e2fminsize_bytes / 1024 / 1024))
-  e2fminsize_blocks=$(($e2fminsize_bytes / 512 + 1))
-  e2ftarget_mb=$(($e2ftarget_bytes / 1024 / 1024))
+  
+  e2ftarget_bytes=$(($size * 1024 * 1024))
   e2ftarget_blocks=$(($e2ftarget_bytes / 512 + 1))
 
-  echo "Minimum size is $e2fminsize_mb MB ($e2fminsize file system blocks, $e2fminsize_blocks blocks), resizing to $e2ftarget_mb MB ($e2ftarget_blocks blocks)"
-
-  echo "Resizing file system to $e2target_blocks blocks..."
+  echo "Resizing file system to $e2ftarget_blocks blocks..."
   resize2fs $LODEV ${e2ftarget_blocks}s
   losetup -d $LODEV
   trap - EXIT
 
   new_end=$(($start + $e2ftarget_blocks))
 
-  echo "Resizing partition to end at $start + $e2ftarget_blocsk = $new_end blocks..."
+  echo "Resizing partition to end at $start + $e2ftarget_blocks = $new_end blocks..."
   fdisk $image <<FDISK
 p
 d
@@ -248,4 +242,49 @@ FDISK
   resize2fs -p $LODEV
   losetup -d $LODEV
   trap - EXIT
+}
+
+function minimize_ext() {
+  image=$1
+  partition=$2
+  buffer=$3
+
+  echo "Resizing partition $partition on $image to minimal size + $buffer MB"
+  partitioninfo=$(sfdisk -d $image | grep "$image$partition")
+  
+  start=$(echo $partitioninfo | awk '{print $4-0}')
+  e2fsize_blocks=$(echo $partitioninfo | awk '{print $6-0}')
+  offset=$(($start*512))
+
+  LODEV=$(losetup -f --show -o $offset $image)
+  trap 'losetup -d $LODEV' EXIT
+
+  e2fsck -fy $LODEV
+  e2fblocksize=$(tune2fs -l $LODEV | grep -i "block size" | awk -F: '{print $2-0}')
+  e2fminsize=$(resize2fs -P $LODEV 2>/dev/null | grep -i "minimum size" | awk -F: '{print $2-0}')
+
+  e2fminsize_bytes=$(($e2fminsize * $e2fblocksize))
+  e2ftarget_bytes=$(($buffer * 1024 * 1024 + $e2fminsize_bytes))
+  e2fsize_bytes=$((($e2fsize_blocks - 1) * 512))
+
+  e2fminsize_mb=$(($e2fminsize_bytes / 1024 / 1024))
+  e2fminsize_blocks=$(($e2fminsize_bytes / 512 + 1))
+  e2ftarget_mb=$(($e2ftarget_bytes / 1024 / 1024))
+  e2ftarget_blocks=$(($e2ftarget_bytes / 512 + 1))
+  e2fsize_mb=$(($e2fsize_bytes / 1024 / 1024))
+  
+  size_offset_mb=$(($e2fsize_mb - $e2ftarget_mb))
+  
+  losetup -d $LODEV
+
+  echo "Actual size is $e2fsize_mb MB ($e2fsize_blocks blocks), Minimum size is $e2fminsize_mb MB ($e2fminsize file system blocks, $e2fminsize_blocks blocks)"
+  echo "Resizing to $e2ftarget_mb MB ($e2ftarget_blocks blocks)" 
+  
+  if [ $size_offset_mb -gt 0 ]; then
+	echo "Partition size is bigger then the desired size, shrinking"
+	shrink_ext $image 2 $(($e2ftarget_mb - 1)) # -1 to compensat rounding mistakes
+  elif [ $size_offset_mb -lt 0 ]; then
+    echo "Partition size is lower then the desired size, enlarging"
+	enlarge_ext $image 2 $((-$size_offset_mb + 1)) # +1 to compensat rounding mistakes
+  fi
 }
