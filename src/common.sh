@@ -77,12 +77,12 @@ function gitclone(){
     clone_params="$clone_params --depth $depth"
   fi
 
-  sudo -u pi git clone $clone_params "$build_repo" "$repo_dir"
+  git clone $clone_params "$build_repo" "$repo_dir"
 
   if [ "$build_repo" != "$ship_repo" ]
   then
     pushd "$repo_dir"
-      sudo -u pi git remote set-url origin "$ship_repo"
+      git remote set-url origin "$ship_repo"
     popd
   fi
 }
