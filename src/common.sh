@@ -298,3 +298,19 @@ function minimize_ext() {
 	enlarge_ext $image 2 $((-$size_offset_mb + 1)) # +1 to compensat rounding mistakes
   fi
 }
+
+function is_installed(){
+  # checks if a package is installed, returns 1 if installed and 0 if not.
+  # usage: is_installed <package_name>
+  dpkg-query -W -f='${Status}' $1 2>/dev/null | grep -c "ok installed"
+}
+
+function is_in_apt(){
+  #checks if a package is in the apt repo, returns 1 if exists and 0 if not
+  #usage is_in_apt <package_name>
+  if [ $(apt-cache policy $1 |  wc  | awk '{print $1}') -gt 0 ]; then
+    echo 1
+  else
+    echo 0
+  fi
+}

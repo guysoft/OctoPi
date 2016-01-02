@@ -41,7 +41,12 @@ unpack /filesystem/boot /boot
 apt-get update
 
 # in case we are building from a regular raspbian image instead of the lite one...
-apt-get remove -y --purge scratch squeak-plugins-scratch squeak-vm wolfram-engine python-minecraftpi minecraft-pi sonic-pi oracle-java8-jdk bluej greenfoot libreoffice-common libreoffice-core freepats nodered
+remove_extra=""
+if [ $( is_installed greenfoot ) -eq 1 ];
+then
+  remove_extra="$remove_extra greenfoot nodered"
+fi
+apt-get remove -y --purge scratch squeak-plugins-scratch squeak-vm wolfram-engine python-minecraftpi minecraft-pi sonic-pi oracle-java8-jdk bluej libreoffice-common libreoffice-core freepats $remove_extra
 apt-get autoremove -y
 
 apt-get -y --force-yes install python2.7 python-virtualenv python-dev git screen libts-bin subversion cmake checkinstall avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev
@@ -62,14 +67,20 @@ pushd /home/pi
   # since that stuff takes ages to compile during build, we do a somewhat dirty
   # trick here by installing the raspbian versions, copying the libs over
   # to our virtualenv and then purging the raspbian versions again
-  apt-get -y --force-yes install python-openssl python-cryptography
-  from=/usr/lib/python2.7/dist-packages
-  to=/home/pi/oprint/lib/python2.7/site-packages
-  for pattern in "cffi*" "cryptography*" "OpenSSL*" "ply*" "pycparser*" "pyOpenSSL*" "six*"
-  do
-    cp -v -r --preserve=mode,timestamps $from/$pattern $to/
-  done
-  apt-get remove -y --purge python-openssl python-cryptography
+  apt-get -y --force-yes install python-openssl
+  if [ $( is_in_apt python-cryptography ) -eq 1 ]; then
+    apt-get -y --force-yes install python-cryptography
+    from=/usr/lib/python2.7/dist-packages
+    to=/home/pi/oprint/lib/python2.7/site-packages
+    for pattern in "cffi*" "cryptography*" "OpenSSL*" "ply*" "pycparser*" "pyOpenSSL*" "six*"
+    do
+      cp -v -r --preserve=mode,timestamps $from/$pattern $to/
+    done
+    apt-get remove -y --purge python-openssl python-cryptography
+  else
+    sudo -u pi /home/pi/oprint/bin/pip install cryptography
+    apt-get remove -y --purge python-openssl
+  fi
   apt-get autoremove -y
   chown -R pi.pi /home/pi/oprint
   sudo -u pi /home/pi/oprint/bin/pip install ndg-httpsclient pyasn1
