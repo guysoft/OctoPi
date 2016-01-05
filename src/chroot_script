@@ -214,7 +214,7 @@ unpack /filesystem/root /
 ### setup services
 
 ### Disable GUI at start
-systemctl disable lightdm.service
+systemctl_if_exists disable lightdm.service
 
 update-rc.d prepare_resize defaults
 

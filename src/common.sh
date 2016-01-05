@@ -302,3 +302,11 @@ function is_in_apt(){
     echo 0
   fi
 }
+
+systemctl_if_exists() {
+    if hash systemctl 2>/dev/null; then
+        systemctl "$@"
+    else
+        echo "no systemctl, not running"
+    fi
+}
