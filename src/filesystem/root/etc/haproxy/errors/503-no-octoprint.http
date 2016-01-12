@@ -5,7 +5,7 @@ Content-Type: text/html
 
 <html>
     <head>
-        <title>OctoPrint is still starting</title>
+        <title>OctoPrint is currently not running</title>
         <style>
             body {
                 margin: 0;
