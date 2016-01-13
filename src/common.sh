@@ -174,7 +174,7 @@ function enlarge_ext() {
   start=$(sfdisk -d $image | grep "$image$partition" | awk '{print $4-0}')
   offset=$(($start*512))
   dd if=/dev/zero bs=1M count=$size >> $image
-  echo ",+," | sfdisk -N2 $image
+  echo ",+," | sfdisk -N$partition $image
   LODEV=$(losetup -f --show -o $offset $image)
   trap 'losetup -d $LODEV' EXIT
 
@@ -214,7 +214,7 @@ function shrink_ext() {
   new_end=$(($start + $e2ftarget_blocks))
 
   echo "Resizing partition to end at $start + $e2ftarget_blocks = $new_end blocks..."
-  echo "$start,$new_end" | sfdisk -N2 $image
+  echo "$start,$new_end" | sfdisk -N$partition $image
   
   new_size=$((($new_end + 1) * 512))
   echo "Truncating image to $new_size bytes..."
