@@ -1,0 +1,62 @@
+#!/bin/bash
+#!/bin/bash -x
+
+# based on steps found at
+#   https://github.com/BillyBlaze/OctoPrint-TouchUI/wiki/Setup:-Boot-to-Browser
+
+#   TODO
+# -----------------------------------
+#  - Add proper detection of TouchUI plugin
+#  - Add tweaks found in
+#       https://github.com/BillyBlaze/OctoPrint-TouchUI/wiki/Tweaks:-Iceweasel
+#
+
+echo ""
+echo "Setting up boot-to-browser, do not turn off your Pi during this process!"
+echo ""
+echo "Note: Assumes Pi is configured to boot to command line"
+echo "Note: Assumes Touch UI plugin is already installed"
+echo ""
+
+# this is a kludge that needs to be fixed to properly check if plugin is currently installed
+if grep -q 'Successfully installed TouchUI' ~/.octoprint/logs/plugin_pluginmanager_console.log; then
+    echo Saw TouchUI was installed 
+else
+    echo ERROR: TouchUI Plugin not found.  Exiting.
+    exit 1
+fi
+
+# bring system up to date
+sudo apt-get update
+sudo apt-get -y upgrade
+
+
+# Install X.org, iceweasel and stuff:
+sudo apt-get install -y matchbox xinit x11-xserver-utils unclutter iceweasel
+
+
+# Get the TouchUI boot files:
+wget -P /home/pi/ https://github.com/BillyBlaze/OctoPrint-TouchUI/archive/autostart.zip
+# this will create a OctoPrint-TouchUI-autostart directory
+unzip -d /home/pi/ /home/pi/autostart.zip
+
+
+# Copy service file and register it as auto boot:
+sudo cp /home/pi/OctoPrint-TouchUI-autostart/touchui.init /etc/init.d/touchui
+sudo chmod +x /etc/init.d/touchui
+sudo update-rc.d touchui defaults
+
+
+# this is like `sudo dpkg-reconfigure x11-common` to allow Anybody to run xinit.
+sudo sed -i \
+    's/allowed_users=console/allowed_users=anybody/' /etc/X11/Xwrapper.config
+
+
+# can safely remove the downloaded autostart.zip
+rm /home/pi/autostart.zip
+
+
+echo ""
+echo "Reboot your Pi to have it boot to Touch UI."
+echo "    sudo reboot"
+echo ""
