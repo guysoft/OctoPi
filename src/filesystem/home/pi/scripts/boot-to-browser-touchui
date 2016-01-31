@@ -4,27 +4,33 @@
 # based on steps found at
 #   https://github.com/BillyBlaze/OctoPrint-TouchUI/wiki/Setup:-Boot-to-Browser
 
-#   TODO
+#   TODO?
 # -----------------------------------
-#  - Add proper detection of TouchUI plugin
 #  - Add tweaks found in
 #       https://github.com/BillyBlaze/OctoPrint-TouchUI/wiki/Tweaks:-Iceweasel
 #
 
 echo ""
 echo "Setting up boot-to-browser, do not turn off your Pi during this process!"
-echo ""
-echo "Note: Assumes Pi is configured to boot to command line"
-echo "Note: Assumes Touch UI plugin is already installed"
+echo "NOTE: Assumes Pi is configured to boot to command line"
 echo ""
 
-# this is a kludge that needs to be fixed to properly check if plugin is currently installed
-if grep -q 'Successfully installed TouchUI' ~/.octoprint/logs/plugin_pluginmanager_console.log; then
-    echo Saw TouchUI was installed 
+# determine directory script is running in
+#    via http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Run python script to determine whether plugin is installed
+plugin_status_py="$DIR/plugin_status.py"
+"$plugin_status_py" touchui
+exit_code=$?
+if [ $exit_code -eq 0 ]
+then
+    echo "Saw TouchUI plugin was enabled"
 else
-    echo ERROR: TouchUI Plugin not found.  Exiting.
+    echo "ERROR: TouchUI Plugin not found enabled. (Code: $exit_code)" >&2
     exit 1
 fi
+
 
 # bring system up to date
 sudo apt-get update
