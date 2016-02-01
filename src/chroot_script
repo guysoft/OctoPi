@@ -217,6 +217,8 @@ unpack /filesystem/root /
 systemctl_if_exists disable lightdm.service
 
 update-rc.d prepare_resize defaults
+update-rc.d change_password defaults
+update-rc.d change_hostname defaults
 
 ### OctoPrint
 

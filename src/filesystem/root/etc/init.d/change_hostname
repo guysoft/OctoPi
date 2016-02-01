@@ -1,0 +1,61 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          change_hostname
+# Required-Start:    $local_fs
+# Required-Stop:
+# Default-Start:     3
+# Default-Stop:
+# Short-Description: Change pi's hostname via /boot/octopi-hostname
+# Description:
+### END INIT INFO
+
+. /lib/lsb/init-functions
+
+do_start () {
+  text_file="/boot/octopi-hostname.txt"
+  if [ ! -f "$text_file" ]
+  then
+    exit 0
+  fi
+
+  old_hostname=`hostname`
+  new_hostname=`head -n1 "$text_file" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' | tr -d '\n'`
+
+  if [ ! -n "$new_hostname" ]
+  then
+    log_failure_msg "No new host name provided, refusing to change to empty host name"
+    exit 1
+  fi
+
+  # make sure we do have a valid hostname here (see RFC 952 and 1123, a-zA-Z0-9 only)
+  sanitized_hostname=`echo "$new_hostname" | tr -cd '[[:alnum:]]-'` 
+  if [ "$new_hostname" = "$sanitized_hostname" ]
+  then
+    rm "$text_file"
+    echo "$new_hostname" > /etc/hostname
+    sed -i -e "s@$old_hostname@$new_hostname@g" /etc/hosts
+
+    log_success_msg "Change of host name prepared, rebooting to apply..."
+    /sbin/reboot
+  else
+    log_failure_msg "Hostname $new_hostname contains invalid characters (only a-zA-Z0-9 are allowed), refusing to change"
+  fi
+}
+
+echo "First parameter is $1" >> /var/log/prepare_resize
+case "$1" in
+  start|"")
+        do_start
+        ;;
+  restart|reload|force-reload)
+        echo "Error: argument '$1' not supported" >&2
+        exit 3
+        ;;
+  stop)
+        # No-op
+        ;;
+  *)
+        echo "Usage: prepare_resize [start|stop]" >&2
+        exit 3
+        ;;
+esac
