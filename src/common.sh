@@ -207,7 +207,19 @@ function enlarge_ext() {
   start=$(sfdisk -d $image | grep "$image$partition" | awk '{print $4-0}')
   offset=$(($start*512))
   dd if=/dev/zero bs=1M count=$size >> $image
-  echo ",+," | sfdisk -N$partition $image
+  fdisk $image <<FDISK
+p
+d
+$partition
+n
+p
+$partition
+$start
+
+p
+w
+FDISK
+
   LODEV=$(losetup -f --show -o $offset $image)
   trap 'losetup -d $LODEV' EXIT
 
