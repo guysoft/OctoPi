@@ -5,7 +5,7 @@
 # Required-Stop:
 # Default-Start:     3
 # Default-Stop:
-# Short-Description: Change pi's hostname via /boot/octopi-hostname
+# Short-Description: Change pi's hostname via /boot/octopi-hostname.txt
 # Description:
 ### END INIT INFO
 
@@ -42,7 +42,6 @@ do_start () {
   fi
 }
 
-echo "First parameter is $1" >> /var/log/prepare_resize
 case "$1" in
   start|"")
         do_start
@@ -55,7 +54,7 @@ case "$1" in
         # No-op
         ;;
   *)
-        echo "Usage: prepare_resize [start|stop]" >&2
+        echo "Usage: change_hostname [start|stop]" >&2
         exit 3
         ;;
 esac
