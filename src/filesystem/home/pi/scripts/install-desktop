@@ -1,0 +1,95 @@
+#!/bin/bash
+
+if [ "$(id -u)" != "0" ]
+then
+  echo "Please run this with sudo or as user root" 2>&1
+  echo "Since we need to install a couple of packages, sudo" 2>&1
+  echo "actually IS needed here. Thanks :)" 2>&1
+  exit 1
+fi
+
+pause() {
+  read -n1 -r -p $'Press any key to continue or Ctrl+C to exit...\n' key
+}
+
+echo
+echo "This will install the desktop environment on your Pi"
+echo "Please keep in mind that the desktop environment needs"
+echo "system resources that then might not be available for"
+echo "printing, possible leading to print artifacts."
+echo "It is not recommended to run the desktop environment"
+echo "alongside OctoPrint if you do not have a Pi2 with"
+echo "multiple cores. Even then, use at your own risk."
+echo
+echo "If you do not want to install the desktop environment"
+echo "after all, please hit Ctrl+C now."
+echo
+
+pause
+
+echo
+echo "The desktop environment can be set up to start"
+echo "automatically when the Pi boots."
+echo "If you want to have it set up this way, please"
+echo "type 'yes' now. Type 'no' if not."
+echo -n "Finish with ENTER: "
+
+read x_on_boot
+[ "$x_on_boot" == "yes" ] || x_on_boot="no"
+
+echo
+echo "Going to install the desktop environment (automatic start on boot: $x_on_boot)"
+echo
+echo "This will take a while, do NOT switch off the Pi or close this console until done!"
+echo
+
+echo
+echo "--- Updating our package list"
+echo
+
+apt-get update
+
+echo
+echo "--- Installing desktop packages"
+echo
+
+apt-get install --yes raspberrypi-ui-mods lightdm xinit lxterminal
+
+if [ "$x_on_boot" == "yes" ]
+then
+  echo
+  echo "--- Setting up Pi to boot to desktop"
+  echo
+  systemctl set-default graphical.target
+else
+  echo
+  echo "--- Setting up Pi to not boot to desktop"
+  echo
+  systemctl set-default multi-user.target
+fi
+
+echo
+echo "--- Removing uninstalled applications from desktop"
+echo
+
+# we make sure that non of the non-installed packages show up in either
+# the default lxde panel or menu
+basefolder="/usr/share/raspi-ui-overrides/applications/"
+lxde_panel_file="/etc/xdg/lxpanel/profile/LXDE-pi/panels/panel"
+files="libreoffice-draw libreoffice-math libreoffice-startcenter bluej greenfoot wolfram-mathematica wolfram-language"
+
+for entry in $files
+do
+        desktop_file="$basefolder$entry.desktop"
+
+        # hide .desktop file from menu
+        grep "Hidden: true" $desktop_file || echo "Hidden: true" >> $desktop_file
+
+        # remove any links to it from panel
+        perl -i -p0e 's!\s*Button {\n\s*id='"$desktop_file"'\n\s*}!!igs' "$lxde_panel_file"
+done
+
+
+echo
+echo "--- Done!"
+echo
