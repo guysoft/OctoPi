@@ -259,8 +259,19 @@ function shrink_ext() {
   new_end=$(($start + $e2ftarget_blocks))
 
   echo "Resizing partition to end at $start + $e2ftarget_blocks = $new_end blocks..."
-  echo "$start,$new_end" | sfdisk -N$partition $image
-  
+  fdisk $image <<FDISK
+p
+d
+$partition
+n
+p
+$partition
+$start
+$new_end
+p
+w
+FDISK
+
   new_size=$((($new_end + 1) * 512))
   echo "Truncating image to $new_size bytes..."
   truncate --size=$new_size $image
