@@ -11,6 +11,11 @@ This repository contains the source script to generate the distribution out of a
 Where to get it?
 ----------------
 
+Download the latest stable build via this button:
+
+.. image:: https://i.imgur.com/NvUOGfS.png
+   :target: https://octopi.octoprint.org/latest
+
 Official mirror is `here <http://docstech.net/OctoPiMirror/>`_
 
 Nightly builds are available `here <http://docstech.net/OctoPiMirror/nightly/>`_
@@ -59,7 +64,7 @@ OctoPi can be built from Debian, Ubuntu, Raspbian, or even OctoPi.
 Build requires about 2.5 GB of free space available.
 You can build it by issuing the following commands::
 
-    sudo apt-get install realpath qemu-user-static
+    sudo apt-get install gawk util-linux realpath qemu-user-static
     
     git clone https://github.com/guysoft/OctoPi.git
     cd OctoPi/src/image

@@ -30,7 +30,7 @@ mkdir -p $OCTOPI_MOUNT_PATH
 
 install_cleanup_trap
 install_fail_on_error_trap $OCTOPI_MOUNT_PATH
-unmount_image $OCTOPI_MOUNT_PATH || true
+unmount_image $OCTOPI_MOUNT_PATH force || true
 
 pushd $OCTOPI_WORKSPACE
   if [ -e *.img ]; then  
@@ -38,9 +38,21 @@ pushd $OCTOPI_WORKSPACE
   fi
   unzip $OCTOPI_ZIP_IMG
   OCTOPI_IMG_PATH=`ls | grep .img`
+  export OCTOPI_BUILDBASE=$(basename $OCTOPI_IMG_PATH)
+
+  if [ -n "$OCTOPI_IMAGE_ENLARGEROOT" ]
+  then
+    # make our image a bit larger so we don't run into size problems...
+    enlarge_ext $OCTOPI_IMG_PATH 2 $OCTOPI_IMAGE_ENLARGEROOT
+  fi
 
   # mount root and boot partition
   mount_image $OCTOPI_IMG_PATH $OCTOPI_MOUNT_PATH
+  if [ -n "$OCTOPI_APT_CACHE" ]
+  then
+    mkdir -p "$OCTOPI_APT_CACHE"
+    mount --bind "$OCTOPI_APT_CACHE" $OCTOPI_MOUNT_PATH/var/cache/apt
+  fi
 
   #Edit pi filesystem
   pushd $OCTOPI_MOUNT_PATH
@@ -75,12 +87,18 @@ pushd $OCTOPI_WORKSPACE
       echo "Injecting environment post script from $OCTOPI_POSTSCRIPT..."
       execute_chroot_script $OCTOPI_POSTSCRIPT $OCTOPI_POSTSCRIPT/chroot_script
     fi
-    
+
     restoreLd
   popd
   
   # unmount first boot, then root partition
   unmount_image $OCTOPI_MOUNT_PATH
   chmod 777 $OCTOPI_IMG_PATH
+
+  if [ -n "$OCTOPI_IMAGE_RESIZEROOT" ]
+  then
+    # resize image to minimal size + provided size
+    minimize_ext $OCTOPI_IMG_PATH 2 $OCTOPI_IMAGE_RESIZEROOT
+  fi
 popd
 
