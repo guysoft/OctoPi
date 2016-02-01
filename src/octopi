@@ -33,7 +33,6 @@ install_fail_on_error_trap $OCTOPI_MOUNT_PATH
 unmount_image $OCTOPI_MOUNT_PATH force || true
 
 pushd $OCTOPI_WORKSPACE
-  
   if [ -e *.img ]; then  
     rm *.img
   fi
@@ -57,14 +56,6 @@ pushd $OCTOPI_WORKSPACE
 
   #Edit pi filesystem
   pushd $OCTOPI_MOUNT_PATH
-    #Put git clones in place
-    
-    pushd home/pi 
-        gitclone OCTOPI_OCTOPRINT_REPO OctoPrint
-        gitclone OCTOPI_OCTOPIPANEL_REPO OctoPiPanel
-        gitclone OCTOPI_FBCP_REPO rpi-fbcp
-        gitclone OCTOPI_MJPGSTREAMER_REPO mjpg-streamer
-    popd
 
     #make QEMU boot (remember to return)
     fixLd

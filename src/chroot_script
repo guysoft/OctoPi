@@ -83,7 +83,7 @@ pushd /home/pi
     apt-get remove -y --purge python-openssl
   fi
   apt-get autoremove -y
-  chown -R pi:pi /home/pi/oprint
+  chown -R pi.pi /home/pi/oprint
   sudo -u pi /home/pi/oprint/bin/pip install ndg-httpsclient pyasn1
 
   # OctoPrint & pyserial
@@ -95,7 +95,7 @@ pushd /home/pi
     sudo -u pi /home/pi/oprint/bin/pip install https://pybonjour.googlecode.com/files/pybonjour-1.1.1.tar.gz
 
     #OctoPrint
-    chown -R pi:pi OctoPrint
+    gitclone OCTOPI_OCTOPRINT_REPO OctoPrint
     pushd OctoPrint
       PIP_DEFAULT_TIMEOUT=60 sudo -u pi /home/pi/oprint/bin/python setup.py install
     popd
@@ -105,13 +105,13 @@ pushd /home/pi
   if [ "$OCTOPI_INCLUDE_OCTOPIPANEL" == "yes" ]
   then
     echo "--- Installing OctoPiPanel"
-    chown -R pi:pi OctoPiPanel
+    gitclone OCTOPI_OCTOPIPANEL_REPO OctoPiPanel
     pushd OctoPiPanel
       sudo -u pi /home/pi/oprint/bin/pip install -r requirements.txt
     popd
 
     #Add fbcp for TFT screens
-    chown -R pi:pi rpi-fbcp
+    gitclone OCTOPI_FBCP_REPO rpi-fbcp
     pushd rpi-fbcp
       sudo -u pi mkdir build
       pushd build
@@ -128,7 +128,7 @@ pushd /home/pi
   then
     echo "--- Installing mjpg-streamer"
     apt-get -y --force-yes --no-install-recommends install libjpeg8-dev imagemagick libav-tools libv4l-dev
-    chown -R pi:pi mjpg-streamer
+    gitclone OCTOPI_MJPGSTREAMER_REPO mjpg-streamer
     pushd mjpg-streamer
       mv mjpg-streamer-experimental/* .
       sudo -u pi make
