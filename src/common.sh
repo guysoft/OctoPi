@@ -77,12 +77,12 @@ function gitclone(){
     clone_params="$clone_params --depth $depth"
   fi
 
-  sudo -u pi git clone $clone_params "$build_repo" "$repo_dir"
+  git clone $clone_params "$build_repo" "$repo_dir"
 
   if [ "$build_repo" != "$ship_repo" ]
   then
     pushd "$repo_dir"
-      sudo -u pi git remote set-url origin "$ship_repo"
+      git remote set-url origin "$ship_repo"
     popd
   fi
 }
@@ -207,19 +207,7 @@ function enlarge_ext() {
   start=$(sfdisk -d $image | grep "$image$partition" | awk '{print $4-0}')
   offset=$(($start*512))
   dd if=/dev/zero bs=1M count=$size >> $image
-  fdisk $image <<FDISK
-p
-d
-$partition
-n
-p
-$partition
-$start
-
-p
-w
-FDISK
-
+  echo ",+," | sfdisk -N$partition $image
   LODEV=$(losetup -f --show -o $offset $image)
   trap 'losetup -d $LODEV' EXIT
 
@@ -259,19 +247,8 @@ function shrink_ext() {
   new_end=$(($start + $e2ftarget_blocks))
 
   echo "Resizing partition to end at $start + $e2ftarget_blocks = $new_end blocks..."
-  fdisk $image <<FDISK
-p
-d
-$partition
-n
-p
-$partition
-$start
-$new_end
-p
-w
-FDISK
-
+  echo "$start,$new_end" | sfdisk -N$partition $image
+  
   new_size=$((($new_end + 1) * 512))
   echo "Truncating image to $new_size bytes..."
   truncate --size=$new_size $image
@@ -330,4 +307,28 @@ function minimize_ext() {
     echo "Partition size is lower then the desired size, enlarging"
 	enlarge_ext $image 2 $((-$size_offset_mb + 1)) # +1 to compensat rounding mistakes
   fi
+}
+
+function is_installed(){
+  # checks if a package is installed, returns 1 if installed and 0 if not.
+  # usage: is_installed <package_name>
+  dpkg-query -W -f='${Status}' $1 2>/dev/null | grep -c "ok installed"
+}
+
+function is_in_apt(){
+  #checks if a package is in the apt repo, returns 1 if exists and 0 if not
+  #usage is_in_apt <package_name>
+  if [ $(apt-cache policy $1 |  wc  | awk '{print $1}') -gt 0 ]; then
+    echo 1
+  else
+    echo 0
+  fi
+}
+
+systemctl_if_exists() {
+    if hash systemctl 2>/dev/null; then
+        systemctl "$@"
+    else
+        echo "no systemctl, not running"
+    fi
 }

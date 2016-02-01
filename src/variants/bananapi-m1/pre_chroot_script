@@ -8,4 +8,5 @@ install_chroot_fail_on_error_trap
 unpack /filesystem/root /
 
 #cleanup
+mkdir -p /var/cache/apt/archives
 apt-get clean

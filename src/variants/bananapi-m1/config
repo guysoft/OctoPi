@@ -1,1 +1,2 @@
-OCTOPI_ZIP_IMG=`ls -t $IMAGE_PATH/*-raspbian-bpi-R1-M1*.zip | head -n 1`
+VARIANT_CONFIG_DIR=$(realpath -s $(dirname $(realpath -s $BASH_SOURCE))/../..)
+OCTOPI_ZIP_IMG=`ls -t $VARIANT_CONFIG_DIR/image-varients/*-raspbian-bpi-R1-M1*.zip | head -n 1`
