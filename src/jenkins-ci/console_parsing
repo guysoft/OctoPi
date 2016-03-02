@@ -4,4 +4,4 @@ error /md5sum: * No such file or directory/
 error /Error is not recoverable: exiting now/
 error /Network is unreachable/
 error /404  Not Found/
-error /Hash Sum mismatch/
+error /Failed to fetch/
