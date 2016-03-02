@@ -5,4 +5,4 @@ error /Error is not recoverable: exiting now/
 error /Network is unreachable/
 error /error: timed out/
 error /404  Not Found/
-error /Hash Sum mismatch/
+error /Failed to fetch/
