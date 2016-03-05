@@ -40,7 +40,7 @@ fi
 [ -n "$OCTOPI_MOUNT_PATH" ] || OCTOPI_MOUNT_PATH=$OCTOPI_WORKSPACE/mount
 
 # if set will enlarge root parition prior to build by provided size in MB
-[ -n "$OCTOPI_IMAGE_ENLARGEROOT" ] || OCTOPI_IMAGE_ENLARGEROOT=
+[ -n "$OCTOPI_IMAGE_ENLARGEROOT" ] || OCTOPI_IMAGE_ENLARGEROOT=400
 
 # if set will resize root partition on image after build to minimum size + 
 # provided size in MB
