@@ -2,4 +2,4 @@
 sudo apt-get install -y gawk util-linux realpath git qemu-user-static unzip
 
 cd /OctoPi/src
-sudo bash -x ./build
+sudo bash ./build
