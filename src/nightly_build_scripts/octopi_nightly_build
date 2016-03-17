@@ -1,9 +1,9 @@
 #!/bin/bash -x
 whoami
-OCTOPIPATH=/home/guy/tmp/OctoPi
+OCTOPIPATH=/OctoPi
 
 #Update repos used
-sudo -u guy /home/guy/stuff/scripts/gitmirror/update_git_mirrors
+#sudo -u guy /home/guy/stuff/scripts/gitmirror/update_git_mirrors
 
 for i in `lsof ${OCTOPIPATH}/src/workspace/mount | awk '{print $2}'`; do kill -9 $i; done
 
@@ -15,11 +15,11 @@ pushd ${OCTOPIPATH}
     umount ${OCTOPIPATH}/src/workspace/mount/dev/pts
     umount ${OCTOPIPATH}/src/workspace/mount
     git pull origin devel
-    export OCTOPI_OCTOPRINT_REPO_BUILD='http://localhost/git/OctoPrint.git/'
-    export OCTOPI_OCTOPIPANEL_REPO_BUILD='http://localhost/git/OctoPiPanel.git/'
-    export OCTOPI_FBCP_REPO_BUILD='http://localhost/git/rpi-fbcp.git/'
-    export OCTOPI_MJPGSTREAMER_REPO_BUILD='http://localhost/git/mjpg-streamer.git/'
-    export OCTOPI_WIRINGPI_REPO_BUILD='http://localhost/git/wiringPi.git/'
+    #export OCTOPI_OCTOPRINT_REPO_BUILD='http://localhost/git/OctoPrint.git/'
+    #export OCTOPI_OCTOPIPANEL_REPO_BUILD='http://localhost/git/OctoPiPanel.git/'
+    #export OCTOPI_FBCP_REPO_BUILD='http://localhost/git/rpi-fbcp.git/'
+    #export OCTOPI_MJPGSTREAMER_REPO_BUILD='http://localhost/git/mjpg-streamer.git/'
+    #export OCTOPI_WIRINGPI_REPO_BUILD='http://localhost/git/wiringPi.git/'
     
     ${OCTOPIPATH}/src/build $1
     pushd src
