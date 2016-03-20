@@ -6,6 +6,8 @@ set -e
 # Written by Guy Sheffer <guysoft at gmail dot com>
 # GPL V3
 
+export LC_ALL=C
+
 source /common.sh
 install_cleanup_trap
 
