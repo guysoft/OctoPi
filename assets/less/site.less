@@ -1,19 +1,19 @@
 @import "bootstrap/bootstrap.less";
+
+// fix for less v2 vs bootstrap v2, see http://stackoverflow.com/a/28182792/2028598
+#grid {
+    .core  {
+        .span(@gridColumns) {
+            width: (@gridColumnWidth * @gridColumns) + (@gridGutterWidth * (@gridColumns - 1));
+        }
+    }
+};
+
 @import url(https://fonts.googleapis.com/css?family=Arvo:400,700,400italic,700italic);
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700);
 
 @import "mixins.less";
 @import "variables.less";
-
-@bqIcofontPath: "../font";
-@font-face {
-  font-family:'bqreaders_icofont';
-  src: url('@{bqIcofontPath}/bqreaders_icofont.eot');
-  src: url('@{bqIcofontPath}/bqreaders_icofont.eot?#iefix') format('embedded-opentype'),
-       url('@{bqIcofontPath}/bqreaders_icofont.woff') format('woff'), 
-       url('@{bqIcofontPath}/bqreaders_icofont.ttf') format('truetype'),
-       url('@{bqIcofontPath}/bqreaders_icofont.svg#bqreaders_icofont') format('svg'); 
-}
 
 @footerHeight: @baseLineHeight;
 @footerPadding: 10px;
@@ -35,6 +35,27 @@ body, html {
 .text-align-right  { text-align: right; }
 .text-align-center { text-align: center; }
 
+.to-top {
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  cursor: pointer;
+  padding: 10px;
+  background-color: @octoDark;
+  display: none;
+
+  border: 1px solid mix(@octoLight, @octoDark, 50%);
+  .border-radius(10px);
+
+  i {
+    color: white;
+  }
+
+  &.active {
+    display: block;
+  }
+}
+
 .navbar {
   .brand {
     color: @white;
@@ -44,32 +65,9 @@ body, html {
       padding-right: 3px;
     }
   }
-
-  .bqlogo {
-    padding: 5px 0;
-  }
 }
 
 .navbar .nav > li > a { padding: 12px 10px 9px; }
-
-h1 {
-  font-family: @serifFontFamily;
-}
-
-.content {
-  h1, h2 {
-    margin: 20px 0 30px;
-    padding-bottom: 9px;
-    border-bottom: 1px solid @grayLighter;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    a {
-      color: @textColor;
-    }
-  }
-
-}
 
 .page-header {
   background: @octoDark;
@@ -110,9 +108,33 @@ h1 {
 #main {
   padding-bottom: @footerHeight;
 
+  .hero-content {
+    h1 {
+      font-family: @serifFontFamily;
+    }
+  }
+
   .content {
     padding-top: 30px;
     padding-bottom: 50px;
+
+    line-height: 2em;
+    li {
+      line-height: 2em;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 1em;
+    }
+
+    h2, h3, h4, h5, h6 {
+      margin-top: 1em;
+      margin-bottom: 1em;
+    }
   }
 }
 

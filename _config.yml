@@ -13,8 +13,3 @@ exclude: [vendor]
 
 # Build settings
 markdown: kramdown
-
-collections:
-  plugins:
-    output: true
-    permalink: /plugins/:path/
