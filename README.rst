@@ -76,7 +76,7 @@ You can build it by issuing the following commands::
 Building OctoPi Variants
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-OctoPi supports building variants, which are builds with changes from the main relesae build. An example and other variants are avilable in the folder ``src/variants/example``.
+OctoPi supports building variants, which are builds with changes from the main release build. An example and other variants are available in the folder ``src/variants/example``.
 
 To build a variant use::
 
@@ -84,7 +84,7 @@ To build a variant use::
     
 Building Using Vagrant
 ~~~~~~~~~~~~~~~~~~~~~~
-There is a vagrant machine configuration to let build OctoPi in case your build enviroment behaves diffrently. Unless you do extra configuration, vagrant must run as root to have nfs folder sync working.
+There is a vagrant machine configuration to let build OctoPi in case your build environment behaves differently. Unless you do extra configuration, vagrant must run as root to have nfs folder sync working.
 
 To use it::
 
