@@ -112,11 +112,13 @@ function unpack() {
 
 function mount_image() {
   image_path=$1
-  mount_path=$2
+  root_partition=$2
+  mount_path=$3
+  echo "burr"
+  echo $2
 
   # dump the partition table, locate boot partition and root partition
   boot_partition=1
-  root_partition=2
   fdisk_output=$(sfdisk -d $image_path)
   boot_offset=$(($(echo "$fdisk_output" | grep "$image_path$boot_partition" | awk '{print $4-0}') * 512))
   root_offset=$(($(echo "$fdisk_output" | grep "$image_path$root_partition" | awk '{print $4-0}') * 512))
@@ -125,7 +127,11 @@ function mount_image() {
 
   # mount root and boot partition
   sudo mount -o loop,offset=$root_offset $image_path $mount_path/
-  sudo mount -o loop,offset=$boot_offset $image_path $mount_path/boot
+  if [[ "$boot_partition" != "$root_partition" ]]; then
+    sudo mount -o loop,offset=$boot_offset $image_path $mount_path/boot
+  fi
+  sudo mkdir -p $mount_path/dev/pts
+  sudo mount -o bind /dev $mount_path/dev
   sudo mount -o bind /dev/pts $mount_path/dev/pts
 }
 
@@ -325,10 +331,10 @@ function minimize_ext() {
   
   if [ $size_offset_mb -gt 0 ]; then
 	echo "Partition size is bigger then the desired size, shrinking"
-	shrink_ext $image 2 $(($e2ftarget_mb - 1)) # -1 to compensat rounding mistakes
+	shrink_ext $image $partition $(($e2ftarget_mb - 1)) # -1 to compensat rounding mistakes
   elif [ $size_offset_mb -lt 0 ]; then
     echo "Partition size is lower then the desired size, enlarging"
-	enlarge_ext $image 2 $((-$size_offset_mb + 1)) # +1 to compensat rounding mistakes
+	enlarge_ext $image $partition $((-$size_offset_mb + 1)) # +1 to compensat rounding mistakes
   fi
 }
 
@@ -348,7 +354,19 @@ function is_in_apt(){
   fi
 }
 
-systemctl_if_exists() {
+function remove_if_installed(){
+  remove_extra_list=""
+  for package in "$1"
+  do
+    if [ $( is_installed package ) -eq 1 ];
+    then
+        remove_extra_list="$remove_extra_list $package"
+    fi
+  done
+  echo $remove_extra_list
+}
+
+function systemctl_if_exists() {
     if hash systemctl 2>/dev/null; then
         systemctl "$@"
     else

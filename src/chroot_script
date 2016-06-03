@@ -44,15 +44,17 @@ unpack /filesystem/boot /boot
 apt-get update
 
 # in case we are building from a regular raspbian image instead of the lite one...
-remove_extra=""
-if [ $( is_installed greenfoot ) -eq 1 ];
-then
-  remove_extra="$remove_extra greenfoot nodered"
-fi
-apt-get remove -y --purge scratch squeak-plugins-scratch squeak-vm wolfram-engine python-minecraftpi minecraft-pi sonic-pi oracle-java8-jdk bluej libreoffice-common libreoffice-core freepats $remove_extra
+remove_extra=$(remove_if_installed scratch squeak-plugins-scratch squeak-vm wolfram-engine python-minecraftpi minecraft-pi sonic-pi oracle-java8-jdk bluej libreoffice-common libreoffice-core freepats greenfoot nodered)
+echo "removing:" $remove_extra
+apt-get remove -y --purge  $remove_extra
 apt-get autoremove -y
 
-apt-get -y --force-yes install python2.7 python-virtualenv python-dev git screen libts-bin subversion cmake checkinstall avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev
+libts=""
+if [ $( is_in_apt libts-bin ) -eq 1 ]; then
+  libts=libts-bin
+fi
+
+apt-get -y --force-yes install python2.7 python-virtualenv python-dev git screen subversion cmake checkinstall avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev $libts
 
 echo " - Reinstall iputils-ping"
 apt-get install --reinstall iputils-ping
@@ -129,7 +131,13 @@ pushd /home/pi
   if [ "$OCTOPI_INCLUDE_MJPGSTREAMER" == "yes" ]
   then
     echo "--- Installing mjpg-streamer"
-    apt-get -y --force-yes --no-install-recommends install libjpeg8-dev imagemagick libav-tools libv4l-dev
+    if [ $( is_in_apt libjpeg62-turbo-dev ) -eq 1 ]; then
+      apt-get -y --force-yes install libjpeg62-turbo-dev
+    elif [ $( is_in_apt libjpeg8-dev ) -eq 1 ]; then 
+      apt-get -y --force-yes install libjpeg8-dev
+    fi
+    
+    apt-get -y --force-yes --no-install-recommends install imagemagick libav-tools libv4l-dev
     gitclone OCTOPI_MJPGSTREAMER_REPO mjpg-streamer
     pushd mjpg-streamer
       mv mjpg-streamer-experimental/* .
@@ -143,13 +151,11 @@ pushd /home/pi
     echo "--- Installing CuraEngine"
     folder=CuraEngine-$OCTOPI_CURAENGINE_VERSION
     zipfile=$folder.zip
-    apt-get -y install gcc-4.7 g++-4.7
+    apt-get -y install gcc-4.9 g++-4.9
     sudo -u pi wget -O$zipfile $OCTOPI_CURAENGINE_ARCHIVE
     sudo -u pi unzip $zipfile
     pushd $folder
-      sudo -u pi wget https://gist.githubusercontent.com/foosel/f86d6a729c0187ff8a82/raw/3d4f152b924080f502d887d11269f27a2389d64d/CuraEngine.patch
-      sudo -u pi patch < CuraEngine.patch
-      sudo -u pi make CXX=g++-4.7 VERSION=$OCTOPI_CURAENGINE_VERSION
+      sudo -u pi make CXX=g++-4.9 VERSION=$OCTOPI_CURAENGINE_VERSION
       cp build/CuraEngine /usr/local/bin/cura_engine
     popd
     sudo -u pi rm -r $folder $zipfile

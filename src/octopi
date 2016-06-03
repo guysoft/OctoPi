@@ -37,17 +37,17 @@ pushd $OCTOPI_WORKSPACE
     rm *.img
   fi
   unzip $OCTOPI_ZIP_IMG
-  OCTOPI_IMG_PATH=`ls | grep .img`
+  OCTOPI_IMG_PATH=`ls | grep '.img\|.raw' | head -n 1`
   export OCTOPI_BUILDBASE=$(basename $OCTOPI_IMG_PATH)
 
   if [ -n "$OCTOPI_IMAGE_ENLARGEROOT" ]
   then
     # make our image a bit larger so we don't run into size problems...
-    enlarge_ext $OCTOPI_IMG_PATH 2 $OCTOPI_IMAGE_ENLARGEROOT
+    enlarge_ext $OCTOPI_IMG_PATH $OCTOPI_ROOT_PARTITION $OCTOPI_IMAGE_ENLARGEROOT
   fi
 
   # mount root and boot partition
-  mount_image $OCTOPI_IMG_PATH $OCTOPI_MOUNT_PATH
+  mount_image $OCTOPI_IMG_PATH $OCTOPI_ROOT_PARTITION $OCTOPI_MOUNT_PATH
   if [ -n "$OCTOPI_APT_CACHE" ]
   then
     mkdir -p "$OCTOPI_APT_CACHE"
@@ -58,7 +58,9 @@ pushd $OCTOPI_WORKSPACE
   pushd $OCTOPI_MOUNT_PATH
 
     #make QEMU boot (remember to return)
-    fixLd
+    if [ "$OCTOPI_IMAGE_RASPBIAN" == "yes" ]; then
+      fixLd
+    fi
     #sed -i 's@include /etc/ld.so.conf.d/\*.conf@\#include /etc/ld.so.conf.d/\*.conf@' etc/ld.so.conf
 
     # if an additional pre-script is defined, execute that now
@@ -87,8 +89,9 @@ pushd $OCTOPI_WORKSPACE
       echo "Injecting environment post script from $OCTOPI_POSTSCRIPT..."
       execute_chroot_script $OCTOPI_POSTSCRIPT $OCTOPI_POSTSCRIPT/chroot_script
     fi
-
-    restoreLd
+    if [ "$OCTOPI_IMAGE_RASPBIAN" == "yes" ]; then
+      restoreLd
+    fi
   popd
   
   # unmount first boot, then root partition
@@ -98,7 +101,7 @@ pushd $OCTOPI_WORKSPACE
   if [ -n "$OCTOPI_IMAGE_RESIZEROOT" ]
   then
     # resize image to minimal size + provided size
-    minimize_ext $OCTOPI_IMG_PATH 2 $OCTOPI_IMAGE_RESIZEROOT
+    minimize_ext $OCTOPI_IMG_PATH $OCTOPI_ROOT_PARTITION $OCTOPI_IMAGE_RESIZEROOT
   fi
 popd
 
