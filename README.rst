@@ -54,6 +54,7 @@ Requirements
 #. Downloaded `Raspbian <http://www.raspbian.org/>`_ image.
 #. root privileges for chroot
 #. Bash
+#. git
 #. realpath
 #. sudo (the script itself calls it, running as root without sudo won't work)
 
@@ -64,7 +65,7 @@ OctoPi can be built from Debian, Ubuntu, Raspbian, or even OctoPi.
 Build requires about 2.5 GB of free space available.
 You can build it by issuing the following commands::
 
-    sudo apt-get install gawk util-linux realpath qemu-user-static
+    sudo apt-get install gawk util-linux realpath qemu-user-static git
     
     git clone https://github.com/guysoft/OctoPi.git
     cd OctoPi/src/image
