@@ -1,0 +1,114 @@
+HTTP/1.0 503 Service Unavailable
+Cache-Control: no-cache
+Connection: close
+Content-Type: text/html
+
+<html>
+    <head>
+        <title>Webcam server is currently not running</title>
+        <style>
+            body {
+                margin: 0;
+                font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                font-size: 14px;
+                line-height: 20px;
+                color: #333333;
+                background-color: #ffffff;
+            }
+
+            code {
+                font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+                font-size: 12px;
+                border-radius: 3px;
+                padding: 2px 4px;
+                color: #d14;
+                white-space: nowrap;
+                background-color: #f7f7f7;
+                border: 1px solid #e1e1e8;
+            }
+
+            pre {
+                font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+                font-size: 12px;
+                border-radius: 3px;
+                padding: 2px 4px;
+                white-space: nowrap;
+                background-color: #f7f7f7;
+                border: 1px solid #e1e1e8;
+            }
+
+            @media (max-width: 767px) {
+                .wrapper {
+                    padding: 20px;
+                }
+            }
+
+            @media (min-width: 768px) {
+                .wrapper {
+                    position: absolute;
+                    width: 750px;
+                    height: 600px;
+                    top: 50%;
+                    left: 50%;
+                    margin: -300px 0 0 -375px;
+                }
+            }
+
+            h1 {
+                line-height: 1.3;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>The webcam server is currently not running</h1>
+
+            <p><strong>
+                If you do not have a camera attached, this is normal and can be safely ignored. 
+            </strong></p>
+
+            <p>
+                Otherwise, if you just started up your Raspberry Pi or just plugged in your camera, 
+                please wait a couple of seconds.
+            </p>
+
+            <p>
+                If the issue persists, please check the following:
+            </p>
+
+            <ul>
+                <li>
+                    If you have a Raspberry Pi camera, verify that it is properly attached. The ribbon 
+                    cable can be plugged in the wrong way. <strong>Power off your Pi first, do not attempt
+                    to attach or detach the Raspberry Pi camera while the Pi is powered!</strong>
+                </li>
+                <li>
+                    If you have a USB camera, it might be that it does not support MJPG (Motion JPEG) natively and needs the
+                    <code>-y</code> parameter to work. Try <a href="https://github.com/foosel/OctoPrint/wiki/FAQ#how-can-i-change-the-webcam-resolution-on-octopi" target="_blank">editing <code>octopi.txt</code></a>,
+                    add <code>-y</code> to <code>camera_usb_options</code> and make sure to remove the leading <code>#</code>, e.g.:
+                    <pre>camera_usb_options="-r 640x480 -f 10 -y"</pre>
+                    Reboot your Raspberry Pi with the camera attached and see if that makes it work.<br>
+                    <strong>Note</strong>: If your camera doesn't support MJPG natively, the webcam server will have to use valuable
+                    system resources to transcode the camera stream which could be better used for printing. Consider 
+                    getting a camera that does support MJPG natively.
+                </li>
+                <li>
+                    Log into your Raspberry Pi via SSH. Check if your camera is detected by the system via <code>lsusb</code>.
+                    If it is check what the webcam server is reporting in <code>/var/log/webcamd.log</code>, there might be an
+                    error logged in there that helps to determine what's wrong.
+                </li>
+            </ul>
+
+            <p>
+                If all that doesn't help to trouble shoot the issue, you can seek
+                support on the
+                <a href="https://groups.google.com/group/octoprint">OctoPrint Mailinglist</a>
+                or in the <a href="https://plus.google.com/communities/102771308349328485741">OctoPrint G+ Community</a>.
+                Please provide your camera model, <code>lsusb</code> output and <code>/var/log/webcamd.log</code> (as a 
+                <a href="http://pastebin.com/" target="_blank">pastebin link</a>) and explain what you 
+                already tried and observed as detailed as possible.
+            </p>
+        </div>
+    </body>
+</html>
+
