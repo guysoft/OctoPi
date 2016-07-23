@@ -100,7 +100,7 @@ After provisioning the machine, its also possible to run a nightly build which u
     cd OctoPi/src/vagrant
     run_vagrant_build.sh
     
-To build a variant on the machine simply run:
+To build a variant on the machine simply run::
 
     cd FullPageOS/src/vagrant
     run_vagrant_build.sh [Variant]
