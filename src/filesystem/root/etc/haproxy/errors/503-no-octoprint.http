@@ -27,22 +27,14 @@ Content-Type: text/html
                 border: 1px solid #e1e1e8;
             }
 
-            #startup-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 10000;
-                display: block;
-            }
-
-            .background {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
+            pre {
+                font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+                font-size: 12px;
+                border-radius: 3px;
+                padding: 2px 4px;
+                white-space: nowrap;
+                background-color: #f7f7f7;
+                border: 1px solid #e1e1e8;
             }
 
             @media (max-width: 767px) {
@@ -55,10 +47,10 @@ Content-Type: text/html
                 .wrapper {
                     position: absolute;
                     width: 750px;
-                    height: 400px;
+                    height: 450px;
                     top: 50%;
                     left: 50%;
-                    margin: -200px 0 0 -375px;
+                    margin: -225px 0 0 -375px;
                 }
             }
 
@@ -83,8 +75,11 @@ Content-Type: text/html
             <ul>
                 <li>
                     Verify that the process is running:
-                    <code>ps -ef | grep -i octoprint</code> should show a
-                    python process.
+                    <code>ps -ef | grep -i octoprint | grep -i python</code> should show a
+                    python process:
+                    <pre>pi@octopi:~ $ ps -ef | grep -i octoprint | grep -i python<br>
+pi        1441     1  6 11:12 ?        00:00:15 /home/pi/oprint/bin/python <br>
+/home/pi/oprint/bin/octoprint --host=127.0.0.1 --port=5000</pre>
                 </li>
                 <li>
                     If it isn't, the question is why. Take a look into
@@ -104,6 +99,9 @@ Content-Type: text/html
                 support on the
                 <a href="https://groups.google.com/group/octoprint">OctoPrint Mailinglist</a>
                 or in the <a href="https://plus.google.com/communities/102771308349328485741">OctoPrint G+ Community</a>.
+                Please provide your OctoPi <strong>and</strong> OctoPrint versions, your <code>octoprint.log</code> 
+                (in form of a <a href="http://pastebin.com/" target="_blank">pastebin link</a>) and explain what you 
+                already tried and observed as detailed as possible.
             </p>
         </div>
     </body>
