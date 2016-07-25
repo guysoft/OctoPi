@@ -203,27 +203,14 @@ echo "# enable raspicam" >> /boot/config.txt
 echo "start_x=1" >> /boot/config.txt
 echo "gpu_mem=128" >> /boot/config.txt
 
-# allow ethernet network configuration via /boot/octopi-ethernet.txt
-echo "source /boot/octopi-ethernet.txt" >> /etc/network/interfaces
-
-# allow wifi network configuration via /boot/octopi-wifi.txt
-mv /etc/wpa_supplicant/wpa_supplicant.conf /boot/octopi-wifi.txt
-ln -s /boot/octopi-wifi.txt /etc/wpa_supplicant/wpa_supplicant.conf
-cat <<EOT >> /etc/wpa_supplicant/wpa_supplicant.conf
-
-# Uncomment the following section to add your wifi SSID and password
-# 'man -s 5 wpa_supplicant.conf' for advanced options
-#network={
-#  ssid="Your Wifi SSID"
-#  psk="supersecretwifipassword"
-#}
-
-## You can configure more than 1 wifi networks by adding more 'network' blocks
-#network={
-#  ssid="Another Wifi"
-#  psk="password"
-#}
-EOT
+# allow network configuration via /boot/octopi-network.txt
+sed -i "s@iface wlan0 @iface wlan0-raspbian @g" /etc/network/interfaces
+sed -i "s@iface wlan1 @iface wlan1-raspbian @g" /etc/network/interfaces
+echo "mapping wlan0" >> /etc/network/interfaces
+echo "  script /root/bin/map_iface" >> /etc/network/interfaces
+echo "mapping wlan1" >> /etc/network/interfaces
+echo "  script /root/bin/map_iface" >> /etc/network/interfaces
+echo "source /boot/octopi-network.txt" >> /etc/network/interfaces
 
 # copy /etc/wpa_supplicant/ifupdown.sh to /etc/ifplugd/action.d/ifupdown - for wlan auto reconnect
 [ -f /etc/ifplugd/action.d/ifupdown ] && mv /etc/ifplugd/action.d/ifupdown /etc/ifplugd/action.d/ifupdown.original
