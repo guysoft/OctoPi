@@ -217,7 +217,8 @@ mv /etc/wpa_supplicant/wpa_supplicant.conf /boot/octopi-wifi.txt
 ln -s /boot/octopi-wifi.txt /etc/wpa_supplicant/wpa_supplicant.conf
 cat <<EOT >> /etc/wpa_supplicant/wpa_supplicant.conf
 
-# Uncomment the following section to add your wifi SSID and password
+# This is only used to configure multiple wifit networks or other advanced wifi features.
+# take a look into octopi-network.txt instead if you only need basic wifi configuration
 # 'man -s 5 wpa_supplicant.conf' for advanced options
 #network={
 #  ssid="Your Wifi SSID"
