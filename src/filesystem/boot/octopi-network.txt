@@ -9,6 +9,8 @@
 #
 # Just uncomment the lines prefixed with a single # of the configuration
 # that matches your wifi setup and fill in SSID and passphrase.
+#
+# If you need to configure more than 1 wifi networks, please use /boot/octopi-wpa-supplicant.txt instead
 
 ## WPA/WPA2 secured
 #iface wlan0-octopi inet manual
