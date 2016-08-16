@@ -41,7 +41,7 @@
 #
 # You can then reach the Pi from the system's browser by going to
 #
-#   http://192.168.250.1
+#   http://192.168.250.10
 #
 # or
 #
