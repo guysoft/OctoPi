@@ -18,7 +18,7 @@ Download the latest stable build via this button:
 
 Official mirror is `here <http://docstech.net/OctoPiMirror/>`_
 
-Nightly builds are available `here <http://gnet.homelinux.com/OctoPi/nightly/>`_
+Nightly builds are available `here <http://gnethomelinux.com/OctoPi/nightly/>`_
 
 How to use it?
 --------------
