@@ -66,7 +66,7 @@ pushd /home/pi
   sudo -u pi virtualenv oprint
   
   # first lets upgrade pip (the shipped version is way too old...)
-  sudo -u pi /home/pi/oprint/bin/pip install --upgrade pip
+  sudo -u pi /home/pi/oprint/bin/pip install --upgrade "pip>=8,<9"
 
   # we also want pyopenssl so we have a secure SSL context available
   # since that stuff takes ages to compile during build, we do a somewhat dirty
