@@ -6,3 +6,4 @@ error /Network is unreachable/
 error /error: timed out/
 error /404  Not Found/
 error /Failed to fetch/
+error /Traceback/
