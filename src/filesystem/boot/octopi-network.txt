@@ -11,6 +11,11 @@
 # that matches your wifi setup and fill in SSID and passphrase.
 #
 # If you need to configure more than 1 wifi networks, please use /boot/octopi-wpa-supplicant.txt instead
+#
+# !! MacOS users !! 
+# If you use Textedit to edit this file make sure to use "plain text format" 
+# and "disable smart quotes" in "Textedit > Preferences", otherwise Textedit 
+# will use none-compatible characters.
 
 ## WPA/WPA2 secured
 #iface wlan0-octopi inet manual
