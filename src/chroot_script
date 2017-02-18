@@ -249,6 +249,9 @@ update-rc.d prepare_resize defaults
 update-rc.d change_password defaults
 update-rc.d change_hostname defaults
 
+### Fix SSH
+echo "IPQoS 0x00" >> /etc/ssh/sshd_config
+
 ### OctoPrint
 
 if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
