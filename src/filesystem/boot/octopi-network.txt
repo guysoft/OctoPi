@@ -3,6 +3,15 @@
 # This file is included into /etc/network/interfaces, so anything that
 # works by editing that file is also possible here.
 
+# !!!!! HEADS-UP MACOSX USERS !!!!!
+#
+# If you use Textedit to edit this file make sure to use "plain text format" 
+# and "disable smart quotes" in "Textedit > Preferences", otherwise Textedit 
+# will use none-compatible characters and your network configuration won't
+# work!
+#
+# !!!!! HEADS-UP MACOSX USERS !!!!!
+
 ### WIFI CONFIGURATION ######################################################
 # The three segments below should cover you in most cases if you run
 # a wifi network that uses either WPA/WPA2 or WEP encryption.
@@ -10,12 +19,7 @@
 # Just uncomment the lines prefixed with a single # of the configuration
 # that matches your wifi setup and fill in SSID and passphrase.
 #
-# If you need to configure more than 1 wifi networks, please use /boot/octopi-wpa-supplicant.txt instead
-#
-# !! MacOS users !! 
-# If you use Textedit to edit this file make sure to use "plain text format" 
-# and "disable smart quotes" in "Textedit > Preferences", otherwise Textedit 
-# will use none-compatible characters.
+# If you need to configure more than 1 wifi network, please use /boot/octopi-wpa-supplicant.txt instead
 
 ## WPA/WPA2 secured
 #iface wlan0-octopi inet manual
@@ -32,7 +36,12 @@
 #    wireless-essid "put SSID here"
 #    wireless-mode managed
 
-### WIRED CONFIGURATION #####################################################
+### WIRED CONFIGURATION WITH DHCP ###########################################
+# Nothing to do, OctoPi is already preconfigured that way. Just plug in your
+# cable, wait for an IP to be assigned and stuff should work out of the box
+# just fine.
+
+### WIRED CONFIGURATION WITH STATIC IP ######################################
 # The following segment allows you to configure your wired connection
 # with a static IP.
 #
@@ -46,7 +55,7 @@
 #
 # You can then reach the Pi from the system's browser by going to
 #
-#   http://192.168.250.10
+#   http://192.168.250.1
 #
 # or
 #
