@@ -66,29 +66,7 @@ pushd /home/pi
   sudo -u pi virtualenv oprint
   
   # first lets upgrade pip (the shipped version is way too old...)
-  sudo -u pi /home/pi/oprint/bin/pip install --upgrade "pip>=8,<9"
-
-  # we also want pyopenssl so we have a secure SSL context available
-  # since that stuff takes ages to compile during build, we do a somewhat dirty
-  # trick here by installing the raspbian versions, copying the libs over
-  # to our virtualenv and then purging the raspbian versions again
-  apt-get -y --force-yes install python-openssl
-  if [ $( is_in_apt python-cryptography ) -eq 1 ]; then
-    apt-get -y --force-yes install python-cryptography
-    from=/usr/lib/python2.7/dist-packages
-    to=/home/pi/oprint/lib/python2.7/site-packages
-    for pattern in "cffi*" "cryptography*" "OpenSSL*" "ply*" "pycparser*" "pyOpenSSL*" "six*"
-    do
-      cp -v -r --preserve=mode,timestamps $from/$pattern $to/
-    done
-    apt-get remove -y --purge python-openssl python-cryptography
-  else
-    sudo -u pi /home/pi/oprint/bin/pip install cryptography
-    apt-get remove -y --purge python-openssl
-  fi
-  apt-get autoremove -y
-  chown -R pi.pi /home/pi/oprint
-  sudo -u pi /home/pi/oprint/bin/pip install ndg-httpsclient pyasn1
+  sudo -u pi /home/pi/oprint/bin/pip install --upgrade pip
 
   # OctoPrint & pyserial
   if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
