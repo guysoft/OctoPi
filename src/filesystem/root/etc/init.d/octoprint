@@ -16,8 +16,8 @@
 # Author: Sami Olmari
 
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-DESC="Octoprint Daemon"
-NAME="Octoprint"
+DESC="OctoPrint Daemon"
+NAME="OctoPrint"
 DAEMON=/usr/bin/octoprint
 PIDFILE=/var/run/$NAME.pid
 PKGNAME=octoprint
@@ -73,7 +73,7 @@ do_start()
 
    if [ $RETVAL != 0 ]; then
        start-stop-daemon --start --background --quiet --pidfile $PIDFILE --make-pidfile \
-       --exec $DAEMON --chuid $OCTOPRINT_USER --user $OCTOPRINT_USER --umask $UMASK -- $DAEMON_ARGS
+       --exec $DAEMON --chuid $OCTOPRINT_USER --user $OCTOPRINT_USER --umask $UMASK -- serve $DAEMON_ARGS
        RETVAL="$?"
    fi
 }
