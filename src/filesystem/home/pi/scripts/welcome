@@ -1,0 +1,35 @@
+#!/bin/bash
+
+_IP=$(hostname -I)
+_OCTOPRINT_VERSION=$(/home/pi/oprint/bin/python -c "from octoprint._version import get_versions; print(get_versions()['version'])" || echo "unknown")
+_OCTOPI_VERSION=$(cat /etc/octopi_version || echo "unknown")
+
+echo
+echo "------------------------------------------------------------------------------"
+echo "Access OctoPrint from a web browser on your network by navigating to any of:"
+echo
+echo "    http://octopi.local"
+
+for ip in $_IP;
+do
+    echo "    http://$ip"
+done
+
+echo
+echo "https is also available, with a self-signed certificate."
+
+if ! which lightdm 2>&1 >/dev/null;
+then
+    echo "------------------------------------------------------------------------------"
+    echo "This image comes without a desktop environment installed because it's not "
+    echo "required for running OctoPrint. If you want a desktop environment you can "
+    echo "install it via"
+    echo
+    echo "    sudo /home/pi/scripts/install-desktop"
+fi
+
+echo "------------------------------------------------------------------------------"
+echo "OctoPrint version : $_OCTOPRINT_VERSION"
+echo "OctoPi version    : $_OCTOPI_VERSION"
+echo "------------------------------------------------------------------------------"
+echo
