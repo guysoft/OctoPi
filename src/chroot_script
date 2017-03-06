@@ -214,6 +214,32 @@ EOT
 [ -f /etc/ifplugd/action.d/ifupdown ] && mv /etc/ifplugd/action.d/ifupdown /etc/ifplugd/action.d/ifupdown.original
 [ -f /etc/wpa_supplicant/ifupdown.sh ] && ln -s /etc/wpa_supplicant/ifupdown.sh /etc/ifplugd/action.d/ifupdown
 
+# add some "How To" info to boot output
+sed -i 's@exit 0@@' /etc/rc.local
+cat <<'EOT' >> /etc/rc.local
+
+echo
+echo "------------------------------------------------------------"
+echo
+echo "You may now open a web browser on your local network and "
+echo "navigate to any of the following addresses to access "
+echo "OctoPrint:"
+echo
+echo "    http://octopi.local"
+
+for ip in $(hostname -I);
+do 
+    echo "    http://$ip"
+done
+
+echo
+echo "https is also available, with a self-signed certificate."
+echo 
+echo "------------------------------------------------------------"
+echo
+EOT
+echo 'exit 0' >> /etc/rc.local
+
 #unpack root in the end, so etc file are not overwritten, might need to add two roots int he future
 unpack /filesystem/root /
 
