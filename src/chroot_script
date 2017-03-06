@@ -214,6 +214,9 @@ EOT
 [ -f /etc/ifplugd/action.d/ifupdown ] && mv /etc/ifplugd/action.d/ifupdown /etc/ifplugd/action.d/ifupdown.original
 [ -f /etc/wpa_supplicant/ifupdown.sh ] && ln -s /etc/wpa_supplicant/ifupdown.sh /etc/ifplugd/action.d/ifupdown
 
+# add a longer welcome text to ~pi/.bashrc
+echo "source /home/pi/scripts/welcome" >> /home/pi/.bashrc
+
 #unpack root in the end, so etc file are not overwritten, might need to add two roots int he future
 unpack /filesystem/root /
 
