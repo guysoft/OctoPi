@@ -18,8 +18,9 @@ echo "Please keep in mind that the desktop environment needs"
 echo "system resources that then might not be available for"
 echo "printing, possible leading to print artifacts."
 echo "It is not recommended to run the desktop environment"
-echo "alongside OctoPrint if you do not have a Pi2 with"
-echo "multiple cores. Even then, use at your own risk."
+echo "alongside OctoPrint if you do not have a Pi with"
+echo "multiple cores (e.g. Pi1 or PiZero). Even then, use"
+echo "at your own risk."
 echo
 echo "If you do not want to install the desktop environment"
 echo "after all, please hit Ctrl+C now."
@@ -53,7 +54,7 @@ echo
 echo "--- Installing desktop packages"
 echo
 
-apt-get install --yes raspberrypi-ui-mods lightdm xinit lxterminal
+apt-get install --yes raspberrypi-ui-mods
 
 if [ "$x_on_boot" == "yes" ]
 then
@@ -69,27 +70,8 @@ else
 fi
 
 echo
-echo "--- Removing uninstalled applications from desktop"
-echo
-
-# we make sure that non of the non-installed packages show up in either
-# the default lxde panel or menu
-basefolder="/usr/share/raspi-ui-overrides/applications/"
-lxde_panel_file="/etc/xdg/lxpanel/profile/LXDE-pi/panels/panel"
-files="libreoffice-draw libreoffice-math libreoffice-startcenter bluej greenfoot wolfram-mathematica wolfram-language"
-
-for entry in $files
-do
-        desktop_file="$basefolder$entry.desktop"
-
-        # hide .desktop file from menu
-        grep "Hidden: true" $desktop_file || echo "Hidden: true" >> $desktop_file
-
-        # remove any links to it from panel
-        perl -i -p0e 's!\s*Button {\n\s*id='"$desktop_file"'\n\s*}!!igs' "$lxde_panel_file"
-done
-
-
-echo
 echo "--- Done!"
+echo
+
+echo "You might want to reboot now: sudo reboot"
 echo
