@@ -20,6 +20,8 @@
 # that matches your wifi setup and fill in SSID and passphrase.
 #
 # If you need to configure more than 1 wifi network, please use /boot/octopi-wpa-supplicant.txt instead
+#
+# ATTENTION: please note that the raspberry pi 3 internal wifi does currently not support the wifi channels 12 and 13
 
 ## WPA/WPA2 secured
 #iface wlan0-octopi inet manual
