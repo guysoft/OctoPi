@@ -238,6 +238,10 @@ echo
 echo "------------------------------------------------------------"
 echo
 EOT
+
+# prevent ntp updates from failing due to some Rpi3 weirdness, see also "Fix SSH" further below
+echo '/sbin/iptables -t mangle -I POSTROUTING 1 -o wlan0 -p udp --dport 123 -j TOS --set-tos 0x00' >> /etc/rc.local
+
 echo 'exit 0' >> /etc/rc.local
 
 # add a longer welcome text to ~pi/.bashrc
