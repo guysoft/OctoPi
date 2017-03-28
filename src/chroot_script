@@ -49,12 +49,7 @@ echo "removing:" $remove_extra
 apt-get remove -y --purge  $remove_extra
 apt-get autoremove -y
 
-libts=""
-if [ $( is_in_apt libts-bin ) -eq 1 ]; then
-  libts=libts-bin
-fi
-
-apt-get -y --force-yes install python2.7 python-virtualenv python-dev git screen subversion cmake checkinstall avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev $libts
+apt-get -y --force-yes install python2.7 python-virtualenv python-dev git screen subversion cmake checkinstall avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev
 
 echo " - Reinstall iputils-ping"
 apt-get install --reinstall iputils-ping
@@ -80,28 +75,6 @@ pushd /home/pi
     gitclone OCTOPI_OCTOPRINT_REPO OctoPrint
     pushd OctoPrint
       PIP_DEFAULT_TIMEOUT=60 sudo -u pi /home/pi/oprint/bin/python setup.py install
-    popd
-  fi
-
-  #OctoPiPanel
-  if [ "$OCTOPI_INCLUDE_OCTOPIPANEL" == "yes" ]
-  then
-    echo "--- Installing OctoPiPanel"
-    gitclone OCTOPI_OCTOPIPANEL_REPO OctoPiPanel
-    pushd OctoPiPanel
-      sudo -u pi /home/pi/oprint/bin/pip install -r requirements.txt
-    popd
-
-    #Add fbcp for TFT screens
-    gitclone OCTOPI_FBCP_REPO rpi-fbcp
-    pushd rpi-fbcp
-      sudo -u pi mkdir build
-      pushd build
-        sudo -u pi cmake ..
-        sudo -u pi make
-        install fbcp /usr/local/bin/fbcp
-        sudo -u pi make clean
-      popd
     popd
   fi
 
@@ -306,19 +279,6 @@ else
   rm /etc/init.d/webcamd
   rm /etc/default/webcamd
   rm /root/bin/webcamd
-fi
-
-### OctoPiPanel
-
-if [ ! "$OCTOPI_INCLUDE_OCTOPIPANEL" == "yes" ]
-then
-  # we don't need the tft setup stuff
-  rm /home/pi/scripts/OctoPiPanel
-  rm /home/pi/scripts/calibrate-rpi-display
-  rm /home/pi/scripts/enable-adafruit-pitft
-  rm /home/pi/scripts/enable-rpi-display
-  rm /boot/cmdline-pi-tft.txt
-  rm /etc/udev/rules.d/95-ads7846.rules
 fi
 
 #cleanup

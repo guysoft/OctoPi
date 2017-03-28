@@ -5,7 +5,8 @@ OctoPi
 .. :scale: 50 %
 .. :alt: OctoPi logo
 
-A `Raspberry Pi <http://www.raspberrypi.org/>`_ distribution for 3d printers. It includes the `OctoPrint <http://octoprint.org>`_ host software for 3d printers out of the box and `mjpg-streamer with RaspiCam support <https://github.com/jacksonliam/mjpg-streamer>`_ for live viewing of prints and timelapse video creation. OctoPi also includes `OctoPiPanel <https://github.com/jonaslorander/OctoPiPanel>`_, which is an LCD display app that works with OctoPrint, and scripts to configure supported display.s
+A `Raspberry Pi <http://www.raspberrypi.org/>`_ distribution for 3d printers. It includes the `OctoPrint <http://octoprint.org>`_ host software for 3d printers out of the box and `mjpg-streamer with RaspiCam support <https://github.com/jacksonliam/mjpg-streamer>`_ for live viewing of prints and timelapse video creation.
+
 This repository contains the source script to generate the distribution out of an existing `Raspbian <http://www.raspbian.org/>`_ distro image.
 
 Where to get it?
@@ -41,8 +42,6 @@ Features
 * `Raspbian <http://www.raspbian.org/>`_ tweaked for maximum preformance for printing out of the box
 * `mjpg-streamer with RaspiCam support <https://github.com/jacksonliam/mjpg-streamer>`_ for live viewing of prints and timelapse video creation.
 * `CuraEngine <https://github.com/Ultimaker/CuraEngine>`_ pre-installed for slicing directly on the Raspberry Pi
-* `OctoPiPanel <https://github.com/jonaslorander/OctoPiPanel>`_, which is an LCD display app that works with OctoPrint
-* Configuration scripts for various LCD displays
 
 Developing
 ----------
