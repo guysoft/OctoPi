@@ -38,9 +38,10 @@
 #
 # If this fixes your problem, please report it back so we can include the device
 # out of the box.
+#
 #additional_brokenfps_usb_devices=("046d:082b" "aabb:ccdd")
 
-### additional options to supply to MJPG Streamer for the RasPi Cam
+### Additional options to supply to MJPG Streamer for the RasPi Cam
 #
 # See https://github.com/foosel/OctoPrint/wiki/MJPG-Streamer-configuration
 # for available options
@@ -48,3 +49,17 @@
 # Defaults to 10fps
 #
 #camera_raspi_options="-fps 10"
+
+### Configuration of camera HTTP output
+#
+# Usually you should NOT need to change this at all! Only touch if you
+# know what you are doing and what the parameters mean.
+#
+# Below settings are used in the mjpg-streamer call like this:
+#
+#   -o "output_http.so -w $camera_http_webroot $camera_http_options"
+#
+# Current working directory is the mjpg-streamer base directory.
+#
+#camera_http_webroot="./www-octopi"
+#camera_http_options="-n"

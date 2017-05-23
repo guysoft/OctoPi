@@ -93,6 +93,23 @@ pushd /home/pi
     pushd mjpg-streamer
       mv mjpg-streamer-experimental/* .
       sudo -u pi make
+
+      # create our custom web folder and add a minimal index.html to it
+      sudo -u pi mkdir www-octopi
+      pushd www-octopi
+        cat <<EOT >> index.html
+<html>
+<head><title>mjpg_streamer test page</title></head>
+<body>
+<h1>Snapshot</h1>
+<p>Refresh the page to refresh the snapshot</p>
+<img src="./?action=snapshot" alt="Snapshot">
+<h1>Stream</h1>
+<img src="./?action=stream" alt="Stream">
+</body>
+</html>
+EOT
+      popd
     popd
   fi
   
