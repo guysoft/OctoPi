@@ -19,6 +19,8 @@ MJPGSTREAMER_INPUT_RASPICAM="input_raspicam.so"
 camera="auto"
 camera_usb_options="-r 640x480 -f 10"
 camera_raspi_options="-fps 10"
+camera_http_webroot="./www-octopi"
+camera_http_options="-n"
 additional_brokenfps_usb_devices=()
 
 if [ -e "/boot/octopi.txt" ]; then
@@ -47,8 +49,8 @@ function goodbye() {
 function runMjpgStreamer {
     input=$1
     pushd $MJPGSTREAMER_HOME > /dev/null 2>&1
-        echo Running ./mjpg_streamer -o "output_http.so -w ./www" -i "$input"
-        LD_LIBRARY_PATH=. ./mjpg_streamer -o "output_http.so -w ./www" -i "$input" &
+        echo Running ./mjpg_streamer -o "output_http.so -w $camera_http_webroot $camera_http_options" -i "$input"
+        LD_LIBRARY_PATH=. ./mjpg_streamer -o "output_http.so -w $camera_http_webroot $camera_http_options" -i "$input" &
         wait
     popd > /dev/null 2>&1
 }
@@ -108,6 +110,7 @@ echo "--- Configuration: ----------------------------"
 echo "camera:        $camera"
 echo "usb options:   $camera_usb_options"
 echo "raspi options: $camera_raspi_options"
+echo "http options:  -w $camera_http_webroot $camera_http_options"
 echo "-----------------------------------------------"
 echo ""
 
