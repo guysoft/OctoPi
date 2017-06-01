@@ -66,9 +66,9 @@ You can build it by issuing the following commands::
 
     sudo apt-get install gawk util-linux realpath qemu-user-static git
     
-    git clone https://github.com/guysoft/OctoPi.git
+    sudo git clone https://github.com/guysoft/OctoPi.git
     cd OctoPi/src/image
-    curl -J -O -L  http://downloads.raspberrypi.org/raspbian_latest
+    sudo curl -J -O -L  http://downloads.raspberrypi.org/raspbian_latest
     cd ..
     sudo modprobe loop
     sudo bash -x ./build
