@@ -4,7 +4,7 @@ short_title: OctoPi
 email: contact@octoprint.org
 description: The ready-to-go Raspberry Pi image with OctoPrint
 external: "https://octopi.octoprint.org"
-#baseurl: "https://octopi.octoprint.org" # the subpath of your site, e.g. /blog/
+baseurl: "https://octopi.octoprint.org" # the subpath of your site, e.g. /blog/
 url: "https://octopi.octoprint.org" # the base hostname & protocol for your site
 twitter_username: OctoPrint3D
 github_username:  guysoft
