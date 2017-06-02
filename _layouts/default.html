@@ -26,6 +26,25 @@
     <!-- Le fav and touch icons -->
     <link rel="shortcut icon" href="{{ site.baseurl }}/assets/img/tentacle-32x32.png">
 
+    <!-- Le social media meta data -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@{{ site.twitter_username }}" />
+    <meta name="twitter:title" content="{{ page.title }}" />
+    <meta name="twitter:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description}}{% endif %}" />
+    <meta name="twitter:image" content="{{ site.baseurl }}/assets/img/octopi-card.png" />
+
+    <meta property="og:title" content="{{ page.title }}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="{{ site.baseurl }}/assets/img/octopi-600x400.png" />
+    <meta property="og:description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description}}{% endif %}" />
+    <meta property="og:site_name" content="{{ page.title }}" />
+    <meta property="og:url" content="{{ page.url | prepend: BASE_PATH | prepend: site.external }}" />
+
+    <meta itemscope itemtype="http://schema.org/WebPage" />
+    <meta itemprop="headline" content="{{ page.title }}" />
+    <meta itemprop="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description}}{% endif %}" />
+    <meta itemprop="image" content="{{ site.baseurl }}/assets/img/octopi-600x400.png" />
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
 </head>
