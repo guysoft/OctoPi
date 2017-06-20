@@ -72,9 +72,9 @@ You can build it by issuing the following commands::
     cd OctoPi/src/image
     curl -J -O -L  http://downloads.raspberrypi.org/raspbian_latest
     cd ..
-    ../CustomPiOS/src/update-custompios-paths
+    ../../CustomPiOS/src/update-custompios-paths
     sudo modprobe loop
-    sudo bash -x ./build
+    sudo bash -x ./build_dist
     
 Building OctoPi Variants
 ~~~~~~~~~~~~~~~~~~~~~~~~
