@@ -1,0 +1,64 @@
+###############################################################################
+# All our config settings must start with OCTOPI_
+
+[ -n "$BASE_PRESCRIPT" ] || BASE_PRESCRIPT=
+[ -n "$BASE_POSTSCRIPT" ] || BASE_POSTSCRIPT=
+
+[ -n "$BASE_SCRIPT_PATH" ] || BASE_SCRIPT_PATH=$CONFIG_DIR
+[ -n "$BASE_IMAGE_PATH" ] || BASE_IMAGE_PATH=$BASE_SCRIPT_PATH/image
+[ -n "$BASE_IMAGE_RASPBIAN" ] || BASE_IMAGE_RASPBIAN=yes
+
+[ -n "$BASE_IMAGE_ZIP_IMG" ] || BASE_IMAGE_ZIP_IMG=`ls -t $BASE_IMAGE_PATH/*-raspbian*.zip | head -n 1`
+
+[ -n "$BASE_WORKSPACE" ] || BASE_WORKSPACE=$BASE_SCRIPT_PATH/workspace$WORKSPACE_POSTFIX
+[ -n "$BASE_CHROOT_SCRIPT_PATH" ] || BASE_CHROOT_SCRIPT_PATH=$BASE_SCRIPT_PATH/chroot_script
+[ -n "$BASE_ROOT_PARTITION" ] || BASE_ROOT_PARTITION=$BASE_WORKSPACE/mount
+
+# The root partiton of the image filesystem, 2 for raspbian
+[ -n "$BASE_ROOT_PARTITION" ] || BASE_ROOT_PARTITION=2
+
+# if set will enlarge root parition prior to build by provided size in MB
+[ -n "$BASE_IMAGE_ENLARGEROOT" ] || BASE_IMAGE_ENLARGEROOT=400
+
+# if set will resize root partition on image after build to minimum size + 
+# provided size in MB
+[ -n "$BASE_IMAGE_RESIZEROOT" ] || BASE_IMAGE_RESIZEROOT=200
+
+# a local directory on the build server to bind mount under /var/cache/apt
+[ -n "$BASE_APT_CACHE" ] || BASE_APT_CACHE=$BASE_WORKSPACE/aptcache
+
+# a host:port combo for a apt-proxy (such as apt-cacher-ng) to use
+[ -n "$BASE_APT_PROXY" ] || BASE_APT_PROXY=
+
+# an alternative pypi index url to use, e.g. a proxy such as devpi
+[ -n "$BASE_PYPI_INDEX" ] || BASE_PYPI_INDEX=
+
+[ -n "$BASE_OVERRIDE_HOSTNAME" ] || BASE_OVERRIDE_HOSTNAME=octopi
+
+# a git mirror to use for git clones instead of original remotes
+[ -n "$BASE_BUILD_REPO_MIRROR" ] || BASE_BUILD_REPO_MIRROR=
+
+# OctoPrint repo & branch
+[ -n "$OCTOPI_OCTOPRINT_REPO_SHIP" ] || OCTOPI_OCTOPRINT_REPO_SHIP=https://github.com/foosel/OctoPrint.git
+[ -n "$OCTOPI_OCTOPRINT_REPO_BUILD" ] || OCTOPI_OCTOPRINT_REPO_BUILD=
+[ -n "$OCTOPI_OCTOPRINT_REPO_BRANCH" ] || OCTOPI_OCTOPRINT_REPO_BRANCH=master
+[ -n "$OCTOPI_INCLUDE_OCTOPRINT" ] || OCTOPI_INCLUDE_OCTOPRINT=yes
+
+# CuraEngine archive & version
+[ -n "$OCTOPI_CURAENGINE_VERSION" ] || OCTOPI_CURAENGINE_VERSION=15.04.6
+[ -n "$OCTOPI_CURAENGINE_ARCHIVE" ] || OCTOPI_CURAENGINE_ARCHIVE=https://github.com/Ultimaker/CuraEngine/archive/$OCTOPI_CURAENGINE_VERSION.zip
+[ -n "$OCTOPI_INCLUDE_CURAENGINE" ] || OCTOPI_INCLUDE_CURAENGINE=yes
+
+# mjpg streamer
+[ -n "$OCTOPI_MJPGSTREAMER_REPO_SHIP" ] || OCTOPI_MJPGSTREAMER_REPO_SHIP=https://github.com/jacksonliam/mjpg-streamer.git
+[ -n "$OCTOPI_MJPGSTREAMER_REPO_BUILD" ] || OCTOPI_MJPGSTREAMER_REPO_BUILD=
+[ -n "$OCTOPI_MJPGSTREAMER_REPO_BRANCH" ] || OCTOPI_MJPGSTREAMER_REPO_BRANCH=master
+[ -n "$OCTOPI_MJPGSTREAMER_REPO_DEPTH" ] || OCTOPI_MJPGSTREAMER_REPO_DEPTH=1
+[ -n "$OCTOPI_INCLUDE_MJPGSTREAMER" ] || OCTOPI_INCLUDE_MJPGSTREAMER=yes
+
+# HAProxy
+[ -n "$OCTOPI_INCLUDE_HAPROXY" ] || OCTOPI_INCLUDE_HAPROXY=yes
+
+# WiringPi
+[ -n "$OCTOPI_INCLUDE_WIRINGPI" ] || OCTOPI_INCLUDE_WIRINGPI=yes
+

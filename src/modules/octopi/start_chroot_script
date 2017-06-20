@@ -11,29 +11,7 @@ export LC_ALL=C
 source /common.sh
 install_cleanup_trap
 
-if [ -n "$OCTOPI_APT_PROXY" ]
-then
-  echo "Acquire::http { Proxy \"http://$OCTOPI_APT_PROXY\"; };" > /etc/apt/apt.conf.d/02octopi_build_proxy
-fi
-
-if [ -n "$OCTOPI_PYPI_INDEX" ]
-then
-  pip_index_config="[global]\nindex-url = $OCTOPI_PYPI_INDEX"
-  easyinstall_index_config="[easy_install]\nindex-url = $OCTOPI_PYPI_INDEX"
-
-  mkdir -p /root/.pip
-  echo -e "$pip_index_config" > /root/.pip/pip.conf
-  echo -e "$easyinstall_index_config" > /root/.pydistutils.cfg
-
-  mkdir -p /home/pi/.pip
-  sudo -u pi echo -e "$pip_index_config" > /home/pi/.pip/pip.conf
-  sudo -u pi echo -e "$easyinstall_index_config" > /home/pi/.pydistutils.cfg
-
-  echo "Configured pypi index url $OCTOPI_PYPI_INDEX"
-  cat /home/pi/.pip/pip.conf
-  cat /home/pi/.pydistutils.cfg
-fi
-
+### Script ####
 # prevent any installed services from automatically starting (I'm looking at you haproxy)
 echo exit 101 > /usr/sbin/policy-rc.d
 chmod +x /usr/sbin/policy-rc.d
@@ -151,25 +129,18 @@ usermod -a -G dialout pi
 
 # store octopi commit used to build this image
 echo "$OCTOPI_COMMIT" > /etc/octopi_commit
-echo "$OCTOPI_BUILDBASE" > /etc/octopi_buildbase
+
+# Keep legacy compatibility
+ln -s /etc/custompios_buildbase /etc/octopi_buildbase
 
 # allow pi user to run shutdown and service commands
 echo "pi ALL=NOPASSWD: /sbin/shutdown" > /etc/sudoers.d/octoprint-shutdown
 echo "pi ALL=NOPASSWD: /sbin/service" > /etc/sudoers.d/octoprint-service
 
-#reach printer by name
-echo "$OCTOPI_OVERRIDE_HOSTNAME" > /etc/hostname
-sed -i -e "s@raspberrypi@$OCTOPI_OVERRIDE_HOSTNAME@g" /etc/hosts
-
 #make sure users don't run git with sudo, thus breaking permissions, by adding /root/bin to the
 #default sudo path and placing a git wrapper script there that checks if it's run as root
 sed -i "s@secure_path=\"@secure_path=\"/root/bin:@g" /etc/sudoers
 chmod +x /root/bin/git
-
-# enable raspicam
-echo "# enable raspicam" >> /boot/config.txt
-echo "start_x=1" >> /boot/config.txt
-echo "gpu_mem=128" >> /boot/config.txt
 
 # allow network configuration via /boot/octopi-network.txt
 sed -i "s@iface wlan0 @iface wlan0-raspbian @g" /etc/network/interfaces
@@ -306,15 +277,3 @@ apt-get autoremove -y
 
 rm -r /usr/sbin/policy-rc.d
 
-if [ -n "$OCTOPI_APT_PROXY" ]
-then
-  rm -r /etc/apt/apt.conf.d/02octopi_build_proxy
-fi
-
-if [ -n "$OCTOPI_PYPI_INDEX" ]
-then
-  rm -r /root/.pip
-  rm -r /root/.pydistutils.cfg
-  rm -r /home/pi/.pip/pip.conf
-  rm -r /home/pi/.pydistutils.cfg
-fi

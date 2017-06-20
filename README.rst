@@ -50,6 +50,7 @@ Requirements
 ~~~~~~~~~~~~
 
 #. `qemu-arm-static <http://packages.debian.org/sid/qemu-user-static>`_
+#. `CustomPiOS <https://github.com/guysoft/CustomPiOS>`_
 #. Downloaded `Raspbian <http://www.raspbian.org/>`_ image.
 #. root privileges for chroot
 #. Bash
@@ -66,10 +67,12 @@ You can build it by issuing the following commands::
 
     sudo apt-get install gawk util-linux realpath qemu-user-static git
     
+    https://github.com/guysoft/CustomPiOS.git
     git clone https://github.com/guysoft/OctoPi.git
     cd OctoPi/src/image
     curl -J -O -L  http://downloads.raspberrypi.org/raspbian_latest
     cd ..
+    ../CustomPiOS/src/update-custompios-paths
     sudo modprobe loop
     sudo bash -x ./build
     
@@ -80,7 +83,7 @@ OctoPi supports building variants, which are builds with changes from the main r
 
 To build a variant use::
 
-    sudo bash -x ./build [Variant]
+    sudo bash -x ./build_dist [Variant]
     
 Building Using Vagrant
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -93,6 +96,7 @@ To use it::
     sudo modprobe nfs
     cd OctoPi/src/vagrant
     sudo vagrant up
+    run_vagrant_build.sh
 
 After provisioning the machine, its also possible to run a nightly build which updates from devel using::
 
@@ -101,15 +105,15 @@ After provisioning the machine, its also possible to run a nightly build which u
     
 To build a variant on the machine simply run::
 
-    cd FullPageOS/src/vagrant
+    cd src/vagrant
     run_vagrant_build.sh [Variant]
     
 
 Usage
 ~~~~~
 
-#. If needed, override existing config settings by creating a new file ``src/config.local``. You can override all settings found in ``src/config``. If you need to override the path to the Raspbian image to use for building OctoPi, override the path to be used in ``ZIP_IMG``. By default the most recent file matching ``*-raspbian.zip`` found in ``src/image`` will be used.
-#. Run ``src/build`` as root.
+#. If needed, override existing config settings by creating a new file ``src/config.local``. You can override all settings found in ``src/modules/octopi/config``. If you need to override the path to the Raspbian image to use for building OctoPi, override the path to be used in ``ZIP_IMG``. By default the most recent file matching ``*-raspbian.zip`` found in ``src/image`` will be used.
+#. Run ``src/build_dist`` as root.
 #. The final image will be created at the ``src/workspace``
 
 Code contribution would be appreciated!
