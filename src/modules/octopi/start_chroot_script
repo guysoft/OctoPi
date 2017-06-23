@@ -9,7 +9,6 @@ set -e
 export LC_ALL=C
 
 source /common.sh
-install_cleanup_trap
 
 ### Script ####
 # prevent any installed services from automatically starting (I'm looking at you haproxy)
@@ -142,35 +141,6 @@ echo "pi ALL=NOPASSWD: /sbin/service" > /etc/sudoers.d/octoprint-service
 sed -i "s@secure_path=\"@secure_path=\"/root/bin:@g" /etc/sudoers
 chmod +x /root/bin/git
 
-# allow network configuration via /boot/octopi-network.txt
-sed -i "s@iface wlan0 @iface wlan0-raspbian @g" /etc/network/interfaces
-sed -i "s@iface wlan1 @iface wlan1-raspbian @g" /etc/network/interfaces
-echo "mapping wlan0" >> /etc/network/interfaces
-echo "  script /root/bin/map_iface" >> /etc/network/interfaces
-echo "mapping wlan1" >> /etc/network/interfaces
-echo "  script /root/bin/map_iface" >> /etc/network/interfaces
-echo "source /boot/octopi-network.txt" >> /etc/network/interfaces
-
-# allow configuring multiple wifi networks via /boot/octopi-wpa-supplicant.txt
-mv /etc/wpa_supplicant/wpa_supplicant.conf /boot/octopi-wpa-supplicant.txt
-ln -s /boot/octopi-wpa-supplicant.txt /etc/wpa_supplicant/wpa_supplicant.conf
-cat <<EOT >> /etc/wpa_supplicant/wpa_supplicant.conf
-
-# This is only used to configure multiple wifi networks or other advanced wifi features.
-# take a look into octopi-network.txt instead if you only need basic wifi configuration
-# 'man -s 5 wpa_supplicant.conf' for advanced options
-#network={
-#  ssid="Your Wifi SSID"
-#  psk="supersecretwifipassword"
-#}
-
-## You can configure more than 1 wifi networks by adding more 'network' blocks
-#network={
-#  ssid="Another Wifi"
-#  psk="password"
-#}
-EOT
-
 # copy /etc/wpa_supplicant/ifupdown.sh to /etc/ifplugd/action.d/ifupdown - for wlan auto reconnect
 [ -f /etc/ifplugd/action.d/ifupdown ] && mv /etc/ifplugd/action.d/ifupdown /etc/ifplugd/action.d/ifupdown.original
 [ -f /etc/wpa_supplicant/ifupdown.sh ] && ln -s /etc/wpa_supplicant/ifupdown.sh /etc/ifplugd/action.d/ifupdown
@@ -199,9 +169,6 @@ echo
 echo "------------------------------------------------------------"
 echo
 EOT
-
-# prevent ntp updates from failing due to some Rpi3 weirdness, see also "Fix SSH" further below
-echo '/sbin/iptables -t mangle -I POSTROUTING 1 -o wlan0 -p udp --dport 123 -j TOS --set-tos 0x00' >> /etc/rc.local
 
 echo 'exit 0' >> /etc/rc.local
 
