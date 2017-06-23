@@ -1,3 +1,4 @@
 src/config.local
+src/custompios_path
 src/image/*.zip
 **/key.json
