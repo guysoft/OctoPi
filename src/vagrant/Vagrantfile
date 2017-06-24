@@ -1,6 +1,6 @@
 Vagrant.configure("2") do |o|
     # o.vm.box = "octopi-build"
-    o.vm.box= "wzurowski/vivid64"
+    o.vm.box= "ubuntu/zesty64"
     o.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
     o.vm.synced_folder "../../", "/OctoPi", create:true, type: "nfs"
     o.vm.network :private_network, ip: "192.168.55.55"
