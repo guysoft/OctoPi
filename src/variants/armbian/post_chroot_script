@@ -1,1 +1,0 @@
-sed -i -e "s@manual@dhcp@g" /boot/octopi-network.txt
