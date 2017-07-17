@@ -3,6 +3,8 @@ src/custompios_path
 src/image/*.zip
 src/image-variants/*.zip
 **/key.json
+src/nightly_build_scripts/index.html
+src/nightly_build_scripts/node_modules
 src/workspace-*
 src/workspace
 src/build.log
