@@ -134,7 +134,7 @@ ln -s /etc/custompios_buildbase /etc/octopi_buildbase
 
 # allow pi user to run shutdown and service commands
 echo "pi ALL=NOPASSWD: /sbin/shutdown" > /etc/sudoers.d/octoprint-shutdown
-echo "pi ALL=NOPASSWD: /sbin/service" > /etc/sudoers.d/octoprint-service
+echo "pi ALL=NOPASSWD: /usr/sbin/service" > /etc/sudoers.d/octoprint-service
 
 #make sure users don't run git with sudo, thus breaking permissions, by adding /root/bin to the
 #default sudo path and placing a git wrapper script there that checks if it's run as root
