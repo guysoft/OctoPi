@@ -90,10 +90,14 @@ Building Using Vagrant
 There is a vagrant machine configuration to let build OctoPi in case your build environment behaves differently. Unless you do extra configuration, vagrant must run as root to have nfs folder sync working.
 
 To use it::
-
+    
     sudo apt-get install vagrant nfs-kernel-server
     sudo vagrant plugin install vagrant-nfs_guest
     sudo modprobe nfs
+    cd ../OctoPi
+    git clone https://github.com/guysoft/CustomPiOS.git    
+    cd OctoPi/src
+    ../../CustomPiOS/src/update-custompios-paths
     cd OctoPi/src/vagrant
     sudo vagrant up
     run_vagrant_build.sh
