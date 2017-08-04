@@ -1,5 +1,6 @@
 #!/bin/bash
 
+_NAME=$(hostname)
 _IP=$(hostname -I)
 _OCTOPRINT_VERSION=$(/home/pi/oprint/bin/python -c "from octoprint._version import get_versions; print(get_versions()['version'])" || echo "unknown")
 _OCTOPI_VERSION=$(cat /etc/octopi_version || echo "unknown")
@@ -8,8 +9,11 @@ echo
 echo "------------------------------------------------------------------------------"
 echo "Access OctoPrint from a web browser on your network by navigating to any of:"
 echo
-echo "    http://octopi.local"
 
+for name in $_NAME;
+do
+    echo "    http://$name.local"
+done
 for ip in $_IP;
 do
     echo "    http://$ip"
