@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-set -x
-set -e
 # OctoPI generation script
 # Helper script that runs in a Raspbian chroot to create the OctoPI distro
-# Written by Guy Sheffer <guysoft at gmail dot com>
+# Written by Guy Sheffer <guysoft at gmail dot com> and Gina Häußge <osd@foosel.net>
 # GPL V3
+########
+set -x
+set -e
 
 export LC_ALL=C
 
