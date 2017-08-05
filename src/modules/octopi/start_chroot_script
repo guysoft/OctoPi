@@ -12,9 +12,6 @@ export LC_ALL=C
 source /common.sh
 
 ### Script ####
-# prevent any installed services from automatically starting (I'm looking at you haproxy)
-echo exit 101 > /usr/sbin/policy-rc.d
-chmod +x /usr/sbin/policy-rc.d
 
 unpack /filesystem/home/pi /home/pi pi
 unpack /filesystem/home/root /root root
@@ -238,6 +235,4 @@ fi
 #cleanup
 apt-get clean
 apt-get autoremove -y
-
-rm -r /usr/sbin/policy-rc.d
 
