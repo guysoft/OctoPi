@@ -167,14 +167,14 @@ var outputPage = function(files, s) {
   output.write("<h2 id='rpi'>Raspberry Pi</h2>\n");
 
   output.write("<h3 id='rpi-stable'>Stable Builds</h3>\n")
-  outputTable(filterNameByRegex(files, /^stable\/.*octopi-(wheezy|jessie)-.*/),
+  outputTable(filterNameByRegex(files, /^stable\/.*octopi-(wheezy|jessie|stretch)-.*/),
               output,
               function(name) { return stripLeading(name, "stable/") },
               3);
 
   output.write("<h3 id='rpi-nightly'>Nightly Builds</h3>\n");
   output.write("<small>Warning: These builds are untested and can be unstable and/or broken. If in doubt use a stable build.</small>");
-  outputTable(filterNameByRegex(files.filter(function (obj) { return !obj.name.startsWith("stable/") && !obj.name.startsWith("bananapi-m1/") }), /octopi-(wheezy|jessie)-/),
+  outputTable(filterNameByRegex(files.filter(function (obj) { return !obj.name.startsWith("stable/") && !obj.name.startsWith("bananapi-m1/") }), /octopi-(wheezy|jessie|stretch)-/),
               output,
               function(name) { return name },
               14);
