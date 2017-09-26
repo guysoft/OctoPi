@@ -176,7 +176,7 @@ unpack /filesystem/root /
 ### setup services
 
 ### Disable GUI at start
-systemctl_if_exists disable lightdm.service
+systemctl_if_exists disable lightdm.service || true
 
 update-rc.d change_password defaults
 update-rc.d change_hostname defaults
