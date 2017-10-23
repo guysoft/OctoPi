@@ -201,10 +201,10 @@ fi
 
 if [ "$OCTOPI_INCLUDE_HAPROXY" == "yes" ]
 then
-  update-rc.d gencert defaults
+  systemctl_if_exists enable gencert.service
 else
   # let's remove the configs for system services we don't need
-  rm /etc/init.d/gencert
+  rm /etc/systemd/system/gencert.service
 
   # also we need to make OctoPrint bind to all interfaces because otherwise
   # it will be unaccessible...

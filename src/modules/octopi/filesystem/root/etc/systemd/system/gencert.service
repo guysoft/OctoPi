@@ -1,0 +1,17 @@
+[Unit]
+Description=Ensure that haproxy certs are generated
+
+DefaultDependencies=no
+
+Before=network-pre.target
+Wants=network-pre.target
+
+After=local-fs.target
+Wants=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/root/bin/gencert
+
+[Install]
+WantedBy=multi-user.target
