@@ -2,7 +2,14 @@
 
 if [ "$(id -u)" == "0" ]
 then
-  echo "Please run git without sudo, your regular user account is enough :)" 2>&1
+  echo "Please do not run git as root, your regular user account is enough :)"
+  echo
+  echo "If you need to run git with root rights for some other application than"
+  echo "what comes preinstalled on this image you can remove this sanity check:"
+  echo
+  echo "    sudo rm /root/bin/git"
+  echo
+  echo "You might have to restart your login session after doing that."
   exit 1
 fi
 
