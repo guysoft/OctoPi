@@ -186,6 +186,12 @@ systemctl_if_exists enable check_wpa_link.service
 ### Fix SSH
 echo "IPQoS 0x00" >> /etc/ssh/sshd_config
 
+
+### Try and fix https://github.com/guysoft/OctoPi/issues/424
+
+sed -i "s@ExecStart=/usr/bin/ssh-keygen -A -v@ExecStart=/bin/bash -c ' /usr/bin/ssh-keygen -A -v >> /var/log/regenerate_ssh_host_keys.log 2>\&1'@g" /lib/systemd/system/regenerate_ssh_host_keys.service
+sed -i "s@ExecStartPost=/bin/systemctl disable regenerate_ssh_host_keys@ExecStartPost=/bin/bash -c 'for i in /etc/ssh/ssh_host_*_key*; do actualsize=\$(wc -c <\"\$i\") ;if [ \$actualsize -eq 0 ]; then echo size is 0 bytes ; exit 1 ; fi ; done ; /bin/systemctl disable regenerate_ssh_host_keys'@g" /lib/systemd/system/regenerate_ssh_host_keys.service
+
 ### OctoPrint
 
 if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
