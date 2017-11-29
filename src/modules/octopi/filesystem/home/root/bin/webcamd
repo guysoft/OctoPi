@@ -27,7 +27,7 @@ if [ -e "/boot/octopi.txt" ]; then
     source "/boot/octopi.txt"
 fi
 
-brokenfps_usb_devices=("046d:082b" "${additional_brokenfps_usb_devices[@]}")
+brokenfps_usb_devices=("046d:082b" "1908:2310" "${additional_brokenfps_usb_devices[@]}")
 
 # cleans up when the script receives a SIGINT or SIGTERM
 function cleanup() {
