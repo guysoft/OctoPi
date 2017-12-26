@@ -39,7 +39,7 @@
 # If this fixes your problem, please report it back so we can include the device
 # out of the box.
 #
-#additional_brokenfps_usb_devices=("046d:082b" "aabb:ccdd")
+#additional_brokenfps_usb_devices=("046d:082b" "1908:2310" "aabb:ccdd")
 
 ### Additional options to supply to MJPG Streamer for the RasPi Cam
 #
