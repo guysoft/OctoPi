@@ -65,7 +65,7 @@ OctoPi can be built from Debian, Ubuntu, Raspbian, or even OctoPi.
 Build requires about 2.5 GB of free space available.
 You can build it by issuing the following commands::
 
-    sudo apt-get install gawk util-linux realpath qemu-user-static git p7zip-full
+    sudo apt-get install gawk util-linux realpath qemu-user-static git p7zip-full python3
     
     git clone https://github.com/guysoft/CustomPiOS.git
     git clone https://github.com/guysoft/OctoPi.git
