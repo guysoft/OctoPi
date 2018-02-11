@@ -98,12 +98,14 @@ To use it::
     sudo apt-get install vagrant nfs-kernel-server virtualbox
     sudo vagrant plugin install vagrant-nfs_guest
     sudo modprobe nfs
-    cd ../OctoPi
-    git clone https://github.com/guysoft/CustomPiOS.git    
-    cd OctoPi/src
+    git clone https://github.com/guysoft/CustomPiOS.git
+    git clone https://github.com/guysoft/OctoPi.git
+    cd OctoPi/src/image
+    wget -c --trust-server-names 'https://downloads.raspberrypi.org/raspbian_lite_latest'
+    cd ..
     ../../CustomPiOS/src/update-custompios-paths
-    cd OctoPi/src/vagrant
-    sudo vagrant up
+    cd vagrant
+    vagrant up
     run_vagrant_build.sh
 
 After provisioning the machine, its also possible to run a nightly build which updates from devel using::
