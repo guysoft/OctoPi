@@ -140,6 +140,7 @@ sed -i "s@secure_path=\"@secure_path=\"/root/bin:@g" /etc/sudoers
 chmod +x /root/bin/git
 
 # add some "How To" info to boot output
+# Note, this code is also in /filesystem/home/pi/scripts/
 sed -i 's@exit 0@@' /etc/rc.local
 cat <<'EOT' >> /etc/rc.local
 
@@ -150,7 +151,10 @@ echo "You may now open a web browser on your local network and "
 echo "navigate to any of the following addresses to access "
 echo "OctoPrint:"
 echo
-echo "    http://octopi.local"
+for name in $_NAME;
+do
+    echo " http://$name.local"
+done
 
 for ip in $(hostname -I);
 do 
