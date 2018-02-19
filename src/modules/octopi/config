@@ -1,11 +1,13 @@
 ###############################################################################
 # All our config settings must start with OCTOPI_
 
-# OctoPrint repo & branch
+# OctoPrint archive
+[ -n "$OCTOPI_OCTOPRINT_ARCHIVE" ] || OCTOPI_OCTOPRINT_ARCHIVE=$(curl -s https://api.github.com/repos/foosel/OctoPrint/releases/latest | grep "zipball_url" | cut -d : -f 2,3 | tr -d \" | tr -d ,)
 [ -n "$OCTOPI_OCTOPRINT_REPO_SHIP" ] || OCTOPI_OCTOPRINT_REPO_SHIP=https://github.com/foosel/OctoPrint.git
-[ -n "$OCTOPI_OCTOPRINT_REPO_BUILD" ] || OCTOPI_OCTOPRINT_REPO_BUILD=
-[ -n "$OCTOPI_OCTOPRINT_REPO_BRANCH" ] || OCTOPI_OCTOPRINT_REPO_BRANCH=master
 [ -n "$OCTOPI_INCLUDE_OCTOPRINT" ] || OCTOPI_INCLUDE_OCTOPRINT=yes
+
+# PyBonjour archive
+[ -n "$OCTOPI_PYBONJOUR_ARCHIVE" ] || OCTOPI_PYBONJOUR_ARCHIVE=https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/pybonjour/pybonjour-1.1.1.tar.gz
 
 # CuraEngine archive & version
 [ -n "$OCTOPI_CURAENGINE_VERSION" ] || OCTOPI_CURAENGINE_VERSION=15.04.6

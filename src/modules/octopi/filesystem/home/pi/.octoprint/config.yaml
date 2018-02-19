@@ -7,10 +7,6 @@ plugins:
     cura_engine: /usr/local/bin/cura_engine
   discovery:
     publicPort: 80
-  softwareupdate:
-    checks:
-      octoprint:
-        update_folder: /home/pi/OctoPrint
 server:
   commands:
     systemShutdownCommand: sudo shutdown -h now
