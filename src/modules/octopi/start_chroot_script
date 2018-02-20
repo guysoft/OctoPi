@@ -48,20 +48,6 @@ pushd /home/pi
 
     #OctoPrint
     PIP_DEFAULT_TIMEOUT=60 sudo -u pi /home/pi/oprint/bin/pip install $OCTOPI_OCTOPRINT_ARCHIVE
-
-    #"redirect" for people still expecting a source checkout at ~/OctoPrint...
-    sudo -u pi mkdir OctoPrint
-    cat <<EOT >> OctoPrint/README.txt
-OctoPrint 1.3.6 and newer no longer rely on a git checkout for updates,
-so OctoPi no longer goes that route either.
-
-Feel free to manually create a git clone though if you need it (e.g. for
-branch based updates or on board development):
-
-    cd ~
-    rm -r OctoPrint
-    git clone $OCTOPI_OCTOPRINT_REPO_SHIP
-EOT
   fi
 
   #mjpg-streamer
@@ -128,6 +114,9 @@ EOT
     echo "--- Installing WiringPi"
     apt-get install wiringpi
   fi
+
+  # fetch current yq build and install to /usr/local/bin
+  wget -O yq $OCTOPI_YQ_DOWNLOAD && chmod +x yq && mv yq /usr/local/bin
   
 popd
 
