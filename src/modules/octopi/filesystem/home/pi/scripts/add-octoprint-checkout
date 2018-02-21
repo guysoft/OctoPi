@@ -1,0 +1,43 @@
+#!/bin/bash
+
+OCTOPRINT_FOLDER=/home/pi/OctoPrint
+OCTOPRINT_CONFIG=/home/pi/.octoprint/config.yaml
+
+pause() {
+  read -n1 -r -p $'Press any key to continue or Ctrl+C to exit...\n' key
+}
+
+echo
+echo "This will add a git checkout of OctoPrint to ~/OctoPrint."
+echo
+echo "This can be helpful if you want to run development branches"
+echo "of OctoPrint or do local development yourself."
+echo
+echo "It is however not needed for OctoPrint's normal operation."
+echo
+echo "If you do not want to add the git checkout after all, please"
+echo "hit Ctrl+C now."
+echo
+
+pause
+
+echo "--- Adding git checkout"
+
+rm -r $OCTOPRINT_FOLDER || true
+git clone https://github.com/foosel/OctoPrint.git $OCTOPRINT_FOLDER
+
+echo "--- Configuring checkout folder in OctoPrint's config.yaml"
+
+echo "plugins: {softwareupdate: {checks: {octoprint: {update_folder: $OCTOPRINT_FOLDER}}}}" | yq m -i $OCTOPRINT_CONFIG -
+
+echo
+echo "--- Done!"
+echo
+
+echo "Your git checkout is now available at ~/OctoPrint. Please note that it"
+echo "is currently not installed. If you want to replace the default installation"
+echo "of OctoPrint with whatever is currently checked out in your git checkout"
+echo "you'll need to do this manually. You'll also need to keep your checkout"
+echo "up to date manually if you still have OctoPrint's update mode set to release"
+echo "tracking."
+echo

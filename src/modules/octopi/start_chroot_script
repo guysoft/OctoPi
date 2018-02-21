@@ -44,13 +44,10 @@ pushd /home/pi
     echo "--- Installing OctoPrint"
 
     #pybonjour (for mdns discovery)
-    sudo -u pi /home/pi/oprint/bin/pip install https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/pybonjour/pybonjour-1.1.1.tar.gz
+    sudo -u pi /home/pi/oprint/bin/pip install $OCTOPI_PYBONJOUR_ARCHIVE
 
     #OctoPrint
-    gitclone OCTOPI_OCTOPRINT_REPO OctoPrint
-    pushd OctoPrint
-      PIP_DEFAULT_TIMEOUT=60 sudo -u pi /home/pi/oprint/bin/python setup.py install
-    popd
+    PIP_DEFAULT_TIMEOUT=60 sudo -u pi /home/pi/oprint/bin/pip install $OCTOPI_OCTOPRINT_ARCHIVE
   fi
 
   #mjpg-streamer
@@ -117,6 +114,9 @@ EOT
     echo "--- Installing WiringPi"
     apt-get install wiringpi
   fi
+
+  # fetch current yq build and install to /usr/local/bin
+  wget -O yq $OCTOPI_YQ_DOWNLOAD && chmod +x yq && mv yq /usr/local/bin
   
 popd
 
