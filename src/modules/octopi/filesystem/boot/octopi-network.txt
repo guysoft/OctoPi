@@ -1,0 +1,3 @@
+# Using this file to configure your network connection is no longer supported.
+#
+# Please use octopi-wpa-supplicant.txt instead.
