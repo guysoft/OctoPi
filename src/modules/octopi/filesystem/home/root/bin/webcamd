@@ -65,7 +65,7 @@ function startRaspi {
 function startUsb {
     options="$camera_usb_options"
     device="video0"
-    
+
     extracted_device=`echo $options | sed 's@.*-d /dev/\(video[0-9]+\).*@\1@'`
     if [ "$extracted_device" != "$options" ]
     then
@@ -79,7 +79,7 @@ function startUsb {
         product=`cat $uevent_file | grep PRODUCT | cut -d"=" -f2`
         vid=`echo $product | cut -d"/" -f1`
         pid=`echo $product | cut -d"/" -f2`
-        vidpid=`printf "%04x:%04x" "0x$vid" "0x$pid"` 
+        vidpid=`printf "%04x:%04x" "0x$vid" "0x$pid"`
 
         # ... then look if it is in our list of known broken-fps-devices and if so remove
         # the -f parameter from the options (if it's in there, else that's just a no-op)
@@ -120,7 +120,9 @@ vcgencmd version > /dev/null 2>&1
 
 # keep mjpg streamer running if some camera is attached
 while true; do
-    if [ -e "/dev/video0" ] && { [ "$camera" = "auto" ] || [ "$camera" = "usb" ] ; }; then
+    # get number of usb video devices
+    video_device_count = $(ls /dev/video? 2> /dev/null | wc -l)
+    if [ "$video_device_count" != "0" ] && { [ "$camera" = "auto" ] || [ "$camera" = "usb" ] ; }; then
         startUsb
         sleep 30 &
         wait
