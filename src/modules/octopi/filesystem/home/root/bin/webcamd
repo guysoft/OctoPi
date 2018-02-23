@@ -121,7 +121,7 @@ vcgencmd version > /dev/null 2>&1
 # keep mjpg streamer running if some camera is attached
 while true; do
     # get number of usb video devices
-    video_device_count = $(ls /dev/video? 2> /dev/null | wc -l)
+    video_device_count=$(ls /dev/video? 2> /dev/null | wc -l)
     if [ "$video_device_count" != "0" ] && { [ "$camera" = "auto" ] || [ "$camera" = "usb" ] ; }; then
         startUsb
         sleep 30 &
