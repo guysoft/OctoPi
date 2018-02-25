@@ -66,11 +66,21 @@ function startUsb {
     options="$camera_usb_options"
     device="video0"
 
-    extracted_device=`echo $options | sed 's@.*-d /dev/\(video[0-9]+\).*@\1@'`
+    # check for parameter and set the device if it is given as a parameter
+    input=$1
+    if [[ -n $input ]]; then
+        device=`basename "$input"`
+    fi
+
+    # override the device if it is set in the config
+    extracted_device=`echo $options | sed 's@.*-d /dev/\(video[0-9]\+\).*@\1@'`
     if [ "$extracted_device" != "$options" ]
     then
-        # the camera options refer to another device, use that for determining product
+        # the camera options refer to a device, use that for determining product
         device=$extracted_device
+    else
+        # there was no device explicitly set in the options, let's add it there
+        options="$options -d /dev/$device"
     fi
 
     uevent_file="/sys/class/video4linux/$device/device/uevent"
@@ -120,10 +130,11 @@ vcgencmd version > /dev/null 2>&1
 
 # keep mjpg streamer running if some camera is attached
 while true; do
-    # get number of usb video devices
-    video_device_count=$(ls /dev/video? 2> /dev/null | wc -l)
-    if [ "$video_device_count" != "0" ] && { [ "$camera" = "auto" ] || [ "$camera" = "usb" ] ; }; then
-        startUsb
+    # get list of usb video devices into an array
+    video_devices=($(ls /dev/video? 2> /dev/null))
+    if [ ${#video_devices[@]} != 0 ] && { [ "$camera" = "auto" ] || [ "$camera" = "usb" ] ; }; then
+        #start with first usb camera as the parameter
+        startUsb "${video_devices[0]}"
         sleep 30 &
         wait
     elif [ "`vcgencmd get_camera`" = "supported=1 detected=1" ] && { [ "$camera" = "auto" ] || [ "$camera" = "raspi" ] ; }; then
