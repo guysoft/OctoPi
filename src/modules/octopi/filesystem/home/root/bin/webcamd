@@ -29,6 +29,14 @@ fi
 
 brokenfps_usb_devices=("046d:082b" "1908:2310" "${additional_brokenfps_usb_devices[@]}")
 
+# check if array contains a string
+function containsString() {
+  local e match="$1"
+  shift
+  for e; do [[ "$e" == "$match" ]] && return 0; done
+  return 1
+}
+
 # cleans up when the script receives a SIGINT or SIGTERM
 function cleanup() {
     # make sure that all child processed die when we die
@@ -63,7 +71,7 @@ function startRaspi {
 
 # starts up the USB webcam
 function startUsb {
-    options="$camera_usb_options"
+    options="$usb_options"
     device="video0"
 
     # check for parameter and set the device if it is given as a parameter
@@ -72,16 +80,8 @@ function startUsb {
         device=`basename "$input"`
     fi
 
-    # override the device if it is set in the config
-    extracted_device=`echo $options | sed 's@.*-d /dev/\(video[0-9]\+\).*@\1@'`
-    if [ "$extracted_device" != "$options" ]
-    then
-        # the camera options refer to a device, use that for determining product
-        device=$extracted_device
-    else
-        # there was no device explicitly set in the options, let's add it there
-        options="$options -d /dev/$device"
-    fi
+    # add video device into options
+    options="$options -d /dev/$device"
 
     uevent_file="/sys/class/video4linux/$device/device/uevent"
     if [ -e $uevent_file ]; then
@@ -128,22 +128,59 @@ echo ""
 # I have no idea why, but that's how it is...
 vcgencmd version > /dev/null 2>&1
 
+usb_options="$camera_usb_options"
+
+# if webcam device is explicitly given in /boot/octopi.txt, save the path of the device
+# to a variable and remove its parameter from usb_options
+extracted_device=`echo $usb_options | sed 's@.*-d \(/dev/video[0-9]\+\).*@\1@'`
+if [ "$extracted_device" != "$usb_options" ]
+then
+    # the camera options refer to a device, save it in a variable
+    usb_device_path="$extracted_device"
+    # replace video device parameter with empty string and strip extra whitespace
+    usb_options=`echo $usb_options | sed 's/\-d \/dev\/video[0-9]\+//g' | awk '$1=$1'`
+    echo "Explicitly set USB device was found in options: $usb_device_path"
+fi
+
 # keep mjpg streamer running if some camera is attached
 while true; do
+
     # get list of usb video devices into an array
-    video_devices=($(ls /dev/video? 2> /dev/null))
+    video_devices=($(find /dev -regextype sed -regex '\/dev/video[0-9]\+' | sort 2> /dev/null))
+    echo "Found video devices:" && printf '%s\n' "${video_devices[@]}"
+
     if [ ${#video_devices[@]} != 0 ] && { [ "$camera" = "auto" ] || [ "$camera" = "usb" ] ; }; then
-        #start with first usb camera as the parameter
-        startUsb "${video_devices[0]}"
+
+        if [[ $usb_device_path ]]; then
+            # usb device is explicitly set in options
+            if containsString "$usb_device_path" "${video_devices[@]}"; then
+                # explicitly set usb device was found in video_devices array, start usb with the found device
+                echo "USB device was set in options and found in devices, start MJPG-streamer with the configured USB video device: $usb_device_path"
+                startUsb "$usb_device_path"
+            else
+                # explicitly set usb device was not found
+                echo "Configured USB camera was not detected, trying again in two minutes"
+                sleep 120 &
+                wait
+            fi
+        else
+            # device is not set explicitly in options, start usb with first found usb camera as the device
+            echo "USB device was not set in options, start MJPG-streamer with the first found video device: ${video_devices[0]}"
+            startUsb "${video_devices[0]}"
+        fi
+
         sleep 30 &
         wait
+
     elif [ "`vcgencmd get_camera`" = "supported=1 detected=1" ] && { [ "$camera" = "auto" ] || [ "$camera" = "raspi" ] ; }; then
         startRaspi
         sleep 30 &
         wait
+
     else
         echo "No camera detected, trying again in two minutes"
         sleep 120 &
         wait
+
     fi
 done
