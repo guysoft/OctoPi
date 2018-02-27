@@ -147,9 +147,11 @@ while true; do
 
     # get list of usb video devices into an array
     video_devices=($(find /dev -regextype sed -regex '\/dev/video[0-9]\+' | sort 2> /dev/null))
-    echo "Found video devices:" && printf '%s\n' "${video_devices[@]}"
 
     if [ ${#video_devices[@]} != 0 ] && { [ "$camera" = "auto" ] || [ "$camera" = "usb" ] ; }; then
+
+        echo "Found video devices:"
+        printf '%s\n' "${video_devices[@]}"
 
         if [[ $usb_device_path ]]; then
             # usb device is explicitly set in options
