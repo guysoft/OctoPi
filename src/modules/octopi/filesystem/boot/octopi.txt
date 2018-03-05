@@ -36,16 +36,21 @@
 #
 # By default, this is done for the following devices:
 #   Logitech C170 (046d:082b)
+#   GEMBIRD (1908:2310)
+#   Genius F100 (0458:708c)
+#   Cubeternet GL-UPC822 UVC WebCam (1e4e:0102)
 #
 # Using the following option it is possible to add additional devices. If
 # your webcam happens to show above symptoms, try determining your cam's
 # vendor and product id via lsusb, activating the line below by removing # and 
-# adding it as shown examplatory.
+# adding it, e.g. for two broken cameras "aabb:ccdd" and "aabb:eeff"
+#
+#   additional_brokenfps_usb_devices=("aabb:ccdd" "aabb:eeff")
 #
 # If this fixes your problem, please report it back so we can include the device
-# out of the box.
+# out of the box: https://github.com/guysoft/OctoPi/issues
 #
-#additional_brokenfps_usb_devices=("046d:082b" "1908:2310" "1e4e:0102" "aabb:ccdd")
+#additional_brokenfps_usb_devices=()
 
 ### Additional options to supply to MJPG Streamer for the RasPi Cam
 #
