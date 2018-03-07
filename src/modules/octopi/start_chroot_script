@@ -185,9 +185,6 @@ systemctl_if_exists disable lightdm.service || true
 update-rc.d change_password defaults
 update-rc.d change_hostname defaults
 
-### Fix SSH
-echo "IPQoS 0x00" >> /etc/ssh/sshd_config
-
 
 ### Try and fix https://github.com/guysoft/OctoPi/issues/424
 
