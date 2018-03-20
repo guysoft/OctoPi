@@ -84,7 +84,7 @@ Content-Type: text/html
                 </li>
                 <li>
                     If you have a USB camera, it might be that it does not support MJPG (Motion JPEG) natively and needs the
-                    <code>-y</code> parameter to work. Try <a href="https://github.com/foosel/OctoPrint/wiki/FAQ#how-can-i-change-the-webcam-resolution-on-octopi" target="_blank">editing <code>octopi.txt</code></a>,
+                    <code>-y</code> parameter to work. Try <a href="https://discourse.octoprint.org/t/how-can-i-change-mjpg-streamer-parameters-on-octopi/203" target="_blank">editing <code>octopi.txt</code></a>,
                     add <code>-y</code> to <code>camera_usb_options</code> and make sure to remove the leading <code>#</code>, e.g.:
                     <pre>camera_usb_options="-r 640x480 -f 10 -y"</pre>
                     Reboot your Raspberry Pi with the camera attached and see if that makes it work.<br>
@@ -101,11 +101,8 @@ Content-Type: text/html
 
             <p>
                 If all that doesn't help to trouble shoot the issue, you can seek
-                support on the
-                <a href="https://groups.google.com/group/octoprint">OctoPrint Mailinglist</a>
-                or in the <a href="https://plus.google.com/communities/102771308349328485741">OctoPrint G+ Community</a>.
-                Please provide your camera model, <code>lsusb</code> output and <code>/var/log/webcamd.log</code> (as a 
-                <a href="http://pastebin.com/" target="_blank">pastebin link</a>) and explain what you 
+                support on the <a href="https://discourse.octoprint.org">OctoPrint Community Forum</a>.
+                Please provide your camera model, <code>lsusb</code> output and <code>/var/log/webcamd.log</code> and explain what you 
                 already tried and observed as detailed as possible.
             </p>
         </div>
