@@ -17,8 +17,7 @@
 
 ### Additional options to supply to MJPG Streamer for the USB camera
 #
-# See https://github.com/foosel/OctoPrint/wiki/MJPG-Streamer-configuration
-# for available options
+# See https://faq.octoprint.org/mjpg-streamer-config for available options
 #
 # Defaults to a resolution of 640x480 px and a framerate of 10 fps
 #
@@ -54,8 +53,7 @@
 
 ### Additional options to supply to MJPG Streamer for the RasPi Cam
 #
-# See https://github.com/foosel/OctoPrint/wiki/MJPG-Streamer-configuration
-# for available options
+# See https://faq.octoprint.org/mjpg-streamer-config for available options
 #
 # Defaults to 10fps
 #
