@@ -16,7 +16,12 @@ do
 done
 for ip in $_IP;
 do
-    echo "    http://$ip"
+    if [[ $ip =~ .*:.* ]]
+    then
+        echo "    http://[$ip]"
+    else
+        echo "    http://$ip"
+    fi
 done
 
 echo
