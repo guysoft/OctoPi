@@ -17,7 +17,7 @@ Download the latest stable build via this button:
 .. image:: https://i.imgur.com/NvUOGfS.png
    :target: https://octopi.octoprint.org/latest
 
-Official mirror is `here <http://docstech.net/OctoPiMirror/>`_
+Official mirror is `here <https://github.com/guysoft/OctoPi/releases>`_
 
 Nightly builds are available `here <http://gnethomelinux.com/OctoPi/nightly/>`_
 
