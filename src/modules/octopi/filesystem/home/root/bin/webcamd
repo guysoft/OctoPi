@@ -27,7 +27,7 @@ if [ -e "/boot/octopi.txt" ]; then
     source "/boot/octopi.txt"
 fi
 
-brokenfps_usb_devices=("046d:082b" "1908:2310" "0458:708c" "1e4e:0102" "${additional_brokenfps_usb_devices[@]}")
+brokenfps_usb_devices=("046d:082b" "1908:2310" "0458:708c" "1e4e:0102" "0471:0311" "${additional_brokenfps_usb_devices[@]}")
 
 # check if array contains a string
 function containsString() {
