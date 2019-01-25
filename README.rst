@@ -29,7 +29,7 @@ How to use it?
 #. Boot the Pi from the card
 #. Log into your Pi via SSH (it is located at ``octopi.local`` `if your computer supports bonjour <https://learn.adafruit.com/bonjour-zeroconf-networking-for-windows-and-linux/overview>`_ or the IP address assigned by your router), default username is "pi", default password is "raspberry". Run ``sudo raspi-config``. Once that is open:
 
-   a. Change the password using via "Change User Password"
+   a. Change the password via "Change User Password"
    b. Optionally: Change the configured timezone via "Localization Options" > "Timezone".
    c. Optionally: Change the hostname via "Network Options" > "Hostname". Your OctoPi instance will then no longer be reachable under ``octopi.local`` but rather the hostname you chose postfixed with ``.local``, so keep that in mind.
   
