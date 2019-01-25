@@ -34,6 +34,8 @@ How to use it?
    c. Optionally: Change the hostname via "Network Options" > "Hostname". Your OctoPi instance will then no longer be reachable under ``octopi.local`` but rather the hostname you chose postfixed with ``.local``, so keep that in mind.
   
    You can navigate in the menus using the arrow keys and Enter. To switch to selecting the buttons at the bottom use Tab.
+   
+   You do not need to expand the filesystem, current versions of OctoPi do this automatically.
 
 OctoPrint is located at `http://octopi.local <http://octopi.local>`_ and also at `https://octopi.local <https://octopi.local>`_. Since the SSL certificate is self signed (and generated upon first boot), you will get a certificate warning at the latter location, please ignore it.
 
