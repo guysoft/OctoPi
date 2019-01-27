@@ -35,9 +35,7 @@ pushd /home/pi
   #build virtualenv
   sudo -u pi virtualenv oprint
   
-  # first lets upgrade pip (the shipped version is way too old...)
-  # issue #526 - pin pip to 9.0.3 until OctoPrint 1.3.9 is released
-  sudo -u pi /home/pi/oprint/bin/pip install pip==9.0.3
+  sudo -u pi /home/pi/oprint/bin/pip install --upgrade pip
 
   # OctoPrint & pyserial
   if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
