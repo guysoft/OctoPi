@@ -13,4 +13,4 @@ then
   exit 1
 fi
 
-/usr/bin/git "$@"
+exec /usr/bin/git "$@"
