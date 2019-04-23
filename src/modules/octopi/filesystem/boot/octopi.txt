@@ -17,7 +17,8 @@
 
 ### Additional options to supply to MJPG Streamer for the USB camera
 #
-# See https://faq.octoprint.org/mjpg-streamer-config for available options
+# See the following for available options:
+# https://community.octoprint.org/t/how-can-i-change-mjpg-streamer-parameters-on-octopi/203
 #
 # Defaults to a resolution of 640x480 px and a framerate of 10 fps
 #
