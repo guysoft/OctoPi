@@ -3,6 +3,12 @@
 OCTOPRINT_FOLDER=/home/pi/OctoPrint
 OCTOPRINT_CONFIG=/home/pi/.octoprint/config.yaml
 
+if [ "${PWD}" == "${OCTOPRINT_FOLDER}" ]; then
+    echo "Error: you are in the folder: "${OCTOPRINT_FOLDER}
+    echo "This is where OctoPrint is going to be checked out, please change to a different folder before running this script"
+    exit 1
+fi
+
 pause() {
   read -n1 -r -p $'Press any key to continue or Ctrl+C to exit...\n' key
 }
