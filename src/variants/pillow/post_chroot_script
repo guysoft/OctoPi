@@ -1,0 +1,4 @@
+apt-get update
+apt-get install -y python-dev python-setuptools
+sudo -u pi /home/pi/oprint/bin/pip install Pillow
+
