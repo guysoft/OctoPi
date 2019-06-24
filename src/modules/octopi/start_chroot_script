@@ -59,7 +59,7 @@ pushd /home/pi
       apt-get -y --force-yes install libjpeg8-dev
     fi
     
-    apt-get -y --force-yes --no-install-recommends install imagemagick libav-tools libv4l-dev
+    apt-get -y --force-yes --no-install-recommends install imagemagick ffmpeg libv4l-dev
     gitclone OCTOPI_MJPGSTREAMER_REPO mjpg-streamer
     pushd mjpg-streamer
       mv mjpg-streamer-experimental/* .
