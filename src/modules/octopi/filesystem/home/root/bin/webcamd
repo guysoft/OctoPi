@@ -136,10 +136,11 @@ extracted_device=`echo $usb_options | sed 's@.*-d \(/dev/\(video[0-9]\+\|v4l/[^ 
 if [ "$extracted_device" != "$usb_options" ]
 then
     # the camera options refer to a device, save it in a variable
-    usb_device_path=`readlink -f ${extracted_device}`
     # replace video device parameter with empty string and strip extra whitespace
     usb_options=`echo $usb_options | sed 's/\-d \/dev\/\(video[0-9]\+\|v4l\/[^ ]*\)//g' | awk '$1=$1'`
-    echo "Explicitly set USB device was found in options: $usb_device_path"
+    echo "Explicitly set USB device was found in options: $extracted_device"
+else
+    unset extracted_device
 fi
 
 # keep mjpg streamer running if some camera is attached
@@ -153,8 +154,9 @@ while true; do
         echo "Found video devices:"
         printf '%s\n' "${video_devices[@]}"
 
-        if [[ $usb_device_path ]]; then
+        if [[ $extracted_device ]]; then
             # usb device is explicitly set in options
+            usb_device_path=`readlink -f ${extracted_device}`
             if containsString "$usb_device_path" "${video_devices[@]}"; then
                 # explicitly set usb device was found in video_devices array, start usb with the found device
                 echo "USB device was set in options and found in devices, start MJPG-streamer with the configured USB video device: $usb_device_path"
