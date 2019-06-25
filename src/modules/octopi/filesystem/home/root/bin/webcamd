@@ -132,13 +132,13 @@ usb_options="$camera_usb_options"
 
 # if webcam device is explicitly given in /boot/octopi.txt, save the path of the device
 # to a variable and remove its parameter from usb_options
-extracted_device=`echo $usb_options | sed 's@.*-d \(/dev/video[0-9]\+\).*@\1@'`
+extracted_device=`echo $usb_options | sed 's@.*-d \(/dev/\(video[0-9]\+\|v4l/[^ ]*\)\).*@\1@'`
 if [ "$extracted_device" != "$usb_options" ]
 then
     # the camera options refer to a device, save it in a variable
-    usb_device_path="$extracted_device"
+    usb_device_path=`readlink -f ${extracted_device}`
     # replace video device parameter with empty string and strip extra whitespace
-    usb_options=`echo $usb_options | sed 's/\-d \/dev\/video[0-9]\+//g' | awk '$1=$1'`
+    usb_options=`echo $usb_options | sed 's/\-d \/dev\/\(video[0-9]\+\|v4l\/[^ ]*\)//g' | awk '$1=$1'`
     echo "Explicitly set USB device was found in options: $usb_device_path"
 fi
 
