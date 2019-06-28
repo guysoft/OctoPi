@@ -17,15 +17,14 @@ MJPGSTREAMER_INPUT_RASPICAM="input_raspicam.so"
 
 brokenfps_usb_devices=("046d:082b" "1908:2310" "0458:708c" "1e4e:0102" "0471:0311")
 
-configs="/boot/octopi.txt"
+config_dir="/boot/octopi.conf.d"
 
 echo "Starting up webcamDaemon..."
 echo ""
 
-if [ -f "${configs}" ]; then
-  cfg_files="${configs}"
-else
-  cfg_files=`ls ${configs}/*.txt`
+cfg_files=()
+if [[ -d ${config_dir} ]]; then
+  cfg_files+=( `ls ${configs_dir}/*.txt` )
 fi
 
 array_camera_config=()
@@ -40,8 +39,8 @@ array_camera_device=()
 array_assigned_device=()
 
 echo "--- Configuration: ----------------------------"
-for cfg_file in $cfg_files; do
-  # init configuration - DO NOT EDIT, USE /boot/octopi.txt or /boot/octopi.txt/*.txt INSTEAD!
+for cfg_file in ${cfg_files[@]}; do
+  # init configuration - DO NOT EDIT, USE /boot/octopi.conf.d/*.txt INSTEAD!
   camera="auto"
   camera_usb_options="-r 640x480 -f 10"
   camera_raspi_options="-fps 10"
@@ -49,7 +48,7 @@ for cfg_file in $cfg_files; do
   camera_http_options="-n"
   additional_brokenfps_usb_devices=()
 
-  if [ -e "$cfg_file" ]; then
+  if [[ -e $cfg_file" ]]; then
       source "$cfg_file"
   fi
   usb_options="$camera_usb_options"
