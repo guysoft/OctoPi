@@ -48,7 +48,7 @@ for cfg_file in ${cfg_files[@]}; do
   camera_http_options="-n"
   additional_brokenfps_usb_devices=()
 
-  if [[ -e $cfg_file" ]]; then
+  if [[ -e ${cfg_file} ]]; then
       source "$cfg_file"
   fi
   usb_options="$camera_usb_options"
