@@ -212,12 +212,14 @@ while true; do
             if [[ "auto" != ${scan_mode} ]]; then
               array_camera_device[${i}]="alredy_in_use"
               echo "config file='$camera_config':Video device already in use."
+              continue
             fi
           elif containsString "$usb_device_path" "${video_devices[@]}"; then
             array_camera_device[${i}]="$usb_device_path"
             # explicitly set usb device was found in video_devices array, start usb with the found device
             echo "config file='$camera_config':USB device was set in options and found in devices, start MJPG-streamer with the configured USB video device: $usb_device_path"
             startUsb "$usb_device_path"
+            continue
           fi
         elif [[ -z ${camera_usb_device} ]] && { [[ "usb-auto" == ${scan_mode} ]] || [[ "auto" == ${scan_mode} ]]; }; then
           for video_device in "${video_devices[@]}"; do
@@ -233,7 +235,11 @@ while true; do
               fi
             fi
           done
-        elif [[ "raspi" == ${scan_mode} ]] || [[ "auto" == ${scan_mode} ]]; then
+          if [[ -n ${array_camera_device[${i}]} ]]; then
+            continue
+          fi
+        fi
+        if [[ "raspi" == ${scan_mode} ]] || [[ "auto" == ${scan_mode} ]]; then
           video_device="raspi"
           if containsString "$video_device" "${array_camera_device[@]}"; then
             if [[ "auto" != ${scan_mode} ]]; then

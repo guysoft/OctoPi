@@ -222,8 +222,7 @@ fi
 
 if [ "$OCTOPI_INCLUDE_MJPGSTREAMER" == "yes" ]
 then
-  # make webcamd autostart
-  update-rc.d webcamd defaults
+  systemctl_if_exists enable webcamd.service
 else
   rm /etc/logrotate.d/webcamd
   rm /etc/init.d/webcamd
