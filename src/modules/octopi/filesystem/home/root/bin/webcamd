@@ -23,6 +23,7 @@ echo "Starting up webcamDaemon..."
 echo ""
 
 cfg_files=()
+cfg_files+=/boot/octopi.txt
 if [[ -d ${config_dir} ]]; then
   cfg_files+=( `ls ${config_dir}/*.txt` )
 fi
