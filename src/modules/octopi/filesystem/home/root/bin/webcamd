@@ -15,7 +15,7 @@ MJPGSTREAMER_HOME=/home/pi/mjpg-streamer
 MJPGSTREAMER_INPUT_USB="input_uvc.so"
 MJPGSTREAMER_INPUT_RASPICAM="input_raspicam.so"
 
-brokenfps_usb_devices=("046d:082b" "1908:2310" "0458:708c" "1e4e:0102" "0471:0311")
+brokenfps_usb_devices=("046d:082b" "1908:2310" "0458:708c" "1e4e:0102" "0471:0311" "038f:6001")
 
 config_dir="/boot/octopi.conf.d"
 
