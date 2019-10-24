@@ -1,7 +1,7 @@
 webcam:
   stream: /webcam/?action=stream
   snapshot: http://127.0.0.1:8080/?action=snapshot
-  ffmpeg: /usr/bin/avconv
+  ffmpeg: /usr/bin/ffmpeg
 plugins:
   cura:
     cura_engine: /usr/local/bin/cura_engine
