@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if grep -q "startOnceInSafeMode" ~/.octoprint/config.yaml;
+then
+	# If found,replace the existing line
+	sed -i 's/.*startOnceInSafeMode: false.*/\ \ startOnceInSafeMode: true/' ~/.octoprint/config.yaml
+else
+	# Append otherwise
+	sed -i '/server:/a \ \ startOnceInSafeMode: true' ~/.octoprint/config.yaml
+fi
