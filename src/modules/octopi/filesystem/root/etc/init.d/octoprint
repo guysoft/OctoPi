@@ -3,7 +3,7 @@
 ### BEGIN INIT INFO
 # Provides:          octoprint
 # Required-Start:    $local_fs networking
-# Required-Stop:
+# Required-Stop:     networking
 # Should-Start:
 # Should-Stop:
 # Default-Start:     2 3 4 5
