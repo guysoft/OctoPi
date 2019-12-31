@@ -115,6 +115,37 @@ function goodbye() {
 # runs MJPG Streamer, using the provided input plugin + configuration
 function runMjpgStreamer {
     input=$1
+
+    # There are problems with 0x000137ab firmware on VL805 (Raspberry Pi 4}).
+    # Try to autodetect offending firmware and temporarily fix the issue
+    # by changing power management mode
+    echo "Checking for VL805 (Raspberry Pi 4)..."
+    if [[ -f /usr/bin/vl805 ]]; then
+        VL805_VERSION=$(/usr/bin/vl805)
+        VL805_VERSION=${VL805_VERSION#*: }
+        echo " - version 0x${VL805_VERSION} detected"
+        case "$VL805_VERSION" in
+            00013701)
+                echo "    - nothing to be done. It shouldn't cause USB problems."
+                ;;
+            000137ab)
+                echo -e "    - \e[31mThis version is known to cause problems with USB cameras.\e[39m"
+                echo -e "      You may want to downgrade to 0x0013701."
+                echo -e "    - [FIXING] Trying the setpci -s 01:00.0 0xD4.B=0x41 hack to mitigate the"
+                echo -e "      issue. It disables ASPM L1 on the VL805. Your board may (or may not) get"
+                echo -e "      slightly hotter. For details see:"
+                echo -e "      https://www.raspberrypi.org/forums/viewtopic.php?f=28&t=244421"
+                setpci -s 01:00.0 0xD4.B=0x41
+                ;;
+            *)
+                echo "   - unknown firmware version. Doing nothing."
+                ;;
+        esac
+    else
+        echo "  - It seems that you don't have VL805 (Raspberry Pi 4)."
+        echo "    There should be no problems with USB (a.k.a. select() timeout)"
+    fi
+
     pushd $MJPGSTREAMER_HOME > /dev/null 2>&1
         echo Running ./mjpg_streamer -o "output_http.so -w $camera_http_webroot $camera_http_options" -i "$input"
         LD_LIBRARY_PATH=. ./mjpg_streamer -o "output_http.so -w $camera_http_webroot $camera_http_options" -i "$input" &
