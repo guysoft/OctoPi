@@ -32,10 +32,14 @@ apt-get install --reinstall iputils-ping
 
 pushd /home/pi
 
-  #build virtualenv
-  sudo -u pi virtualenv oprint
-  
+  # build virtualenv
+  # uncomment when setup tools issue has been fixed
+  # sudo -u pi virtualenv oprint
+  # sudo -u pi /home/pi/oprint/bin/pip install --upgrade pip
+
+  sudo -u pi virtualenv --no-setuptools oprint
   sudo -u pi /home/pi/oprint/bin/pip install --upgrade pip
+  sudo -u pi /home/pi/oprint/bin/pip install "setuptools<45"
 
   # OctoPrint & pyserial
   if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
