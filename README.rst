@@ -90,7 +90,11 @@ Building OctoPi Variants
 
 OctoPi supports building variants, which are builds with changes from the main release build. An example and other variants are available in `CustomPiOS, folder src/variants/example <https://github.com/guysoft/CustomPiOS/tree/CustomPiOS/src/variants/example>`_.
 
-To build a variant use::
+docker exec -it mydistro_builder::
+
+    sudo docker exec -it mydistro_builder build [Variant]
+
+Or to build a variant inside a container::
 
     sudo bash -x ./build_dist [Variant]
     
