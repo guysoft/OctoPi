@@ -67,7 +67,7 @@ pushd /home/pi
     gitclone OCTOPI_MJPGSTREAMER_REPO mjpg-streamer
     pushd mjpg-streamer
       mv mjpg-streamer-experimental/* .
-      sudo -u pi make
+      sudo -u pi make -j$(nproc)
 
       # create our custom web folder and add a minimal index.html to it
       sudo -u pi mkdir www-octopi
@@ -98,7 +98,7 @@ EOT
     sudo -u pi wget -O$zipfile $OCTOPI_CURAENGINE_ARCHIVE
     sudo -u pi unzip $zipfile
     pushd $folder
-      sudo -u pi make CXX=g++-4.9 VERSION=$OCTOPI_CURAENGINE_VERSION
+      sudo -u pi make -j$(nproc) CXX=g++-4.9 VERSION=$OCTOPI_CURAENGINE_VERSION
       cp build/CuraEngine /usr/local/bin/cura_engine
     popd
     sudo -u pi rm -r $folder $zipfile
