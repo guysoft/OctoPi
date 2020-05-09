@@ -67,7 +67,19 @@ pushd /home/pi
     gitclone OCTOPI_MJPGSTREAMER_REPO mjpg-streamer
     pushd mjpg-streamer
       mv mjpg-streamer-experimental/* .
-      sudo -u pi make -j$(nproc)
+
+      # As said in Makefile, it is just a wrapper around CMake.
+      # To apply -j option, we have to unwrap it.
+      MJPG_STREAMER_BUILD_DIR=_build
+      [ -d ${MJPG_STREAMER_BUILD_DIR} ] || (mkdir ${MJPG_STREAMER_BUILD_DIR} && \
+        chown pi:pi ${MJPG_STREAMER_BUILD_DIR})
+      [ -f ${MJPG_STREAMER_BUILD_DIR}/Makefile ] || (cd ${MJPG_STREAMER_BUILD_DIR} && \
+        sudo -u pi cmake -DCMAKE${MJPG_STREAMER_BUILD_DIR}_TYPE=Release ..)
+
+      sudo -u pi make -j $(nproc) -C ${MJPG_STREAMER_BUILD_DIR}
+
+      sudo -u pi cp ${MJPG_STREAMER_BUILD_DIR}/mjpg_streamer .
+      sudo -u pi find ${MJPG_STREAMER_BUILD_DIR} -name "*.so" -type f -exec cp {} . \;
 
       # create our custom web folder and add a minimal index.html to it
       sudo -u pi mkdir www-octopi
