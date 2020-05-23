@@ -1,0 +1,33 @@
+[Unit]
+Description=FFMPEG HLS webcam streaming service
+ConditionPathExists=/etc/octopi_streamer/hls
+
+[Service]
+User=webcam
+Restart=always
+RestartSec=5
+Nice=10
+ExecStartPre=/bin/rm -rf /tmp/webcam
+ExecStartPre=/bin/mkdir -p /tmp/webcam/hls
+ExecStartPre=/bin/mkdir -p /tmp/webcam/jpeg
+
+ExecStart=/usr/bin/ffmpeg \
+    \
+    -framerate 30 -video_size 800x600 \
+    -i /dev/video0 \
+    \
+    -c:v mjpeg -q:v 0 \
+    -f image2 -update 1 \
+    /tmp/webcam/jpeg/frame.jpg \
+    \
+    -c:v h264_omx -profile:v high \
+    -b:v 2048k -flags +cgop \
+    -g 30 -keyint_min 30 \
+    \
+    -f hls -hls_time 1 -hls_flags delete_segments \
+    -hls_allow_cache 1 -hls_segment_type fmp4 \
+    -hls_list_size 32 -hls_delete_threshold 64 \
+    /tmp/webcam/hls/stream.m3u8
+
+[Install]
+WantedBy=multi-user.target

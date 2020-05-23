@@ -1,0 +1,10 @@
+[Unit]
+Description=OctoPi streamer selector
+Before=webcamd.service ffmpeg_hls.service nginx.service
+
+[Service]
+Type=oneshot
+ExecStart=/root/bin/streamer_select
+
+[Install]
+WantedBy=multi-user.target

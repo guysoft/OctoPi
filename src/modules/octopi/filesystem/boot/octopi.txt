@@ -72,3 +72,11 @@
 #
 #camera_http_webroot="./www-octopi"
 #camera_http_options="-n"
+
+### EXPERIMENTAL
+# Support for different streamer types.
+#
+# Available options:
+#   mjpeg [default] - stable MJPG-streamer
+#   hls - experimental FFMPEG HLS streamer
+#camera_streamer=mjpeg

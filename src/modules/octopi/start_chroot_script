@@ -11,6 +11,8 @@ export LC_ALL=C
 
 source /common.sh
 
+WEBCAM_USER=webcam
+
 ### Script ####
 
 unpack /filesystem/home/pi /home/pi pi
@@ -28,7 +30,6 @@ apt-get -y --force-yes install python2.7 python-virtualenv python-dev git screen
 
 echo " - Reinstall iputils-ping"
 apt-get install --reinstall iputils-ping
-
 
 pushd /home/pi
 
@@ -98,6 +99,14 @@ pushd /home/pi
 EOT
       popd
     popd
+  fi
+
+  # FFMPEG HLS
+  if [ "$OCTOPI_INCLUDE_FFMPEG_HLS" == "yes" ]
+  then
+    apt-get install -y --force-yes --no-install-recommends ffmpeg nginx
+    useradd ${WEBCAM_USER}
+    usermod -aG video ${WEBCAM_USER}
   fi
   
   #CuraEngine
@@ -234,6 +243,10 @@ then
   sudo -u pi sed -i -e "s@cura_engine: /usr/local/bin/cura_engine@cura_engine:@g" /home/pi/.octoprint/config.yaml
 fi
 
+### Streamer select service.
+
+systemctl_if_exists enable streamer_select.service
+
 ### mjpg_streamer
 
 if [ "$OCTOPI_INCLUDE_MJPGSTREAMER" == "yes" ]
@@ -241,12 +254,15 @@ then
   systemctl_if_exists enable webcamd.service
 else
   rm /etc/logrotate.d/webcamd
-  rm /etc/init.d/webcamd
+  rm /etc/systemd/system/webcamd.service
   rm /etc/default/webcamd
   rm /root/bin/webcamd
 fi
 
+### HLS streamer
+
+systemctl_if_exists enable ffmpeg_hls.service
+
 #cleanup
 apt-get clean
 apt-get autoremove -y
-

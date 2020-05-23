@@ -1,0 +1,20 @@
+# NGINX service definition based on Debian buster version.
+[Unit]
+Description=NGINX server for serving HLS and JPEG frames
+Documentation=man:nginx(8)
+After=network.target nss-lookup.target
+ConditionPathExists=/etc/octopi_streamer/hls
+
+[Service]
+Type=forking
+PIDFile=/run/nginx.pid
+ExecStartPre=/usr/sbin/nginx -t -q -g 'daemon on; master_process on;'
+ExecStart=/usr/sbin/nginx -g 'daemon on; master_process on;'
+ExecReload=/usr/sbin/nginx -g 'daemon on; master_process on;' -s reload
+ExecStop=-/sbin/start-stop-daemon --quiet --stop --retry QUIT/5 --pidfile /run/nginx.pid
+TimeoutStopSec=5
+KillMode=mixed
+Nice=10
+
+[Install]
+WantedBy=multi-user.target
