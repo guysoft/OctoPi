@@ -1,5 +1,6 @@
 [Unit]
 Description=the OctoPi webcam daemon with the user specified config
+ConditionPathExists=/etc/octopi_streamer/mjpeg
 
 [Service]
 WorkingDirectory=/root/bin

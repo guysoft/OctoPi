@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Exit on any error.
+set -e
+
+CONFIG_FILE=/boot/octopi.txt
+MJPEG_TYPE=mjpeg
+HLS_TYPE=hls
+MJPEG_SERVICE=webcamd.service
+HLS_SERVICE=ffmpeg_hls.service
+DEFAULT_TYPE=${MJPEG_TYPE}
+FLAG_DIRECTORY=/etc/octopi_streamer
+
+source ${CONFIG_FILE}
+
+if [ -z ${camera_streamer+x} ]; then
+    echo "No streamer type is set. Defaulting to '${DEFAULT_TYPE}'."
+    camera_streamer=${DEFAULT_TYPE}
+fi
+
+rm -rf ${FLAG_DIRECTORY}
+mkdir -p ${FLAG_DIRECTORY}
+
+echo "Setting streamer type '${camera_streamer}'."
+if [ "${camera_streamer}" = "${MJPEG_TYPE}" ]; then
+    touch ${FLAG_DIRECTORY}/${MJPEG_TYPE}
+elif [ "${camera_streamer}" = "${HLS_TYPE}" ]; then
+    touch ${FLAG_DIRECTORY}/${HLS_TYPE}
+else
+    echo "Streamer type '${camera_streamer}' is not supported."
+    exit 1
+fi
