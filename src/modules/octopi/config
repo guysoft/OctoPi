@@ -12,7 +12,7 @@
 # CuraEngine archive & version
 [ -n "$OCTOPI_CURAENGINE_VERSION" ] || OCTOPI_CURAENGINE_VERSION=15.04.6
 [ -n "$OCTOPI_CURAENGINE_ARCHIVE" ] || OCTOPI_CURAENGINE_ARCHIVE=https://github.com/Ultimaker/CuraEngine/archive/$OCTOPI_CURAENGINE_VERSION.zip
-[ -n "$OCTOPI_INCLUDE_CURAENGINE" ] || OCTOPI_INCLUDE_CURAENGINE=yes
+[ -n "$OCTOPI_INCLUDE_CURAENGINE" ] || OCTOPI_INCLUDE_CURAENGINE=no
 
 # mjpg streamer
 [ -n "$OCTOPI_MJPGSTREAMER_REPO_SHIP" ] || OCTOPI_MJPGSTREAMER_REPO_SHIP=https://github.com/jacksonliam/mjpg-streamer.git
