@@ -255,7 +255,6 @@ then
 else
   rm /etc/logrotate.d/webcamd
   rm /etc/systemd/system/webcamd.service
-  rm /etc/default/webcamd
   rm /root/bin/webcamd
 fi
 
