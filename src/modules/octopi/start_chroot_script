@@ -26,7 +26,7 @@ echo "removing:" $remove_extra
 apt-get remove -y --purge  $remove_extra
 apt-get autoremove -y
 
-apt-get -y --force-yes install python2.7 python-virtualenv python-dev git screen subversion cmake checkinstall avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev
+apt-get -y --force-yes install python3 python3-virtualenv python3-dev git screen subversion cmake checkinstall avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev
 
 echo " - Reinstall iputils-ping"
 apt-get install --reinstall iputils-ping
@@ -34,13 +34,8 @@ apt-get install --reinstall iputils-ping
 pushd /home/pi
 
   # build virtualenv
-  # uncomment when setup tools issue has been fixed
-  # sudo -u pi virtualenv oprint
-  # sudo -u pi /home/pi/oprint/bin/pip install --upgrade pip
-
-  sudo -u pi virtualenv --no-setuptools oprint
+  sudo -u pi python3 -m virtualenv --python=python3 oprint
   sudo -u pi /home/pi/oprint/bin/pip install --upgrade pip
-  sudo -u pi /home/pi/oprint/bin/pip install "setuptools<45"
 
   # OctoPrint & pyserial
   if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
