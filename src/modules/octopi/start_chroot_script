@@ -214,11 +214,10 @@ update-rc.d change_hostname defaults
 
 if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
 then
-  update-rc.d octoprint defaults 95
+  systemctl_if_exists enable octoprint.service
 else
   # let's remove the configs for system services we don't need
-  rm /etc/init.d/octoprint
-  rm /etc/default/octoprint
+  rm /etc/systemd/system/octoprint.service
 fi
 
 ### haproxy
@@ -232,7 +231,7 @@ else
 
   # also we need to make OctoPrint bind to all interfaces because otherwise
   # it will be unaccessible...
-  [ -f /etc/default/octoprint ] && sed -i "s@HOST=127.0.0.1@HOST=0.0.0.0@" /etc/default/octoprint 
+  [ -f /etc/systemd/system/octoprint.service ] && sed -i "s@HOST=127.0.0.1@HOST=0.0.0.0@" /etc/systemd/system/octoprint.service
 fi
 
 ### CuraEngine
