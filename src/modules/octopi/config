@@ -7,7 +7,7 @@
 [ -n "$OCTOPI_INCLUDE_OCTOPRINT" ] || OCTOPI_INCLUDE_OCTOPRINT=yes
 
 # PyBonjour archive
-[ -n "$OCTOPI_PYBONJOUR_ARCHIVE" ] || OCTOPI_PYBONJOUR_ARCHIVE=https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/pybonjour/pybonjour-1.1.1.tar.gz
+[ -n "$OCTOPI_PYBONJOUR_ARCHIVE" ] || OCTOPI_PYBONJOUR_ARCHIVE=https://github.com/OctoPrint/pybonjour-python3/archive/master.zip
 
 # CuraEngine archive & version
 [ -n "$OCTOPI_CURAENGINE_VERSION" ] || OCTOPI_CURAENGINE_VERSION=15.04.6
