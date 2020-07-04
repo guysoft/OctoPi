@@ -11,6 +11,13 @@ export LC_ALL=C
 
 source /common.sh
 
+if [ -n "$OCTOPI_APTMIRROR" ]; 
+then
+    echo "Switching apt mirror in /etc/apt/sources.list to $OCTOPI_APTMIRROR"
+    cp /etc/apt/sources.list /etc/apt/sources.list.backup
+    sed -i "s@http://raspbian.raspberrypi.org/raspbian/@$OCTOPI_APTMIRROR@g" /etc/apt/sources.list
+fi
+
 WEBCAM_USER=webcam
 
 ### Script ####
@@ -261,3 +268,9 @@ systemctl_if_exists enable ffmpeg_hls.service
 #cleanup
 apt-get clean
 apt-get autoremove -y
+
+if [ -n "$OCTOPI_APTMIRROR" ]; 
+then
+    echo "Reverting /etc/apt/sources.list"
+    mv /etc/apt/sources.list.backup /etc/apt/sources.list
+fi
