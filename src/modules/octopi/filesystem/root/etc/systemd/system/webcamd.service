@@ -4,6 +4,8 @@ ConditionPathExists=/etc/octopi_streamer/mjpeg
 
 [Service]
 WorkingDirectory=/root/bin
+StandardOutput=append:/var/log/webcamd.log
+StandardError=append:/var/log/webcamd.log
 ExecStart=/root/bin/webcamd
 Restart=always
 Type=forking
