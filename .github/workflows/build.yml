@@ -59,6 +59,7 @@ jobs:
 
     # artifact upload will take care of zipping for us
     - uses: actions/upload-artifact@v1
+      if: github.event_name == 'schedule'
       with:
         name: ${{ steps.copy.outputs.image }}
         path: ${{ steps.copy.outputs.image }}.img
