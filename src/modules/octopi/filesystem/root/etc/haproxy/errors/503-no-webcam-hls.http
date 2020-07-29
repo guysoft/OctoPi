@@ -1,0 +1,68 @@
+HTTP/1.0 503 Service Unavailable
+Cache-Control: no-cache
+Connection: close
+Content-Type: text/html
+
+<html>
+    <head>
+        <title>HLS Webcam server is currently not running</title>
+        <style>
+            body {
+                margin: 0;
+                font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                font-size: 14px;
+                line-height: 20px;
+                color: #333333;
+                background-color: #ffffff;
+            }
+
+            code {
+                font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+                font-size: 12px;
+                border-radius: 3px;
+                padding: 2px 4px;
+                color: #d14;
+                white-space: nowrap;
+                background-color: #f7f7f7;
+                border: 1px solid #e1e1e8;
+            }
+
+            pre {
+                font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+                font-size: 12px;
+                border-radius: 3px;
+                padding: 2px 4px;
+                white-space: nowrap;
+                background-color: #f7f7f7;
+                border: 1px solid #e1e1e8;
+            }
+
+            @media (max-width: 767px) {
+                .wrapper {
+                    padding: 20px;
+                }
+            }
+
+            @media (min-width: 768px) {
+                .wrapper {
+                    position: absolute;
+                    width: 750px;
+                    height: 600px;
+                    top: 50%;
+                    left: 50%;
+                    margin: -300px 0 0 -375px;
+                }
+            }
+
+            h1 {
+                line-height: 1.3;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>The HLS webcam server is currently not running</h1>
+        </div>
+    </body>
+</html>
+
