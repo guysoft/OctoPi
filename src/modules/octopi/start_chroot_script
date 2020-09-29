@@ -138,7 +138,7 @@ EOT
   if [ "$OCTOPI_INCLUDE_WIRINGPI" == "yes" ]
   then
     echo "--- Installing WiringPi"
-    apt-get install wiringpi
+    apt-get -y install wiringpi
   fi
 
   # fetch current yq build and install to /usr/local/bin
