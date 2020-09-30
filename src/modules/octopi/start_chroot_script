@@ -44,15 +44,10 @@ pushd /home/pi
   sudo -u pi python3 -m virtualenv --python=python3 oprint
   sudo -u pi /home/pi/oprint/bin/pip install --upgrade pip
 
-  # OctoPrint & pyserial
+  # OctoPrint
   if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
   then
     echo "--- Installing OctoPrint"
-
-    #pybonjour (for mdns discovery)
-    sudo -u pi /home/pi/oprint/bin/pip install $OCTOPI_PYBONJOUR_ARCHIVE
-
-    #OctoPrint
     PIP_DEFAULT_TIMEOUT=60 sudo -u pi /home/pi/oprint/bin/pip install $OCTOPI_OCTOPRINT_ARCHIVE
   fi
 
