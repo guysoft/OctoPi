@@ -6,9 +6,6 @@
 [ -n "$OCTOPI_OCTOPRINT_REPO_SHIP" ] || OCTOPI_OCTOPRINT_REPO_SHIP=https://github.com/foosel/OctoPrint.git
 [ -n "$OCTOPI_INCLUDE_OCTOPRINT" ] || OCTOPI_INCLUDE_OCTOPRINT=yes
 
-# PyBonjour archive
-[ -n "$OCTOPI_PYBONJOUR_ARCHIVE" ] || OCTOPI_PYBONJOUR_ARCHIVE=https://github.com/OctoPrint/pybonjour-python3/archive/master.zip
-
 # CuraEngine archive & version
 [ -n "$OCTOPI_CURAENGINE_VERSION" ] || OCTOPI_CURAENGINE_VERSION=15.04.6
 [ -n "$OCTOPI_CURAENGINE_ARCHIVE" ] || OCTOPI_CURAENGINE_ARCHIVE=https://github.com/Ultimaker/CuraEngine/archive/$OCTOPI_CURAENGINE_VERSION.zip
@@ -37,3 +34,4 @@
 
 # Fixed apt mirror
 [ -n "$OCTOPI_APTMIRROR" ] || OCTOPI_APTMIRROR=
+
