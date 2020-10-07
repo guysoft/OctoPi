@@ -162,7 +162,7 @@ var outputPage = function(files, s) {
 
   var output = new StringStream();
 
-  output.write("<ul><li><a href='#rpi'>Raspberry Pi</a><ul><li><a href='#rpi-stable'>Stable Builds</li><li><a href='#rpi-nightly'>Nightly Builds</a></li></ul></li><li><a href='#banana'>Banana Pi M1</a><ul><li><a href='#banana-nightly'>Nightly Builds</a></li></ul></li></ul>");
+  output.write("<ul><li><a href='#rpi'>Raspberry Pi</a><ul><li><a href='#rpi-stable'>Stable Builds</li><li><a href='#rpi-nightly'>Nightly Builds</a></li></ul></li><li><a href='#arm64'>64Bit Nightly Builds </a><ul><li><a href='#arm64'>Nightly Builds arm64</a></li></ul></li></ul>");
 
   output.write("<h2 id='rpi'>Raspberry Pi</h2>\n");
 
@@ -174,18 +174,18 @@ var outputPage = function(files, s) {
 
   output.write("<h3 id='rpi-nightly'>Nightly Builds</h3>\n");
   output.write("<small>Warning: These builds are untested and can be unstable and/or broken. If in doubt use a stable build.</small>");
-  outputTable(filterNameByRegex(files.filter(function (obj) { return !obj.name.startsWith("stable/") && !obj.name.startsWith("bananapi-m1/") }), /octopi-(wheezy|jessie|stretch|buster)-/),
+  outputTable(filterNameByRegex(files.filter(function (obj) { return !obj.name.startsWith("stable/") && !obj.name.startsWith("bananapi-m1/") }), /octopi-(wheezy|jessie|stretch|buster)-armhf/),
               output,
               function(name) { return name },
               14);
 
-  output.write("<h2 id='banana'>Banana Pi M1</h2>\n")
+  output.write("<h2 id='arm64'64Bit > 64Bit Nightly Builds</h2>\n")
 
-  output.write("<h3 id='banana-nightly'>Nightly Builds</h3>\n");
+  output.write("<h3 id='banana-nightly'>Nightly Builds arm64</h3>\n");
   output.write("<small>Warning: These builds are untested and can be unstable and/or broken.</small>");
-  outputTable(filterNameByRegex(files, /^bananapi-m1\//),
+  outputTable(filterNameByRegex(files.filter(function (obj) { return !obj.name.startsWith("stable/") && !obj.name.startsWith("bananapi-m1/") }), /octopi-(wheezy|jessie|stretch|buster)-arm64/),
               output,
-              function(name) { return stripLeading(name, "bananapi-m1/") },
+              function(name) { return name },
               14);
 
   var content = output.buffer;
@@ -212,3 +212,4 @@ client.getFiles(container, function (err, files) {
   var stream = fs.createWriteStream(outputfile);
   outputPage(filterByExtension(files, [".zip"]), stream);
 });
+
