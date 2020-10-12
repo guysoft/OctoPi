@@ -1,4 +1,4 @@
-Place zipped Raspberry Pi OS image here. Or any other variant you want to build/
+Place zipped Raspberry Pi OS 64bit image here.
 
 If not otherwise specified, the build script will always use the most
 recent zip file matching the file name pattern "*-raspbian.zip" or "*-rpios.zip" located

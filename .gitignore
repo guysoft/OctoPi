@@ -1,6 +1,7 @@
 src/config.local
 src/custompios_path
 src/image/*.zip
+src/image-raspios_lite_arm64/*.zip
 src/image-variants/*.zip
 **/key.json
 src/nightly_build_scripts/index.html
