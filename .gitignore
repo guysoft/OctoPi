@@ -13,3 +13,4 @@ src/vagrant/*.log
 src/vagrant/.vagrant
 .vscode
 .idea
+.DS_Store
