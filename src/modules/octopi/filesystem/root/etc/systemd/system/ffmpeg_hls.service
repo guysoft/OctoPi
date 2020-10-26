@@ -9,26 +9,42 @@ RestartSec=5
 Nice=10
 ExecStartPre=/bin/rm -rf /tmp/webcam
 ExecStartPre=/bin/mkdir -p /tmp/webcam/hls
+ExecStartPre=/bin/mkdir -p /tmp/webcam/hls/240p
+ExecStartPre=/bin/mkdir -p /tmp/webcam/hls/480p
 ExecStartPre=/bin/mkdir -p /tmp/webcam/jpeg
+ExecStartPre=/bin/cp /var/lib/ffmpeg_hls/stream.m3u8 /tmp/webcam/hls/stream.m3u8
 
 ExecStart=/usr/bin/ffmpeg \
     \
-    -framerate 30 -video_size 800x600 \
+    -framerate 30 -video_size 640x480 \
     -i /dev/video0 \
+    -pix_fmt yuv420p \
     \
     -c:v mjpeg -q:v 0 \
     -f image2 -update 1 -atomic_writing 1 \
     /tmp/webcam/jpeg/frame.jpg \
     \
     -c:v h264_omx -profile:v high \
-    -b:v 2048k -flags +cgop \
+    -b:v 1264k -flags +cgop \
     -g 30 -keyint_min 30 \
     \
     -f hls -hls_time 1 \
     -hls_flags delete_segments+program_date_time+temp_file+independent_segments \
     -hls_allow_cache 0 -hls_segment_type fmp4 \
     -hls_list_size 32 -hls_delete_threshold 64 \
-    /tmp/webcam/hls/stream.m3u8
+    /tmp/webcam/hls/480p/stream.m3u8 \
+    \
+    -vf scale=-1:240 \
+    \
+    -c:v h264_omx -profile:v high \
+    -b:v 240k -flags +cgop \
+    -g 30 -keyint_min 30 \
+    \
+    -f hls -hls_time 1 \
+    -hls_flags delete_segments+program_date_time+temp_file+independent_segments \
+    -hls_allow_cache 0 -hls_segment_type fmp4 \
+    -hls_list_size 32 -hls_delete_threshold 64 \
+    /tmp/webcam/hls/240p/stream.m3u8
 
 [Install]
 WantedBy=multi-user.target
