@@ -53,7 +53,10 @@
 
 ### Additional options to supply to MJPG Streamer for the RasPi Cam
 #
-# See https://faq.octoprint.org/mjpg-streamer-config for available options
+# See https://faq.octoprint.org/mjpg-streamer-config for available options.
+#
+# NOTE: Newer raspi cam modules are reporting as usb devices causing these
+#       options to be ignored. Set `camera="raspi"` to avoid these issues.
 #
 # Defaults to 10fps
 #
