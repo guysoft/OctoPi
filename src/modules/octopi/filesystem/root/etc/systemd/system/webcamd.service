@@ -9,6 +9,7 @@ StandardError=append:/var/log/webcamd.log
 ExecStart=/root/bin/webcamd
 Restart=always
 Type=forking
+RestartSec=1
 
 [Install]
 WantedBy=multi-user.target
