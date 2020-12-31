@@ -1,7 +1,7 @@
 server {
 	listen 127.0.0.1:28126;
 
-	root /tmp/webcam;
+	root /run/webcam;
 
 	location / {
 		# First attempt to serve request as file, then
