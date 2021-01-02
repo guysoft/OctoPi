@@ -6,6 +6,7 @@ ConditionPathExists=/etc/octopi_streamer/hls
 User=webcam
 Restart=always
 RestartSec=5
+WatchdogSec=21600
 Nice=10
 ExecStartPre=/bin/rm -rf /tmp/webcam
 ExecStartPre=/bin/mkdir -p /tmp/webcam/hls
