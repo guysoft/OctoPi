@@ -3,19 +3,22 @@ Description=FFMPEG HLS webcam streaming service
 ConditionPathExists=/etc/octopi_streamer/hls
 
 [Service]
-User=webcam
+User=root
 Restart=always
 RestartSec=5
 WatchdogSec=21600
 Nice=10
-ExecStartPre=/bin/rm -rf /tmp/webcam
-ExecStartPre=/bin/mkdir -p /tmp/webcam/hls
-ExecStartPre=/bin/mkdir -p /tmp/webcam/hls/240p
-ExecStartPre=/bin/mkdir -p /tmp/webcam/hls/480p
-ExecStartPre=/bin/mkdir -p /tmp/webcam/jpeg
-ExecStartPre=/bin/cp /var/lib/ffmpeg_hls/stream.m3u8 /tmp/webcam/hls/stream.m3u8
+ExecStartPre=/bin/rm -rf /run/webcam
+ExecStartPre=/bin/mkdir -p /run/webcam/hls
+ExecStartPre=/bin/mkdir -p /run/webcam/hls/240p
+ExecStartPre=/bin/mkdir -p /run/webcam/hls/480p
+ExecStartPre=/bin/mkdir -p /run/webcam/jpeg
+ExecStartPre=/bin/cp /var/lib/ffmpeg_hls/stream.m3u8 /run/webcam/hls/stream.m3u8
+ExecStartPre=/bin/chown -R webcam:webcam /run/webcam
+ExecStartPre=/bin/chmod -R 0755 /run/webcam
 
-ExecStart=/usr/bin/ffmpeg \
+ExecStart=/usr/bin/sudo -u webcam \
+    /usr/bin/ffmpeg \
     \
     -framerate 30 -video_size 640x480 \
     -i /dev/video0 \
@@ -23,7 +26,7 @@ ExecStart=/usr/bin/ffmpeg \
     \
     -c:v mjpeg -q:v 0 \
     -f image2 -update 1 -atomic_writing 1 \
-    /tmp/webcam/jpeg/frame.jpg \
+    /run/webcam/jpeg/frame.jpg \
     \
     -c:v h264_omx -profile:v high \
     -b:v 1264k -flags +cgop \
@@ -33,7 +36,7 @@ ExecStart=/usr/bin/ffmpeg \
     -hls_flags delete_segments+program_date_time+temp_file+independent_segments \
     -hls_allow_cache 0 -hls_segment_type fmp4 \
     -hls_list_size 32 -hls_delete_threshold 64 \
-    /tmp/webcam/hls/480p/stream.m3u8 \
+    /run/webcam/hls/480p/stream.m3u8 \
     \
     -vf scale=-1:240 \
     \
@@ -45,7 +48,7 @@ ExecStart=/usr/bin/ffmpeg \
     -hls_flags delete_segments+program_date_time+temp_file+independent_segments \
     -hls_allow_cache 0 -hls_segment_type fmp4 \
     -hls_list_size 32 -hls_delete_threshold 64 \
-    /tmp/webcam/hls/240p/stream.m3u8
+    /run/webcam/hls/240p/stream.m3u8
 
 [Install]
 WantedBy=multi-user.target
