@@ -3,6 +3,8 @@
 if [ "$(id -u)" == "0" ]
 then
   echo "Please do not run git as root, your regular user account is enough :)"
+  echo "The rationale behind this restriction is to prevent cloning the OctoPrint"
+  echo "repository as root, which will most likely break some functionality."
   echo
   echo "If you need to run git with root rights for some other application than"
   echo "what comes preinstalled on this image you can remove this sanity check:"
