@@ -7,6 +7,8 @@ export LC_ALL=C
 source /common.sh
 install_cleanup_trap
 
+# Unpack the filesystem changes for the variant
+unpack /filesystem/root /
 
 # add-apt-repository ppa:ubuntu-raspi2/ppa -y
 apt-get update
