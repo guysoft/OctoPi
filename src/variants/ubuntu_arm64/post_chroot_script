@@ -18,6 +18,5 @@ apt-get autoremove -y
 
 # Compatibility for ws281x
 sudo ln /boot/config-5.8.0-1006-raspi /boot/config.txt
-sudo touch /boot/cmdline.txt
 sudo groupadd spi
 sudo adduser pi spi
