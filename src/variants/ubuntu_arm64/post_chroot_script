@@ -15,3 +15,8 @@ apt-get update
 apt-get -y --force-yes install libraspberrypi-bin rpi.gpio-common
 apt-get clean
 apt-get autoremove -y
+
+# Compatibility for ws281x
+sudo ln /boot/config-5.8.0-1006-raspi /boot/config.txt
+sudo groupadd spi
+sudo adduser pi spi
