@@ -1,0 +1,10 @@
+[Unit]
+ Description=Network Monitor Trigger (every 1 minutes)
+ After=network.target
+
+[Timer]
+ OnCalendar=*-*-* *:*:00
+ AccuracySec=1s
+
+[Install]
+ WantedBy=timers.target
