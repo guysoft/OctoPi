@@ -258,6 +258,10 @@ fi
 
 systemctl_if_exists enable ffmpeg_hls.service
 
+### Network monitoring
+
+systemctl_if_exists enable networkcheck.timer
+
 #cleanup
 apt-get clean
 apt-get autoremove -y
