@@ -29,16 +29,16 @@ How to use it?
 --------------
 
 #. Unzip the image and install it to an sd card `like any other Raspberry Pi image <https://www.raspberrypi.org/documentation/installation/installing-images/README.md>`_
-#. Configure your WiFi by editing ``octopi-wpa-supplicant.txt`` on the root of the flashed card when using it like a thumb drive
+#. Configure your WiFi by editing ``octopi-wpa-supplicant.txt`` on the root of the flashed card when using it like a thumb drive. If you can't find it, you might have mounted the main Linux partition; instead, mount the W95 FAT32 partition
 #. Boot the Pi from the card
 #. Log into your Pi via SSH (it is located at ``octopi.local`` `if your computer supports bonjour <https://learn.adafruit.com/bonjour-zeroconf-networking-for-windows-and-linux/overview>`_ or the IP address assigned by your router), default username is "pi", default password is "raspberry". Run ``sudo raspi-config``. Once that is open:
 
    a. Change the password via "Change User Password"
    b. Optionally: Change the configured timezone via "Localization Options" > "Timezone".
    c. Optionally: Change the hostname via "Network Options" > "Hostname". Your OctoPi instance will then no longer be reachable under ``octopi.local`` but rather the hostname you chose postfixed with ``.local``, so keep that in mind.
-  
+
    You can navigate in the menus using the arrow keys and Enter. To switch to selecting the buttons at the bottom use Tab.
-   
+
    You do not need to expand the filesystem, current versions of OctoPi do this automatically.
 
 OctoPrint is located at `http://octopi.local <http://octopi.local>`_ and also at `https://octopi.local <https://octopi.local>`_. Since the SSL certificate is self signed (and generated upon first boot), you will get a certificate warning at the latter location, please ignore it.
@@ -77,7 +77,7 @@ Build requires about 2.5 GB of free space available.
 You can build it by issuing the following commands::
 
     sudo apt-get install gawk util-linux qemu-user-static git p7zip-full python3
-    
+
     git clone https://github.com/guysoft/CustomPiOS.git
     git clone https://github.com/guysoft/OctoPi.git
     cd OctoPi/src/image
@@ -86,7 +86,7 @@ You can build it by issuing the following commands::
     ../../CustomPiOS/src/update-custompios-paths
     sudo modprobe loop
     sudo bash -x ./build_dist
-    
+
 Building OctoPi Variants
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -99,11 +99,11 @@ docker exec -it mydistro_builder::
 Or to build a variant inside a container::
 
     sudo bash -x ./build_dist [Variant]
-    
+
 Building Using Docker
 ~~~~~~~~~~~~~~~~~~~~~~
 `See Building with docker entry in wiki <https://github.com/guysoft/CustomPiOS/wiki/Building-with-Docker>`_
-    
+
 Building Using Vagrant
 ~~~~~~~~~~~~~~~~~~~~~~
 There is a vagrant machine configuration to let build OctoPi in case your build environment behaves differently. Unless you do extra configuration, vagrant must run as root to have nfs folder sync working.
@@ -113,12 +113,12 @@ Make sure you have a version of vagrant later than 1.9!
 If you are using older versions of Ubuntu/Debian and not using apt-get `from the download page <https://www.vagrantup.com/downloads.html>`_.
 
 To use it::
-    
+
     sudo apt-get install vagrant nfs-kernel-server virtualbox
     sudo vagrant plugin install vagrant-nfs_guest
     sudo modprobe nfs
     cd ../OctoPi
-    git clone https://github.com/guysoft/CustomPiOS.git    
+    git clone https://github.com/guysoft/CustomPiOS.git
     cd OctoPi/src
     ../../CustomPiOS/src/update-custompios-paths
     cd OctoPi/src/vagrant
@@ -129,12 +129,12 @@ After provisioning the machine, its also possible to run a nightly build which u
 
     cd OctoPi/src/vagrant
     run_vagrant_build.sh
-    
+
 To build a variant on the machine simply run::
 
     cd src/vagrant
     run_vagrant_build.sh [Variant]
-    
+
 
 Usage
 ~~~~~
