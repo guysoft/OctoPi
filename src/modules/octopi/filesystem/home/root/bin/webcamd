@@ -73,7 +73,7 @@ for cfg_file in ${cfg_files[@]}; do
   echo "raspi options: $camera_raspi_options"
   echo "http options:  -w $camera_http_webroot $camera_http_options"
   echo ""
-  echo "Explicitly USB device: $extracted_device"
+  echo "Explicitly set USB device: $extracted_device"
   echo "-----------------------------------------------"
   echo ""
 
@@ -102,6 +102,14 @@ function cleanup() {
     local pids=$(jobs -pr)
     [ -n "$pids" ] && kill $pids
     exit 0
+}
+
+# waits for our child processes
+function awaitChildren() {
+    local pids=$(jobs -pr)
+    for pid in $pids; do
+      wait $pid
+    done
 }
 
 # says goodbye when the script shuts down
@@ -181,19 +189,22 @@ function startUsb {
         product=`cat $uevent_file | grep PRODUCT | cut -d"=" -f2`
         vid=`echo $product | cut -d"/" -f1`
         pid=`echo $product | cut -d"/" -f2`
-        vidpid=`printf "%04x:%04x" "0x$vid" "0x$pid"`
 
-        # ... then look if it is in our list of known broken-fps-devices and if so remove
-        # the -f parameter from the options (if it's in there, else that's just a no-op)
-        for identifier in ${brokenfps_usb_devices[@]};
-        do
-            if [ "$vidpid" = "$identifier" ]; then
-                echo
-                echo "Camera model $vidpid is known to not work with -f parameter, stripping it out"
-                echo
-                options=`echo $options | sed -e "s/\(\s\+\|^\)-f\s\+[0-9]\+//g"`
-            fi
-        done
+        if [[ -n "$vid" && -n "$pid" ]]; then
+          vidpid=`printf "%04x:%04x" "0x$vid" "0x$pid"`
+
+          # ... then look if it is in our list of known broken-fps-devices and if so remove
+          # the -f parameter from the options (if it's in there, else that's just a no-op)
+          for identifier in ${brokenfps_usb_devices[@]};
+          do
+              if [ "$vidpid" = "$identifier" ]; then
+                  echo
+                  echo "Camera model $vidpid is known to not work with -f parameter, stripping it out"
+                  echo
+                  options=`echo $options | sed -e "s/\(\s\+\|^\)-f\s\+[0-9]\+//g"`
+              fi
+          done
+        fi
     fi
 
     logger -s "Starting USB webcam"
@@ -237,22 +248,24 @@ while true; do
         camera_http_webroot="${array_camera_http_webroot[${i}]}"
         camera_http_options="${array_camera_http_options[${i}]}"
         brokenfps_usb_devices="${array_camera_brokenfps_usb_devices[${i}]}"
+
         if [[ ${camera_usb_device} ]] && { [[ "usb" == ${scan_mode} ]] || [[ "auto" == ${scan_mode} ]]; }; then
            # usb device is explicitly set in options
           usb_device_path=`readlink -f ${camera_usb_device}`
           if containsString "$usb_device_path" "${array_camera_device[@]}"; then
             if [[ "auto" != ${scan_mode} ]]; then
-              array_camera_device[${i}]="alredy_in_use"
+              array_camera_device[${i}]="already_in_use"
               echo "config file='$camera_config':Video device already in use."
               continue
             fi
           elif containsString "$usb_device_path" "${video_devices[@]}"; then
             array_camera_device[${i}]="$usb_device_path"
             # explicitly set usb device was found in video_devices array, start usb with the found device
-            echo "config file='$camera_config':USB device was set in options and found in devices, start MJPG-streamer with the configured USB video device: $usb_device_path"
+            echo "config file='$camera_config':USB device was set in options and found in devices, starting MJPG-streamer with the configured USB video device: $usb_device_path"
             startUsb "$usb_device_path"
             continue
           fi
+
         elif [[ -z ${camera_usb_device} ]] && { [[ "usb-auto" == ${scan_mode} ]] || [[ "auto" == ${scan_mode} ]]; }; then
           for video_device in "${video_devices[@]}"; do
             if [[ "raspi" != "$video_device" ]]; then
@@ -261,7 +274,7 @@ while true; do
               else
                 array_camera_device[${i}]="$video_device"
                 # device is not set explicitly in options, start usb with first found usb camera as the device
-                echo "config file='$camera_config':USB device was not set in options, start MJPG-streamer with the first found video device: ${video_device}"
+                echo "config file='$camera_config':USB device was not set in options, starting MJPG-streamer with the first found video device: ${video_device}"
                 startUsb "${video_device}"
                 break
               fi
@@ -271,16 +284,17 @@ while true; do
             continue
           fi
         fi
+
         if [[ "raspi" == ${scan_mode} ]] || [[ "auto" == ${scan_mode} ]]; then
           video_device="raspi"
           if containsString "$video_device" "${array_camera_device[@]}"; then
             if [[ "auto" != ${scan_mode} ]]; then
-              array_camera_device[${i}]="alredy_in_use"
+              array_camera_device[${i}]="already_in_use"
               echo "config file='$camera_config':RasPiCam device already in use."
             fi
           elif containsString "$video_device" "${video_devices[@]}"; then
             array_camera_device[${i}]="$video_device"
-            echo "config file='$camera_config':Start MJPG-streamer with video device: ${video_device}"
+            echo "config file='$camera_config':Starting MJPG-streamer with video device: ${video_device}"
             startRaspi
             sleep 30 &
             sleep_pid=$!
@@ -290,14 +304,19 @@ while true; do
       fi
     done
   done
+
   array_assigned_device=( ${array_camera_device[*]} )
   if [[ ${#array_camera[@]} -eq ${#array_assigned_device[@]} ]]; then
-    echo "Done bring up all configured video device"
-    exit 0
-  else
-    echo "Scan again in two minutes"
-    sleep 120 &
-    sleep_pid=$!
-    wait ${sleep_pid}
+    echo "Done bringing up all configured video devices"
+    awaitChildren
+
+    # reset array_camera_device to empty
+    array_camera_device=()
+    for cam in ${array_camera[@]}; do
+      array_camera_device+=("")
+    done
   fi
+
+  echo "Scanning again in two minutes"
+  sleep 120
 done
