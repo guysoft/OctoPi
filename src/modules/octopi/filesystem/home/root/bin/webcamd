@@ -73,7 +73,7 @@ for cfg_file in ${cfg_files[@]}; do
   echo "raspi options: $camera_raspi_options"
   echo "http options:  -w $camera_http_webroot $camera_http_options"
   echo ""
-  echo "Explicitly USB device: $extracted_device"
+  echo "Explicitly set USB device: $extracted_device"
   echo "-----------------------------------------------"
   echo ""
 
@@ -251,7 +251,7 @@ while true; do
           usb_device_path=`readlink -f ${camera_usb_device}`
           if containsString "$usb_device_path" "${array_camera_device[@]}"; then
             if [[ "auto" != ${scan_mode} ]]; then
-              array_camera_device[${i}]="alredy_in_use"
+              array_camera_device[${i}]="already_in_use"
               echo "config file='$camera_config':Video device already in use."
               continue
             fi
@@ -286,7 +286,7 @@ while true; do
           video_device="raspi"
           if containsString "$video_device" "${array_camera_device[@]}"; then
             if [[ "auto" != ${scan_mode} ]]; then
-              array_camera_device[${i}]="alredy_in_use"
+              array_camera_device[${i}]="already_in_use"
               echo "config file='$camera_config':RasPiCam device already in use."
             fi
           elif containsString "$video_device" "${video_devices[@]}"; then
