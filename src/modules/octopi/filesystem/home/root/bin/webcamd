@@ -261,7 +261,7 @@ while true; do
           elif containsString "$usb_device_path" "${video_devices[@]}"; then
             array_camera_device[${i}]="$usb_device_path"
             # explicitly set usb device was found in video_devices array, start usb with the found device
-            echo "config file='$camera_config':USB device was set in options and found in devices, start MJPG-streamer with the configured USB video device: $usb_device_path"
+            echo "config file='$camera_config':USB device was set in options and found in devices, starting MJPG-streamer with the configured USB video device: $usb_device_path"
             startUsb "$usb_device_path"
             continue
           fi
@@ -274,7 +274,7 @@ while true; do
               else
                 array_camera_device[${i}]="$video_device"
                 # device is not set explicitly in options, start usb with first found usb camera as the device
-                echo "config file='$camera_config':USB device was not set in options, start MJPG-streamer with the first found video device: ${video_device}"
+                echo "config file='$camera_config':USB device was not set in options, starting MJPG-streamer with the first found video device: ${video_device}"
                 startUsb "${video_device}"
                 break
               fi
@@ -294,7 +294,7 @@ while true; do
             fi
           elif containsString "$video_device" "${video_devices[@]}"; then
             array_camera_device[${i}]="$video_device"
-            echo "config file='$camera_config':Start MJPG-streamer with video device: ${video_device}"
+            echo "config file='$camera_config':Starting MJPG-streamer with video device: ${video_device}"
             startRaspi
             sleep 30 &
             sleep_pid=$!
