@@ -104,6 +104,14 @@ function cleanup() {
     exit 0
 }
 
+# waits for our child processes
+function awaitChildren() {
+    local pids=$(jobs -pr)
+    for pid in $pids; do
+      wait $pid
+    done
+}
+
 # says goodbye when the script shuts down
 function goodbye() {
     # say goodbye
@@ -237,6 +245,7 @@ while true; do
         camera_http_webroot="${array_camera_http_webroot[${i}]}"
         camera_http_options="${array_camera_http_options[${i}]}"
         brokenfps_usb_devices="${array_camera_brokenfps_usb_devices[${i}]}"
+
         if [[ ${camera_usb_device} ]] && { [[ "usb" == ${scan_mode} ]] || [[ "auto" == ${scan_mode} ]]; }; then
            # usb device is explicitly set in options
           usb_device_path=`readlink -f ${camera_usb_device}`
@@ -253,6 +262,7 @@ while true; do
             startUsb "$usb_device_path"
             continue
           fi
+
         elif [[ -z ${camera_usb_device} ]] && { [[ "usb-auto" == ${scan_mode} ]] || [[ "auto" == ${scan_mode} ]]; }; then
           for video_device in "${video_devices[@]}"; do
             if [[ "raspi" != "$video_device" ]]; then
@@ -271,6 +281,7 @@ while true; do
             continue
           fi
         fi
+
         if [[ "raspi" == ${scan_mode} ]] || [[ "auto" == ${scan_mode} ]]; then
           video_device="raspi"
           if containsString "$video_device" "${array_camera_device[@]}"; then
@@ -290,14 +301,19 @@ while true; do
       fi
     done
   done
+
   array_assigned_device=( ${array_camera_device[*]} )
   if [[ ${#array_camera[@]} -eq ${#array_assigned_device[@]} ]]; then
-    echo "Done bring up all configured video device"
-    exit 0
-  else
-    echo "Scan again in two minutes"
-    sleep 120 &
-    sleep_pid=$!
-    wait ${sleep_pid}
+    echo "Done bringing up all configured video devices"
+    awaitChildren
+
+    # reset array_camera_device to empty
+    array_camera_device=()
+    for cam in ${array_camera[@]}; do
+      array_camera_device+=("")
+    done
   fi
+
+  echo "Scanning again in two minutes"
+  sleep 120
 done
