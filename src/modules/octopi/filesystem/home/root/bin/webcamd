@@ -189,19 +189,22 @@ function startUsb {
         product=`cat $uevent_file | grep PRODUCT | cut -d"=" -f2`
         vid=`echo $product | cut -d"/" -f1`
         pid=`echo $product | cut -d"/" -f2`
-        vidpid=`printf "%04x:%04x" "0x$vid" "0x$pid"`
 
-        # ... then look if it is in our list of known broken-fps-devices and if so remove
-        # the -f parameter from the options (if it's in there, else that's just a no-op)
-        for identifier in ${brokenfps_usb_devices[@]};
-        do
-            if [ "$vidpid" = "$identifier" ]; then
-                echo
-                echo "Camera model $vidpid is known to not work with -f parameter, stripping it out"
-                echo
-                options=`echo $options | sed -e "s/\(\s\+\|^\)-f\s\+[0-9]\+//g"`
-            fi
-        done
+        if [[ -n "$vid" && -n "$pid" ]]; then
+          vidpid=`printf "%04x:%04x" "0x$vid" "0x$pid"`
+
+          # ... then look if it is in our list of known broken-fps-devices and if so remove
+          # the -f parameter from the options (if it's in there, else that's just a no-op)
+          for identifier in ${brokenfps_usb_devices[@]};
+          do
+              if [ "$vidpid" = "$identifier" ]; then
+                  echo
+                  echo "Camera model $vidpid is known to not work with -f parameter, stripping it out"
+                  echo
+                  options=`echo $options | sed -e "s/\(\s\+\|^\)-f\s\+[0-9]\+//g"`
+              fi
+          done
+        fi
     fi
 
     logger -s "Starting USB webcam"
