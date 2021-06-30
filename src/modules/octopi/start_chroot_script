@@ -227,6 +227,15 @@ fi
 if [ "$OCTOPI_INCLUDE_HAPROXY" == "yes" ]
 then
   systemctl_if_exists enable gencert.service
+
+  haproxy_version=$(dpkg -s haproxy | grep '^Version:' | awk '{print $2}')
+  if [[ $haproxy_version = 2.* ]]; then
+    mv /etc/haproxy/haproxy.2.x.cfg /etc/haproxy/haproxy.cfg
+    rm /etc/haproxy/haproxy.1.x.cfg
+  else
+    mv /etc/haproxy/haproxy.1.x.cfg /etc/haproxy/haproxy.cfg
+    rm /etc/haproxy/haproxy.2.x.cfg
+  fi
 else
   # let's remove the configs for system services we don't need
   rm /etc/systemd/system/gencert.service
