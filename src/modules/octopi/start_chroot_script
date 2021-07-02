@@ -59,7 +59,8 @@ pushd /home/"${BASE_USER}"
   #mjpg-streamer
   if [ "$OCTOPI_INCLUDE_MJPGSTREAMER" == "yes" ]
   then
-    echo "--- Installing mjpg-streamer"
+    install_dir=/opt/mjpg-streamer
+    echo "--- Installing mjpg-streamer to $install_dir"
     if [ $( is_in_apt libjpeg62-turbo-dev ) -eq 1 ]; then
       apt-get -y --force-yes install libjpeg62-turbo-dev
     elif [ $( is_in_apt libjpeg8-dev ) -eq 1 ]; then 
@@ -67,26 +68,35 @@ pushd /home/"${BASE_USER}"
     fi
     
     apt-get -y --force-yes --no-install-recommends install imagemagick ffmpeg libv4l-dev
-    gitclone OCTOPI_MJPGSTREAMER_REPO mjpg-streamer
-    pushd mjpg-streamer
-      mv mjpg-streamer-experimental/* .
 
+    wget $OCTOPI_MJPGSTREAMER_ARCHIVE -O mjpg-streamer.zip
+    unzip mjpg-streamer.zip
+    rm mjpg-streamer.zip
+
+    pushd mjpg-streamer-master/mjpg-streamer-experimental
       # As said in Makefile, it is just a wrapper around CMake.
       # To apply -j option, we have to unwrap it.
-      MJPG_STREAMER_BUILD_DIR=_build
-      [ -d ${MJPG_STREAMER_BUILD_DIR} ] || (mkdir ${MJPG_STREAMER_BUILD_DIR} && \
-        chown "${BASE_USER}:${BASE_USER}" ${MJPG_STREAMER_BUILD_DIR})
-      [ -f ${MJPG_STREAMER_BUILD_DIR}/Makefile ] || (cd ${MJPG_STREAMER_BUILD_DIR} && \
-        sudo -u "${BASE_USER}" cmake -DCMAKE${MJPG_STREAMER_BUILD_DIR}_TYPE=Release ..)
+      build_dir=_build
+      mkdir -p $build_dir
+      pushd $build_dir
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+      popd
 
-      sudo -u "${BASE_USER}" make -j $(nproc) -C ${MJPG_STREAMER_BUILD_DIR}
+      make -j $(nproc) -C $build_dir
 
-      sudo -u "${BASE_USER}" cp ${MJPG_STREAMER_BUILD_DIR}/mjpg_streamer .
-      sudo -u "${BASE_USER}" find ${MJPG_STREAMER_BUILD_DIR} -name "*.so" -type f -exec cp {} . \;
+      mkdir -p $install_dir
+
+      install -m 755 $build_dir/mjpg_streamer $install_dir
+      find $build_dir -name "*.so" -type f -exec install -m 644 {} $install_dir \;
+
+      # copy bundled web folder
+      cp -a -r ./www $install_dir
+      chmod 755 $install_dir/www
+      chmod -R 644 $install_dir/www
 
       # create our custom web folder and add a minimal index.html to it
-      sudo -u "${BASE_USER}" mkdir www-octopi
-      pushd www-octopi
+      mkdir $install_dir/www-octopi
+      pushd $install_dir/www-octopi
         cat <<EOT >> index.html
 <html>
 <head><title>mjpg_streamer test page</title></head>
@@ -101,6 +111,10 @@ pushd /home/"${BASE_USER}"
 EOT
       popd
     popd
+    rm -rf mjpg-streamer-master
+
+    # symlink for backwards compatibility
+    sudo -u "${BASE_USER}" ln -s $install_dir /home/"${BASE_USER}"/mjpg-streamer
   fi
 
   # FFMPEG HLS

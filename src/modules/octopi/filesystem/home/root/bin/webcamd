@@ -11,7 +11,7 @@
 ### computer.                                                        ###
 ########################################################################
 
-MJPGSTREAMER_HOME=/home/pi/mjpg-streamer
+MJPGSTREAMER_HOME=/opt/mjpg-streamer
 MJPGSTREAMER_INPUT_USB="input_uvc.so"
 MJPGSTREAMER_INPUT_RASPICAM="input_raspicam.so"
 
