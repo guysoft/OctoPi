@@ -2,8 +2,7 @@
 # All our config settings must start with OCTOPI_
 
 # OctoPrint archive
-[ -n "$OCTOPI_OCTOPRINT_ARCHIVE" ] || OCTOPI_OCTOPRINT_ARCHIVE=$(wget -q -O - https://api.github.com/repos/foosel/OctoPrint/releases/latest | grep "zipball_url" | cut -d : -f 2,3 | tr -d \" | tr -d ,)
-[ -n "$OCTOPI_OCTOPRINT_REPO_SHIP" ] || OCTOPI_OCTOPRINT_REPO_SHIP=https://github.com/foosel/OctoPrint.git
+[ -n "$OCTOPI_OCTOPRINT_PACKAGE" ] || OCTOPI_OCTOPRINT_PACKAGE="OctoPrint"
 [ -n "$OCTOPI_INCLUDE_OCTOPRINT" ] || OCTOPI_INCLUDE_OCTOPRINT=yes
 
 # CuraEngine archive & version
