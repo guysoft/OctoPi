@@ -53,7 +53,7 @@ pushd /home/"${BASE_USER}"
   if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
   then
     echo "--- Installing OctoPrint"
-    PIP_DEFAULT_TIMEOUT=60 sudo -u "${BASE_USER}" /home/"${BASE_USER}"/oprint/bin/pip install $OCTOPI_OCTOPRINT_ARCHIVE
+    PIP_DEFAULT_TIMEOUT=60 sudo -u "${BASE_USER}" /home/"${BASE_USER}"/oprint/bin/pip install $OCTOPI_OCTOPRINT_PACKAGE
   fi
 
   #mjpg-streamer
