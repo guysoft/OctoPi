@@ -19,7 +19,7 @@ Download the latest stable build via this button:
 
 Official mirror is `here <https://github.com/guysoft/OctoPi/releases>`_
 
-Second mirror is `here <https://octopi.gnethomelinux.com/Distros/OctoPi/nightly/>`_
+Second mirror is `here <https://octopi.gnethomelinux.com/Distros/OctoPi/>`_
 
 Nightly builds are available `here <http://unofficialpi.org/Distros/OctoPi/nightly/>`_
 
