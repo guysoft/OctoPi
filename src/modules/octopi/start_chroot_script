@@ -34,7 +34,7 @@ apt-get remove -y --purge  $remove_extra
 apt-get autoremove -y
 
 if [ "${BASE_DISTRO}" == "ubuntu" ]; then
-    apt-get -y --force-yes install python3 python3-virtualenv python3-dev git screen subversion cmake cmake-data avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev libatlas3-base
+    apt-get -y --force-yes install python3 python3-virtualenv python3-dev git screen subversion cmake cmake-data avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev libatlas3-base unzip
 else
     apt-get -y --force-yes install python3 python3-virtualenv python3-dev git screen subversion cmake=3.13.4-1 cmake-data=3.13.4-1 avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev libatlas3-base
 fi
