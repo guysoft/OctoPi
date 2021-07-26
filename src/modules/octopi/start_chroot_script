@@ -61,10 +61,14 @@ pushd /home/"${BASE_USER}"
   then
     install_dir=/opt/mjpg-streamer
     echo "--- Installing mjpg-streamer to $install_dir"
-    if [ $( is_in_apt libjpeg62-turbo-dev ) -eq 1 ]; then
-      apt-get -y --force-yes install libjpeg62-turbo-dev
-    elif [ $( is_in_apt libjpeg8-dev ) -eq 1 ]; then 
-      apt-get -y --force-yes install libjpeg8-dev
+    if [ "${BASE_DISTRO}" == "ubuntu" ]; then
+      apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages install libjpeg8-dev
+    else
+      if [ $( is_in_apt libjpeg62-turbo-dev ) -eq 1 ]; then
+        apt-get -y --force-yes install libjpeg62-turbo-dev
+      elif [ $( is_in_apt libjpeg8-dev ) -eq 1 ]; then
+        apt-get -y --force-yes install libjpeg8-dev
+      fi
     fi
     
     apt-get -y --force-yes --no-install-recommends install imagemagick ffmpeg libv4l-dev
