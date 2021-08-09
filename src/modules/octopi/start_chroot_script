@@ -26,10 +26,6 @@ unpack /filesystem/home/pi /home/"${BASE_USER}" "${BASE_USER}"
 unpack /filesystem/home/root /root root
 unpack /filesystem/boot /boot
 
-if [ "${BASE_DISTRO}" == "ubuntu" ]; then
-  ln -s /boot/firmware/octopi.txt /boot/octopi.txt
-fi
-
 apt-get update
 
 # in case we are building from a regular raspbian image instead of the lite one...
