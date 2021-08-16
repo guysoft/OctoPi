@@ -14,6 +14,7 @@
 MJPGSTREAMER_HOME=/opt/mjpg-streamer
 MJPGSTREAMER_INPUT_USB="input_uvc.so"
 MJPGSTREAMER_INPUT_RASPICAM="input_raspicam.so"
+VIDEOCAPTURECAP_REGEX='Capabilities\s+:\s+0x[0-9a-f]{7}1.+Device Caps\s+:\s+0x[0-9a-f]{7}1'
 
 brokenfps_usb_devices=("046d:082b" "1908:2310" "0458:708c" "0458:6006" "1e4e:0102" "0471:0311" "038f:6001" "046d:0804" "046d:0825" "046d:0994" "0ac8:3450")
 
@@ -39,7 +40,7 @@ array_additional_brokenfps_usb_devices=()
 array_camera_device=()
 array_assigned_device=()
 input_string=""
-max_camera=2
+max_camera=1
 
 echo "--- Configuration: ----------------------------"
 for cfg_file in ${cfg_files[@]}; do
@@ -271,18 +272,22 @@ while true; do
             # Check whether we allow an additional input stream
             if [[ $max_camera > 0 ]]; then
               # Check if the video device has the Video Capture capability or not before adding it to input streams to prevent errors (needs v4l2-ctl command provided by v4l-utils package)
-              echo "will run v4l2-ctl --list-formats -d \"$usb_device_path\"|wc -l"
-              if [[ $(v4l2-ctl --list-formats -d "$usb_device_path"|wc -l) > 3 ]]; then
+              if [[ $(v4l2-ctl -D -d "$usb_device_path") =~ $VIDEOCAPTURECAP_REGEX ]]; then
                 echo "config file='$camera_config':USB device was set in options and found in devices, adding input stream to MJPG-streamer with the configured USB video device: $usb_device_path"
                 addUsbInput "$usb_device_path"
                 max_camera=$max_camera-1
+                continue
               else
                 echo "Cannot add $usb_device_path to input streams as it does not offer video capture capability"
+                continue
               fi
             # Otherwise, notify the stream can't be added to input streams
             else
               echo "Cannot add $usb_device_path to input streams, maximum stream number reached. Please consider increasing nb_max_camera setting in '$camera_config' or remove cameras"
+              continue
             fi
+          elif [[ -z $usb_device_path ]]; then
+            echo "Cannot add $camera_usb_device, the device doesn't exist"
             continue
           fi
 
@@ -297,17 +302,19 @@ while true; do
                 # Check whether we allow an additional input stream
                 if [[ $max_camera > 0 ]]; then
                   # Check if the video device has the Video Capture capability or not before adding it to input streams to prevent errors (needs v4l2-ctl command provided by v4l-utils package)
-                  if [[ $(v4l2-ctl --list-formats -d "${video_device}"|wc -l) > 3 ]]; then
+                  if [[ $(v4l2-ctl -D -d "$usb_device_path") =~ $VIDEOCAPTURECAP_REGEX ]]; then
                     echo "config file='$camera_config':USB device was not set in options, adding input stream to MJPG-streamer with found video device: ${video_device}"
                     addUsbInput "${video_device}"
                     max_camera=$max_camera-1
+                    continue
                   else
                     echo "Cannot add ${video_device} to input streams as it does not offer video capture capability"
+                    continue
                   fi
                 # Otherwise, notify the stream can't be added to input streams
                 else
                   echo "Cannot add $usb_device_path to input streams, maximum stream number reached. Please consider increasing settings or remove cameras"
-                  break
+                  continue
                 fi
               fi
             fi
