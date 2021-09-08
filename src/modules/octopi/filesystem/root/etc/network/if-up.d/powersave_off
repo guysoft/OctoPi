@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+
+# Don't bother for loopback
+if [ "$IFACE" = lo ]; then
+        exit 0
+fi
+
+# Only run from ifup.
+if [ "$MODE" != start ]; then
+        exit 0
+fi
+
+# Only run once
+if [ "$ADDRFAM" != meta ]; then
+        exit 0
+fi
+
+/usr/sbin/iw dev wlan0 set power_save off
+
+exit 0
+
