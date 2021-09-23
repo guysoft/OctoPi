@@ -25,8 +25,6 @@ Nightly builds are available `here <http://unofficialpi.org/Distros/OctoPi/night
 
 64bit Nightly builds are available `here <http://unofficialpi.org/Distros/OctoPi/nightly-arm64/>`_
 
-We recently had to move to building location, donations for somewhere with HTTPS would be great.
-
 How to use it?
 --------------
 
