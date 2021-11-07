@@ -25,7 +25,7 @@ ExecStart=/usr/bin/sudo -u webcam \
     -pix_fmt yuv420p \
     \
     -c:v mjpeg -q:v 0 \
-    -f image2 -update 1 -atomic_writing 1 \
+    -f image2 -r 1 -update 1 -atomic_writing 1 \
     /run/webcam/jpeg/frame.jpg \
     \
     -c:v h264_omx -profile:v high \
