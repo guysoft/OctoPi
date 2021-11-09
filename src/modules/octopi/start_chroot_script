@@ -149,12 +149,6 @@ EOT
     rm /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/certs/ssl-cert-snakeoil.pem
   fi
 
-  if [ "$OCTOPI_INCLUDE_WIRINGPI" == "yes" ]
-  then
-    echo "--- Installing WiringPi"
-    apt-get -y install wiringpi
-  fi
-
   # fetch current yq build and install to /usr/local/bin
   wget -O yq $OCTOPI_YQ_DOWNLOAD && chmod +x yq && mv yq /usr/local/bin
   

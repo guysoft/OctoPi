@@ -20,9 +20,6 @@
 # HAProxy
 [ -n "$OCTOPI_INCLUDE_HAPROXY" ] || OCTOPI_INCLUDE_HAPROXY=yes
 
-# WiringPi
-[ -n "$OCTOPI_INCLUDE_WIRINGPI" ] || OCTOPI_INCLUDE_WIRINGPI=yes
-
 # yq
 [ -n "$OCTOPI_YQ_DOWNLOAD" ] || OCTOPI_YQ_DOWNLOAD=$(wget -q -O - https://api.github.com/repos/mikefarah/yq/releases/latest | grep "browser_download_url" | grep "yq_linux_arm" | cut -d : -f 2,3 | tr -d \" | tr -d ,)
 
