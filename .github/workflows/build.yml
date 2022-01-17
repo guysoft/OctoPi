@@ -1,6 +1,7 @@
 name: Build Image
 
-on: 
+on:
+  repository_dispatch:
   push:
   schedule: 
     - cron: '0 0 * * *'
