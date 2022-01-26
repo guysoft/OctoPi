@@ -270,6 +270,11 @@ systemctl_if_exists enable streamer_select.service
 if [ "$OCTOPI_INCLUDE_MJPGSTREAMER" == "yes" ]
 then
   systemctl_if_exists enable webcamd.service
+### use legacy camera stack on bullseye for now  
+  if grep "camera_auto_detect=1" /boot/config.txt
+    then
+        sed -i "s/camera_auto_detect=1/camera_auto_detect=0/g" /boot/config.txt
+    fi
 else
   rm /etc/logrotate.d/webcamd
   rm /etc/systemd/system/webcamd.service
