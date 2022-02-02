@@ -1,4 +1,4 @@
-name: Build Image
+name: Build Image 64bit
 
 on:
   repository_dispatch:
