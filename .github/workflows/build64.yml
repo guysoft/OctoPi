@@ -55,7 +55,7 @@ jobs:
         NOW=$(date +"%Y-%m-%d-%H%M")
         IMAGE=$NOW-octopi-$DIST_VERSION
 
-        cp repository/src/workspace/*.img $IMAGE.img
+        cp repository/src/workspace-ubuntu_arm64/*.img $IMAGE.img
 
         echo "::set-output name=image::$IMAGE"
 
