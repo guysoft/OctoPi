@@ -29,7 +29,7 @@ jobs:
 
     - name: Download Raspbian Image
       run: |
-        mkdir -i repository/src/image-ubuntu_arm64
+        mkdir -p repository/src/image-ubuntu_arm64
         cd repository/src/image-ubuntu_arm64
         wget -c --trust-server-names 'https://cdimage.ubuntu.com/releases/20.04.3/release/ubuntu-20.04.3-preinstalled-server-arm64+raspi.img.xz'
 
