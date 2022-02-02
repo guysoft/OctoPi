@@ -1,0 +1,67 @@
+name: Build Image
+
+on:
+  repository_dispatch:
+  push:
+  schedule: 
+    - cron: '0 0 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Dependencies
+      run: |
+        sudo apt update
+        sudo apt install coreutils p7zip-full qemu-user-static
+
+    - name: Checkout CustomPiOS
+      uses: actions/checkout@v2
+      with:
+        repository: 'guysoft/CustomPiOS'
+        path: CustomPiOS
+
+    - name: Checkout Project Repository
+      uses: actions/checkout@v2
+      with:
+        path: repository
+        submodules: true
+
+    - name: Download Raspbian Image
+      run: |
+        mkdir -i repository/src/image-ubuntu_arm64
+        cd repository/src/image-ubuntu_arm64
+        wget -c --trust-server-names 'https://cdimage.ubuntu.com/releases/20.04.3/release/ubuntu-20.04.3-preinstalled-server-arm64+raspi.img.xz'
+
+    - name: Update CustomPiOS Paths
+      run: |
+        cd repository/src
+        ../../CustomPiOS/src/update-custompios-paths
+    
+    - name: Force apt mirror to work around intermittent mirror hiccups
+      run: |
+        echo "OCTOPI_APTMIRROR=http://mirror.us.leaseweb.net/raspbian/raspbian" > repository/src/config.local
+
+    - name: Build Image
+      run: |
+        sudo modprobe loop
+        cd repository/src
+        sudo bash -x ./build_dist ubuntu_arm64
+
+    - name: Copy output
+      id: copy
+      run: |
+        source repository/src/config ubuntu_arm64
+        NOW=$(date +"%Y-%m-%d-%H%M")
+        IMAGE=$NOW-octopi-$DIST_VERSION
+
+        cp repository/src/workspace/*.img $IMAGE.img
+
+        echo "::set-output name=image::$IMAGE"
+
+    # artifact upload will take care of zipping for us
+    - uses: actions/upload-artifact@v1
+      if: github.event_name == 'schedule'
+      with:
+        name: ${{ steps.copy.outputs.image }}
+        path: ${{ steps.copy.outputs.image }}.img
