@@ -2,5 +2,10 @@ export DIST_NAME=OctoPi
 export DIST_VERSION=1.0.0
 export MODULES="base(raspicam, network, disable-services(octopi), password-for-sudo)"
 
+export RPI_IMAGER_NAME="${DIST_NAME} version ${DIST_VERSION}"
+export RPI_IMAGER_DESCRIPTION="A Raspberry Pi distribution for 3D printers. Ships OctoPrint out-of-the-box."
+export RPI_IMAGER_ICON="https://raw.githubusercontent.com/guysoft/OctoPi/devel/media/rpi-imager-OctoPi.png"
+
+
 export BASE_IMAGE_ENLARGEROOT=2000
 export BASE_IMAGE_RESIZEROOT=200
