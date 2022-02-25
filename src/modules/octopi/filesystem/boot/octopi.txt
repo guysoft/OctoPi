@@ -82,7 +82,7 @@
 # If connection terminates by variable reasons system tries to restart the wifi connection to reestablish a connection.
 # The connection test is done every minute.
 # By default it is disabled (0 = off / 1 = on)
-# dstination_host can be an ip address or a hostname (for hostname ensure dns resosultion is working correctly)
+# destination_host can be an ip address or a hostname (for hostname ensure dns resosultion is working correctly)
 enable_network_monitor=0
 destination_host=192.168.1.1
 
