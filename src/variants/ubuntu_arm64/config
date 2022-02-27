@@ -6,3 +6,5 @@ export BASE_ZIP_IMG=`ls -t $BASE_IMAGE_PATH/*-{ubuntu}-*-arm64-*.xz | head -n 1`
 export BASE_IGNORE_VARIANT_NAME=yes
 export BASE_USER=pi
 export BASE_USER_PASSWORD=raspberry
+export RPI_IMAGER_NAME="${DIST_NAME} version ${DIST_VERSION} 64bit"
+
