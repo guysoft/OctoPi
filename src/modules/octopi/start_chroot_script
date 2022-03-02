@@ -158,6 +158,12 @@ popd
 usermod -a -G tty "${BASE_USER}"
 usermod -a -G dialout "${BASE_USER}"
 
+# If building against Ubuntu, make sure vcgencmd is available and pi has the rights to use it
+if [ "${BASE_DISTRO}" == "ubuntu" ]; then
+  apt-get -y --force-yes install libraspberrypi-bin
+  usermod -a -G video "${BASE_USER}"
+fi
+
 # store octopi commit used to build this image
 echo "$OCTOPI_COMMIT" > /etc/octopi_commit
 
