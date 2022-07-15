@@ -18,7 +18,7 @@ ExecStartPre=/bin/chown -R webcam:webcam /run/webcam
 ExecStartPre=/bin/chmod -R 0755 /run/webcam
 
 ExecStart=/usr/bin/sudo -u webcam \
-    /opt/ffmpeg-hls/ffmpeg \
+    /usr/bin/ffmpeg \
     \
     -framerate 30 -video_size 640x480 \
     -i /dev/video0 \
@@ -28,7 +28,7 @@ ExecStart=/usr/bin/sudo -u webcam \
     -f image2 -r 1 -update 1 -atomic_writing 1 \
     /run/webcam/jpeg/frame.jpg \
     \
-    -c:v h264_v4l2m2m -level:v 4.0 \
+    -c:v h264_omx -profile:v high \
     -b:v 1264k -flags +cgop \
     -g 30 -keyint_min 30 \
     \
@@ -40,7 +40,7 @@ ExecStart=/usr/bin/sudo -u webcam \
     \
     -vf scale=-1:240 \
     \
-    -c:v h264_v4l2m2m -level:v 4.0 \
+    -c:v h264_omx -profile:v high \
     -b:v 240k -flags +cgop \
     -g 30 -keyint_min 30 \
     \
