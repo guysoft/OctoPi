@@ -124,6 +124,11 @@ EOT
   then
     apt-get install -y --force-yes --no-install-recommends nginx
 
+    ARCH=arm
+    if [ "${BASE_ARCH}" == "aarch64"]; then
+        ARCH=aarch64
+    fi
+
     FFMPEG_BUILD_DIR=$(mktemp -d)
     pushd ${FFMPEG_BUILD_DIR}
       FFMPEG_ARCHIVE=ffmpeg.tar.gz
@@ -131,6 +136,7 @@ EOT
       tar xvzf ${FFMPEG_ARCHIVE}
       cd FFmpeg*
       ./configure \
+        --arch="${ARCH}" \
         --disable-doc \
         --disable-htmlpages \
         --disable-manpages \
