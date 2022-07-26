@@ -146,7 +146,7 @@ EOT
         --disable-ffprobe
       make -j$(nproc)
       mkdir -p ${FFMPEG_HLS_DIR}
-      cp ffmpeg ${FFMPEG_HLS_DIR}
+      copy_and_export ffmpeg-hls-"${ARCH}" ffmpeg "${FFMPEG_HLS_DIR}"
     popd
     rm -r ${FFMPEG_BUILD_DIR}
 
