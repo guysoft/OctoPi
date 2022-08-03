@@ -125,7 +125,7 @@ EOT
     apt-get install -y --force-yes --no-install-recommends nginx
 
     ARCH=arm
-    if [ "${BASE_ARCH}" == "aarch64"]; then
+    if [ "${BASE_ARCH}" == "aarch64" ]; then
         ARCH=aarch64
     fi
 
