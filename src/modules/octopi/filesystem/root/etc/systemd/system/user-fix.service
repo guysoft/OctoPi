@@ -1,0 +1,18 @@
+# Written by Gina Häußge originally at https://github.com/OctoPrint/OctoPi-UpToDate/blob/e70ccdaf0cd4ef4adfaa3f9b6b288fb6bfda116a/scripts/files/user-fix.service
+[Unit]
+Description=Ensure that user name changes are applied as needed
+
+DefaultDependencies=no
+
+Before=network-pre.target
+Wants=network-pre.target
+
+After=local-fs.target
+Wants=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/root/bin/user-fix
+
+[Install]
+WantedBy=multi-user.target
