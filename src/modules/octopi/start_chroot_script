@@ -329,6 +329,15 @@ systemctl_if_exists enable networkcheck.timer
 echo "--- Installing avrdude"
 apt-get -y install avrdude
 
+### User-fixing
+# Users can change their username easily via the Raspberry Pi imager, which breaks some of OctoPi's scripts
+# we need to install virtualenv-tools3, so let's get pip and that
+apt install -y python3-pip
+sudo -u pi pip3 install --user virtualenv-tools3
+
+systemctl_if_exists enable user-fix.service
+
+
 #cleanup
 apt-get clean
 apt-get autoremove -y

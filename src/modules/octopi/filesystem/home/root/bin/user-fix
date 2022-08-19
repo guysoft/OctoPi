@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+# Written by Gina Häußge originally at https://github.com/OctoPrint/OctoPi-UpToDate/blob/e70ccdaf0cd4ef4adfaa3f9b6b288fb6bfda116a/scripts/files/user-fix
+
+set -e
+
+USERID=1000
+FIRSTUSER=`getent passwd $USERID | cut -d: -f1`
+FIRSTUSERHOME=`getent passwd $USERID | cut -d: -f6`
+
+CURRENT=`grep User= /etc/systemd/system/octoprint.service | cut -d= -f2`
+
+if [ "$CURRENT" = "pi" -a "$FIRSTUSER" != "pi" ]; then
+    # if we get here it means that the first user was renamed but we haven't yet
+    # updated all of OctoPi's files that depend on that name, so let's do that now
+
+    # first we need to figure out if we can use the new user name in systemd files
+    # directly or if we need to use the UID - we do that by checking if the
+    # escaped name differes from the plain name, if so something is non ASCII
+    # and the UID is the safer bet
+    FIRSTUSERESC=`systemd-escape "$FIRSTUSER"`
+    if [ "$FIRSTUSER" != "$FIRSTUSERESC" ]; then
+        SERVICEUSER=$USERID
+    else
+        SERVICEUSER=$FIRSTUSER
+    fi
+
+    # fix OctoPrint service file
+    echo "Fixing service file"
+    sed -i "s!User=pi!User=$SERVICEUSER!g" /etc/systemd/system/octoprint.service
+    sed -i "s!ExecStart=/home/pi/!ExecStart=$FIRSTUSERHOME/!g" /etc/systemd/system/octoprint.service
+    systemctl daemon-reload
+
+    # fix sudoers files
+    echo "Fixing sudoers"
+    sed -i "s!^pi!$FIRSTUSER!g" /etc/sudoers.d/octoprint-service
+    sed -i "s!^pi!$FIRSTUSER!g" /etc/sudoers.d/octoprint-shutdown
+
+    # fix scripts
+    echo "Fixing scripts"
+    sed -i "s!/home/pi/!$FIRSTUSERHOME/!g" $FIRSTUSERHOME/scripts/add-octoprint-checkout
+    sed -i "s!/home/pi/!$FIRSTUSERHOME/!g" $FIRSTUSERHOME/scripts/welcome
+    sed -i "s!/home/pi/!$FIRSTUSERHOME/!g" $FIRSTUSERHOME/.bashrc
+    sed -i "s!/home/pi/!$FIRSTUSERHOME/!g" /root/bin/webcamd
+
+    # fix virtualenv
+    echo "Fixing paths in virtual environment"
+    cd $FIRSTUSERHOME/oprint
+    sudo -u $FIRSTUSER $FIRSTUSERHOME/.local/bin/virtualenv-tools --update-path $FIRSTUSERHOME/oprint
+
+    # finally, reboot for all of this to actually take affect
+    echo "Adjusted scripts to new user, restarting services..."
+    systemctl reboot
+fi
