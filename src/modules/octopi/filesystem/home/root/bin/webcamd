@@ -227,7 +227,9 @@ while true; do
   video_devices=($(find /dev -regextype sed -regex '\/dev/video[0-9]\+' | sort 2> /dev/null))
 
   # add list of raspi camera into an array
-  if [ "`vcgencmd get_camera`" = "supported=1 detected=1" ]; then
+  vcgencmd_regex="supported=1 detected=1.*"
+  # Example output matching: supported=1 detected=1, libcamera interfaces=0
+  if [[ "`vcgencmd get_camera`" =~ $vcgencmd_regex ]]; then
     video_devices+=( "raspi" )
   fi
 
