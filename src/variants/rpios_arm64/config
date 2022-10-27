@@ -5,3 +5,4 @@ export BASE_IMAGE_PATH=${DIST_PATH}/image-rpios_arm64
 export BASE_IGNORE_VARIANT_NAME=yes
 export BASE_USER=pi
 export BASE_USER_PASSWORD=raspberry
+export RPI_IMAGER_NAME="${DIST_NAME} version ${DIST_VERSION} 64-bit"
