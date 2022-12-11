@@ -320,6 +320,10 @@ fi
 
 systemctl_if_exists enable ffmpeg_hls.service
 
+### Disable Wifi Power management
+
+systemctl_if_exists enable wifi_powersave@off.service
+
 ### Network monitoring
 
 systemctl_if_exists enable networkcheck.timer
