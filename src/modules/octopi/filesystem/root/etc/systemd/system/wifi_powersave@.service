@@ -1,0 +1,11 @@
+[Unit]
+Description=Set WiFi power save %i
+After=sys-subsystem-net-devices-wlan0.device
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/sbin/iw dev wlan0 set power_save %i
+
+[Install]
+WantedBy=sys-subsystem-net-devices-wlan0.device
