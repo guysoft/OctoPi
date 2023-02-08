@@ -68,6 +68,7 @@ Requirements
 #. Bash
 #. git
 #. sudo (the script itself calls it, running as root without sudo won't work)
+#. jq (part of CustomPiOS dependencies)
 
 Build OctoPi From within OctoPi / Raspbian / Debian / Ubuntu
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
