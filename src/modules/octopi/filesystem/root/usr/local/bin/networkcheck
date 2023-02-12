@@ -23,6 +23,9 @@ if [ $enable_network_monitor == 1 ] && [ "$destination_host" != "" ]; then
 	    fi
 	done < "$input"
     fi
+    
+    echo "Network configuration not found"
+    exit 1
 else
     echo "Network monitoring not enabled."
 fi
