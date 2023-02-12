@@ -23,6 +23,29 @@ if [ $enable_network_monitor == 1 ] && [ "$destination_host" != "" ]; then
 	    fi
 	done < "$input"
     fi
+    
+    if [ -f /etc/wpa_supplicant/wpa_supplicant.conf ]; then # check if config file exists
+        input="/etc/wpa_supplicant/wpa_supplicant.conf"
+        while IFS= read -r line; do # read config file line by line
+            if [[ $line =~ ^network=.* ]]; then # check if we have a network config if a line starts with "network="
+                echo "network config found..."
+                ping -c4 $destination_host > /dev/null # check if destination is reachable - possible by default the router
+                if [ $? != 0 ]; then
+                    echo "Destination not reachable - reconfigure interface..."
+                    sudo wpa_cli -i wlan0 reconfigure # reconfigure network to trigger reconnect
+                    sudo dhclient -v # ensure connection will be established by refresh dhcp lease
+                    echo "Reconnect done."
+                    exit 0 # if we detect multiple network configs exit after 1st one - one reconnect is enough :-)
+                else
+                    echo "Destination reachable - no action needed."
+                    exit 0 # destination reached - exit loop
+                fi
+            fi
+        done < "$input"
+    fi
+    
+    echo "Network configuration not found"
+    exit 1
 else
     echo "Network monitoring not enabled."
 fi
