@@ -4,6 +4,17 @@
 ### MacOSX users: If you use Textedit to edit this file make sure to use 
 ### "plain text format" and "disable smart quotes" in "Textedit > Preferences"
 
+### Configure the max number of cameras Mjpg-streamer will handle
+#
+# Number of streams Mjpg-streamer will handle. Please be aware that the Rpi
+# may not be able to handle a lot of concurrent streams. Should the setting
+# appear more than once in all the configuration files, only the maximum 
+# value will be kept.
+#
+# Defaults to 2
+#
+#nb_max_camera=2
+
 ### Configure which camera to use
 #
 # Available options are:

@@ -14,6 +14,7 @@
 MJPGSTREAMER_HOME=/opt/mjpg-streamer
 MJPGSTREAMER_INPUT_USB="input_uvc.so"
 MJPGSTREAMER_INPUT_RASPICAM="input_raspicam.so"
+VIDEOCAPTURECAP_REGEX='Capabilities\s+:\s+0x[0-9a-f]{7}1.+Device Caps\s+:\s+0x[0-9a-f]{7}1'
 
 brokenfps_usb_devices=("046d:082b" "1908:2310" "0458:708c" "0458:6006" "1e4e:0102" "0471:0311" "038f:6001" "046d:0804" "046d:0825" "046d:0994" "0ac8:3450")
 
@@ -38,6 +39,8 @@ array_camera_http_options=()
 array_additional_brokenfps_usb_devices=()
 array_camera_device=()
 array_assigned_device=()
+input_string=""
+max_camera=1
 
 echo "--- Configuration: ----------------------------"
 for cfg_file in ${cfg_files[@]}; do
@@ -53,6 +56,11 @@ for cfg_file in ${cfg_files[@]}; do
       source "$cfg_file"
   fi
   usb_options="$camera_usb_options"
+
+  # if nb_max_camera is greater than actual setting, overwrite it
+  if [[ $nb_max_camera > $max_camera ]]; then
+    max_camera=$nb_max_camera
+  fi
 
   # if webcam device is explicitly given in /boot/octopi.txt, save the path of the device
   # to a variable and remove its parameter from usb_options
@@ -155,22 +163,22 @@ function runMjpgStreamer {
     fi
 
     pushd $MJPGSTREAMER_HOME > /dev/null 2>&1
-        echo Running ./mjpg_streamer -o "output_http.so -w $camera_http_webroot $camera_http_options" -i "$input"
-        LD_LIBRARY_PATH=. ./mjpg_streamer -o "output_http.so -w $camera_http_webroot $camera_http_options" -i "$input" &
+        echo Running ./mjpg_streamer -o "output_http.so -w $camera_http_webroot $camera_http_options" "$input"
+        LD_LIBRARY_PATH=. ./mjpg_streamer -o "output_http.so -w $camera_http_webroot $camera_http_options" "$input" &
         sleep 1 &
         sleep_pid=$!
         wait ${sleep_pid}
     popd > /dev/null 2>&1
 }
 
-# starts up the RasPiCam
-function startRaspi {
-    logger -s "Starting Raspberry Pi camera"
-    runMjpgStreamer "$MJPGSTREAMER_INPUT_RASPICAM $camera_raspi_options"
+# Adds the RasPiCam stream to Mjpg streamer input streams
+function addRaspiInput {
+    logger -s "Adding Raspberry Pi camera stream to input streams"
+    input_string+="-i '$MJPGSTREAMER_INPUT_RASPICAM $camera_raspi_options' "
 }
 
-# starts up the USB webcam
-function startUsb {
+# Adds an USB webcam stream to Mjpg streamer input streams
+function addUsbInput {
     options="$usb_options"
     device="video0"
 
@@ -208,7 +216,7 @@ function startUsb {
     fi
 
     logger -s "Starting USB webcam"
-    runMjpgStreamer "$MJPGSTREAMER_INPUT_USB $options"
+    input_string+="-i '$MJPGSTREAMER_INPUT_USB $options' "
 }
 
 # make sure our cleanup function gets called when we receive SIGINT, SIGTERM
@@ -263,8 +271,25 @@ while true; do
           elif containsString "$usb_device_path" "${video_devices[@]}"; then
             array_camera_device[${i}]="$usb_device_path"
             # explicitly set usb device was found in video_devices array, start usb with the found device
-            echo "config file='$camera_config':USB device was set in options and found in devices, starting MJPG-streamer with the configured USB video device: $usb_device_path"
-            startUsb "$usb_device_path"
+            # Check whether we allow an additional input stream
+            if [[ $max_camera > 0 ]]; then
+              # Check if the video device has the Video Capture capability or not before adding it to input streams to prevent errors (needs v4l2-ctl command provided by v4l-utils package)
+              if [[ $(v4l2-ctl -D -d "$usb_device_path") =~ $VIDEOCAPTURECAP_REGEX ]]; then
+                echo "config file='$camera_config':USB device was set in options and found in devices, adding input stream to MJPG-streamer with the configured USB video device: $usb_device_path"
+                addUsbInput "$usb_device_path"
+                max_camera=$max_camera-1
+                continue
+              else
+                echo "Cannot add $usb_device_path to input streams as it does not offer video capture capability"
+                continue
+              fi
+            # Otherwise, notify the stream can't be added to input streams
+            else
+              echo "Cannot add $usb_device_path to input streams, maximum stream number reached. Please consider increasing nb_max_camera setting in '$camera_config' or remove cameras"
+              continue
+            fi
+          elif [[ -z $usb_device_path ]]; then
+            echo "Cannot add $camera_usb_device, the device doesn't exist"
             continue
           fi
 
@@ -275,10 +300,24 @@ while true; do
                 : #already in use
               else
                 array_camera_device[${i}]="$video_device"
-                # device is not set explicitly in options, start usb with first found usb camera as the device
-                echo "config file='$camera_config':USB device was not set in options, starting MJPG-streamer with the first found video device: ${video_device}"
-                startUsb "${video_device}"
-                break
+                # device is not set explicitly in options, add device to input streams if there are any left
+                # Check whether we allow an additional input stream
+                if [[ $max_camera > 0 ]]; then
+                  # Check if the video device has the Video Capture capability or not before adding it to input streams to prevent errors (needs v4l2-ctl command provided by v4l-utils package)
+                  if [[ $(v4l2-ctl -D -d "$usb_device_path") =~ $VIDEOCAPTURECAP_REGEX ]]; then
+                    echo "config file='$camera_config':USB device was not set in options, adding input stream to MJPG-streamer with found video device: ${video_device}"
+                    addUsbInput "${video_device}"
+                    max_camera=$max_camera-1
+                    continue
+                  else
+                    echo "Cannot add ${video_device} to input streams as it does not offer video capture capability"
+                    continue
+                  fi
+                # Otherwise, notify the stream can't be added to input streams
+                else
+                  echo "Cannot add $usb_device_path to input streams, maximum stream number reached. Please consider increasing settings or remove cameras"
+                  continue
+                fi
               fi
             fi
           done
@@ -297,7 +336,14 @@ while true; do
           elif containsString "$video_device" "${video_devices[@]}"; then
             array_camera_device[${i}]="$video_device"
             echo "config file='$camera_config':Starting MJPG-streamer with video device: ${video_device}"
-            startRaspi
+            # Check whether we allow an additional input stream
+            if [[ $max_camera > 0 ]]; then
+                addRaspiInput
+                max_camera=$max_camera-1
+            # Otherwise, notify the stream can't be added to input streams
+            else
+              echo "Cannot add $video_device to input streams, maximum stream number reached. Please consider increasing settings or remove cameras"
+            fi
             sleep 30 &
             sleep_pid=$!
             wait ${sleep_pid}
@@ -306,6 +352,10 @@ while true; do
       fi
     done
   done
+  # Start Mjpg-streamer
+  if [[ -n "$input_string" ]]; then
+      runMjpgStreamer "$input_string"
+  fi;
 
   array_assigned_device=( ${array_camera_device[*]} )
   if [[ ${#array_camera[@]} -eq ${#array_assigned_device[@]} ]]; then

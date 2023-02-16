@@ -304,6 +304,7 @@ systemctl_if_exists enable streamer_select.service
 
 if [ "$OCTOPI_INCLUDE_MJPGSTREAMER" == "yes" ]
 then
+  apt-get -y install v4l-utils
   systemctl_if_exists enable webcamd.service
 ### use legacy camera stack on bullseye for now
   if grep "camera_auto_detect=1" /boot/config.txt
