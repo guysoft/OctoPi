@@ -4,16 +4,8 @@
 ### MacOSX users: If you use Textedit to edit this file make sure to use 
 ### "plain text format" and "disable smart quotes" in "Textedit > Preferences"
 
-### Configure which camera to use
-#
-# Available options are:
-# - auto: tries first usb webcam, if that's not available tries raspi cam
-# - usb: only tries usb webcam
-# - raspi: only tries raspi cam
-#
-# Defaults to auto
-#
-#camera="auto"
+### Heads-up: The "input_raspi" input module of mjpg-streamer is no longer supported.
+### Raspicam support is now available on the "input_uvc" module.
 
 ### Additional options to supply to MJPG Streamer for the USB camera
 #
@@ -50,17 +42,6 @@
 # out of the box: https://github.com/guysoft/OctoPi/issues
 #
 #additional_brokenfps_usb_devices=()
-
-### Additional options to supply to MJPG Streamer for the RasPi Cam
-#
-# See https://faq.octoprint.org/mjpg-streamer-config for available options.
-#
-# NOTE: Newer raspi cam modules are reporting as usb devices causing these
-#       options to be ignored. Set `camera="raspi"` to avoid these issues.
-#
-# Defaults to 10fps
-#
-#camera_raspi_options="-fps 10"
 
 ### Configuration of camera HTTP output
 #
