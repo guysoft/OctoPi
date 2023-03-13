@@ -1,0 +1,8 @@
+Place zipped armbian images here.
+
+
+This folder is used in the armbian build variant.
+
+Not that if not otherwise specified in the variant, the build script will always use the most
+recent zip file matching the file name pattern "*-raspbian.zip" or "*-rpios.zip" or "*-rpios.xz" located
+here.
