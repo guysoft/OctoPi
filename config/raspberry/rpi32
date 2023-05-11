@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+
+# Declare Variables before exporting.
+# See https://www.shellcheck.net/wiki/SC2155
+
+DOWNLOAD_URL_CHECKSUM="https://downloads.raspberrypi.org/raspios_lite_armhf_latest.sha256"
+DOWNLOAD_URL_IMAGE="https://downloads.raspberrypi.org/raspios_lite_armhf_latest.torrent"
+
+export DOWNLOAD_URL_CHECKSUM
+export DOWNLOAD_URL_IMAGE

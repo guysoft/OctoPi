@@ -1,0 +1,110 @@
+name: Build MainsailOS
+on:
+  push:
+    branches:
+      - "master"
+      - "develop"
+    paths:
+      - "src/modules/**"
+      - "src/build_dist"
+      - "config/**"
+      - ".github/workflows/BuildImages.yml"
+    tags-ignore:
+      - "**"
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+    paths:
+      - "src/**"
+      - "config/**"
+      - ".github/workflows/BuildImages.yml"
+
+  workflow_dispatch:
+
+# Allow to stop obsolete workflows
+concurrency:
+  group: ci-buildtrain-${{ github.ref }}-1
+  cancel-in-progress: true
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Create Matrix
+        id: set-matrix
+        run: |
+          ARRAY=$(find ${{ github.workspace }}/config -type f -printf '%P\n' | sed '/default/d' | sort | jq -R -s -c 'split("\n")[:-1]')
+          echo "matrix=${ARRAY}" >> $GITHUB_OUTPUT
+
+  build:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config: ${{ fromJson(needs.setup.outputs.matrix) }}
+    steps:
+      - name: Build image
+        id: build
+        uses: mainsail-crew/MainsailOS-actions/build-image@master
+        with:
+          config: ${{ matrix.config }}
+
+      - name: Rename image file
+        id: move-image
+        if: always()
+        shell: bash
+        run: |
+          source repository/src/config
+          NOW="$(date +"%Y-%m-%d")"
+          IMAGE="${NOW}-${DIST_NAME}-${DIST_VERSION}-${{ steps.build.outputs.type }}-${{ steps.build.outputs.sbc }}"
+
+          WORKSPACE=$(echo ${{ github.workspace }})
+          sudo chown -R $USER:$USER $WORKSPACE/repository/src/workspace || true
+          sudo chmod 0775 -R $WORKSPACE/repository/src/workspace || true
+
+          mv repository/src/workspace/*.img $IMAGE.img
+
+          echo "image=${IMAGE}" >> $GITHUB_OUTPUT
+
+      - name: Upload failed Logfile
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: failed-${{ steps.move-image.outputs.image }}.log
+          path: repository/src/build.log
+
+      - name: Compressing Image
+        shell: bash
+        run: |
+          CPU_COUNT="$(nproc)"
+          echo -e "\e[32mUsing ${CPU_COUNT} Cores for compression...\e[0m"
+          xz -efkvz9T"${CPU_COUNT}" ${{ steps.move-image.outputs.image }}.img || true
+
+      - name: Calculating checksums
+        shell: bash
+        run: |
+          sha256sum ${{ steps.move-image.outputs.image }}.img > ${{ steps.move-image.outputs.image }}.img.sha256
+          sha256sum ${{ steps.move-image.outputs.image }}.img.xz > ${{ steps.move-image.outputs.image }}.img.xz.sha256
+
+      - name: Upload Compressed Image
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.move-image.outputs.image }}.img.xz
+          path: ${{ steps.move-image.outputs.image }}.img.xz
+
+      - name: Upload Compressed Image Checksum
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.move-image.outputs.image }}.img.xz.sha256
+          path: ${{ steps.move-image.outputs.image }}.img.xz.sha256
+
+      - name: Upload Image Checksum
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ steps.move-image.outputs.image }}.img.sha256
+          path: ${{ steps.move-image.outputs.image }}.img.sha256

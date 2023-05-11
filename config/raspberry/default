@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Declare Variables before exporting.
+# See https://www.shellcheck.net/wiki/SC2155
+MODULES="base(raspicam, network, disable-services(octopi), password-for-sudo)"
+
+
+
+
+BASE_IMAGE_ENLARGEROOT=2000
+BASE_IMAGE_RESIZEROOT=200
+
+# export Variables
+export DIST_VERSION
+export MODULES
+export BASE_IMAGE_ENLARGEROOT
+export BASE_IMAGE_RESIZEROOT

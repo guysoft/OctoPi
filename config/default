@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+# shellcheck enable=require-variable-braces
+
+get_version() {
+    local ver
+    ver="$(realpath "$( dirname -- "${BASH_SOURCE[0]}")"/version)"
+    cat "${ver}"
+}
+
+get_img_name() {
+    local -a types
+    types=(zip 7z xz)
+    if [ -n "${DIST_PATH}" ]; then
+        for i in "${types[@]}"; do
+            find "${DIST_PATH}/image/" -type f -name "*.${i}" -printf "%p\n"
+        done
+    fi
+
+    if [ -z "${DIST_PATH}" ]; then
+        echo ""
+    fi
+}
+
+DIST_VERSION="$(get_version)"
+BASE_ZIP_IMG="$(get_img_name)"
+DIST_NAME=OctoPi
+
+RPI_IMAGER_NAME="${DIST_NAME} version ${DIST_VERSION}"
+RPI_IMAGER_DESCRIPTION="A Raspberry Pi distribution for 3D printers. Ships OctoPrint out-of-the-box."
+RPI_IMAGER_ICON="https://raw.githubusercontent.com/guysoft/OctoPi/devel/media/rpi-imager-OctoPi.png"
+
+# export Variables
+export DIST_NAME
+export DIST_VERSION
+export BASE_ZIP_IMG
+export RPI_IMAGER_NAME
+export RPI_IMAGER_DESCRIPTION
+export RPI_IMAGER_ICON

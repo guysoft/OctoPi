@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+
+# Declare Variables before exporting.
+# See https://www.shellcheck.net/wiki/SC2155
+
+# Download Base Url
+# DOWNLOAD_BASE_URL="https://github.com/mainsail-crew/armbian-builds/releases/latest/download"
+
+# Base User
+BASE_ADD_USER="yes"
+BASE_USER="pi"
+BASE_USER_PASSWORD="armbian"
+
+# Needed while building for non rpi sbc
+BASE_DISTRO="armbian"
+BASE_IMAGE_RASPBIAN="no"
+
+# partition resizing
+BASE_ROOT_PARTITION="2"
+BASE_IMAGE_ENLARGEROOT=2500
+BASE_IMAGE_RESIZEROOT=600
+# Compress not needed due compression done in workflow
+BASE_RELEASE_COMPRESS=no
+# Modules are valid for 32bit and 64bit images
+MODULES="base, orangepi(orangepi_net, raspicam, network, disable-services(octopi), password-for-sudo)"
+
+# export Variables
+export DOWNLOAD_BASE_URL
+export BASE_ADD_USER
+export BASE_USER
+export BASE_USER_PASSWORD
+export BASE_DISTRO
+export BASE_IMAGE_RASPBIAN
+export BASE_ROOT_PARTITION
+export BASE_IMAGE_ENLARGEROOT
+export BASE_IMAGE_RESIZEROOT
+export BASE_RELEASE_COMPRESS
+export MODULES
