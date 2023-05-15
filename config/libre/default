@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+
+# Declare Variables before exporting.
+# See https://www.shellcheck.net/wiki/SC2155
+
+# shellcheck disable=all
+
+BASE_ARCH="arm64"
+
+# Base User
+BASE_ADD_USER="yes"
+BASE_USER="pi"
+BASE_USER_PASSWORD="lepotato"
+
+# Needed while building for non rpi sbc
+BASE_DISTRO="raspbian"
+BASE_IMAGE_RASPBIAN="yes"
+
+# partition resizing
+BASE_ROOT_PARTITION="2"
+BASE_IMAGE_ENLARGEROOT=5300
+#BASE_IMAGE_RESIZEROOT=600
+# Compress not needed due compression done in workflow
+BASE_RELEASE_COMPRESS=no
+# Modules are valid for 32bit and 64bit images
+# MODULES="base,pkgupgrade,mainsailos(mainsailos,klipper,moonraker,mainsail,timelapse,crowsnest,sonar)"
+MODULES="base,pkgupgrade,mainsailos(net,klipper,is_req_preinstall,moonraker,timelapse,mainsail,crowsnest,sonar,password-for-sudo)"
+
+# export Variables
+export BASE_ADD_USER
+export BASE_USER
+export BASE_USER_PASSWORD
+export BASE_DISTRO
+export BASE_IMAGE_RASPBIAN
+export BASE_ROOT_PARTITION
+export BASE_IMAGE_ENLARGEROOT
+export BASE_IMAGE_RESIZEROOT
+export BASE_RELEASE_COMPRESS
+export MODULES

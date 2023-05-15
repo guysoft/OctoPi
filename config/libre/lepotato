@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Shebang for better file detection
+
+# Declare Variables before exporting.
+# See https://www.shellcheck.net/wiki/SC2155
+
+# shellcheck disable=all
+
+DOWNLOAD_URL_CHECKSUM="https://distro.libre.computer/ci/raspbian/11/SHA256SUMS"
+DOWNLOAD_URL_IMAGE="https://distro.libre.computer/ci/raspbian/11/2022-09-22-raspbian-bullseye-arm64-lite%2Baml-s905x-cc.img.xz"
+
+export DOWNLOAD_URL_CHECKSUM
+export DOWNLOAD_URL_IMAGE
