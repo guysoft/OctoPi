@@ -5,7 +5,8 @@
 # See https://www.shellcheck.net/wiki/SC2155
 
 # Download Base Url
-# DOWNLOAD_BASE_URL="https://github.com/mainsail-crew/armbian-builds/releases/latest/download"
+DOWNLOAD_BASE_URL="https://github.com/mainsail-crew/armbian-builds/releases/latest/download"
+
 
 # Base User
 BASE_ADD_USER="yes"
