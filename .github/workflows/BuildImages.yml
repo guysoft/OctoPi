@@ -1,4 +1,4 @@
-name: Build MainsailOS
+name: Build OctoPi
 on:
   push:
     branches:
