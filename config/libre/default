@@ -25,7 +25,7 @@ BASE_IMAGE_ENLARGEROOT=5300
 BASE_RELEASE_COMPRESS=no
 # Modules are valid for 32bit and 64bit images
 # MODULES="base,pkgupgrade,mainsailos(mainsailos,klipper,moonraker,mainsail,timelapse,crowsnest,sonar)"
-MODULES="base,pkgupgrade,mainsailos(net,klipper,is_req_preinstall,moonraker,timelapse,mainsail,crowsnest,sonar,password-for-sudo)"
+MODULES="base, pkgupgrade, (raspicam, network, disable-services(octopi), password-for-sudo)"
 
 # export Variables
 export BASE_ADD_USER
