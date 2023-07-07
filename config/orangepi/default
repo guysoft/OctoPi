@@ -5,7 +5,7 @@
 # See https://www.shellcheck.net/wiki/SC2155
 
 # Download Base Url
-# DOWNLOAD_BASE_URL="https://github.com/mainsail-crew/armbian-builds/releases/latest/download"
+DOWNLOAD_BASE_URL="https://github.com/mainsail-crew/armbian-builds/releases/latest/download"
 
 # Base User
 BASE_ADD_USER="yes"
@@ -23,7 +23,7 @@ BASE_IMAGE_RESIZEROOT=600
 # Compress not needed due compression done in workflow
 BASE_RELEASE_COMPRESS=no
 # Modules are valid for 32bit and 64bit images
-MODULES="base, orangepi(orangepi_net, raspicam, network, disable-services(octopi), password-for-sudo)"
+MODULES="base(raspicam, network, disable-services(octopi), password-for-sudo)"
 
 # export Variables
 export DOWNLOAD_BASE_URL
