@@ -36,7 +36,7 @@ echo "removing:" $remove_extra
 apt-get remove -y --purge  $remove_extra
 apt-get autoremove -y
 
-apt-get -y --force-yes install python3 python3-virtualenv python3-dev git screen subversion cmake cmake-data avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev libatlas3-base unzip
+apt-get -y --allow-change-held-packages install python3 python3-virtualenv python3-dev git screen subversion cmake cmake-data avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev libatlas3-base unzip
 
 echo " - Reinstall iputils-ping"
 apt-get install --reinstall iputils-ping
@@ -63,13 +63,13 @@ pushd /home/"${BASE_USER}"
       apt-get -y --allow-downgrades --allow-remove-essential --allow-change-held-packages install libjpeg8-dev
     else
       if [ $( is_in_apt libjpeg62-turbo-dev ) -eq 1 ]; then
-        apt-get -y --force-yes install libjpeg62-turbo-dev
+        apt-get -y --allow-change-held-packages install libjpeg62-turbo-dev
       elif [ $( is_in_apt libjpeg8-dev ) -eq 1 ]; then
-        apt-get -y --force-yes install libjpeg8-dev
+        apt-get -y --allow-change-held-packages install libjpeg8-dev
       fi
     fi
 
-    apt-get -y --force-yes --no-install-recommends install imagemagick ffmpeg libv4l-dev
+    apt-get -y --allow-change-held-packages --no-install-recommends install imagemagick ffmpeg libv4l-dev
 
     wget $OCTOPI_MJPGSTREAMER_ARCHIVE -O mjpg-streamer.zip
     unzip mjpg-streamer.zip
@@ -122,7 +122,7 @@ EOT
   # FFMPEG HLS
   if [ "$OCTOPI_INCLUDE_FFMPEG_HLS" == "yes" ]
   then
-    apt-get install -y --force-yes --no-install-recommends nginx
+    apt-get install -y --allow-change-held-packages --no-install-recommends nginx
 
     ARCH=arm
     if [ "${BASE_ARCH}" == "aarch64" ]; then
@@ -174,7 +174,7 @@ EOT
   if [ "$OCTOPI_INCLUDE_HAPROXY" == "yes" ]
   then
     echo "--- Installing haproxy"
-    apt-get -y --force-yes install ssl-cert haproxy
+    DEBIAN_FRONTEND=noninteractive apt-get -o Dpkg::Options::="--force-confold" -y --allow-change-held-packages install ssl-cert haproxy
     rm /etc/ssl/private/ssl-cert-snakeoil.key /etc/ssl/certs/ssl-cert-snakeoil.pem
   fi
 
@@ -189,7 +189,7 @@ usermod -a -G dialout "${BASE_USER}"
 
 # If building against Ubuntu, make sure vcgencmd is available and pi has the rights to use it
 if [ "${BASE_DISTRO}" == "ubuntu" ]; then
-  apt-get -y --force-yes install libraspberrypi-bin
+  apt-get -y --allow-change-held-packages install libraspberrypi-bin
   usermod -a -G video "${BASE_USER}"
 fi
 
