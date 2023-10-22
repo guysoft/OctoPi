@@ -337,8 +337,8 @@ apt-get -y install avrdude
 # Users can change their username easily via the Raspberry Pi imager, which breaks some of OctoPi's scripts
 # we need to install virtualenv-tools3, so let's get pip and that
 if [ "${BASE_DISTRO}" == "raspbian" ] || [ "${BASE_DISTRO}" == "raspios64" ] || [ "${BASE_DISTRO}" == "raspios" ]; then
-    apt install -y python3-pip
-    sudo -u pi pip3 install --user virtualenv-tools3
+    apt install -y python3-pip python3-virtualenv
+    # sudo -u pi pip3 install --user virtualenv-tools3
     systemctl_if_exists enable user-fix.service
 fi
 
