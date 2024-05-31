@@ -26,8 +26,7 @@ FFMPEG_HLS_DIR=/opt/ffmpeg-hls
 
 unpack /filesystem/home/pi /home/"${BASE_USER}" "${BASE_USER}"
 unpack /filesystem/home/root /root root
-unpack /filesystem/boot /boot
-ln -s /boot/firmware/octopi.txt /boot
+unpack /filesystem/boot /boot/firmware
 
 apt-get update
 
