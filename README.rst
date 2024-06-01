@@ -25,6 +25,10 @@ Nightly builds are available `here <http://unofficialpi.org/Distros/OctoPi/night
 
 64bit Nightly builds are available `here <http://unofficialpi.org/Distros/OctoPi/nightly-arm64/>`_
 
+You can also access the nightly builds raspberrypi imager channel by running::
+
+    rpi-imager --repo https://unofficialpi.org/rpi-imager/rpi-imager-octopi.json
+
 How to use it?
 --------------
 
