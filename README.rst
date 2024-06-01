@@ -29,6 +29,10 @@ You can also access the nightly builds raspberrypi imager channel by running::
 
     rpi-imager --repo https://unofficialpi.org/rpi-imager/rpi-imager-octopi.json
 
+or for second mirror::
+
+    rpi-imager --repo https://octopi.gnethomelinux.com/rpi-imager/rpi-imager-octopi.json
+
 How to use it?
 --------------
 
