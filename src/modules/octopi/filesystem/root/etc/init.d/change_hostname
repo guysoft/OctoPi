@@ -11,8 +11,14 @@
 
 . /lib/lsb/init-functions
 
+BOOT_FOLDER=/boot/firmware
+# Fallback for older images
+if [ ! -f "${CONFIG_FILE}" ] && [ -f "/boot/octopi.txt" ]; then
+BOOT_FOLDER=/boot
+fi
+
 do_start () {
-  text_file="/boot/octopi-hostname.txt"
+  text_file="${BOOT_FOLDER}/octopi-hostname.txt"
   if [ ! -f "$text_file" ]
   then
     exit 0
