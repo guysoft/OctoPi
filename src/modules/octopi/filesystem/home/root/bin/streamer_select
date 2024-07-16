@@ -3,7 +3,11 @@
 # Exit on any error.
 set -e
 
+CONFIG_FILE=/boot/firmware/octopi.txt
+# Fallback for older images
+if [ ! -f "${CONFIG_FILE}" ] && [ -f "/boot/octopi.txt" ]; then
 CONFIG_FILE=/boot/octopi.txt
+fi
 MJPEG_TYPE=mjpeg
 HLS_TYPE=hls
 MJPEG_SERVICE=webcamd.service
