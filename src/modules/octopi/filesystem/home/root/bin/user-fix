@@ -7,7 +7,7 @@ USERID=1000
 FIRSTUSER=`getent passwd $USERID | cut -d: -f1`
 FIRSTUSERHOME=`getent passwd $USERID | cut -d: -f6`
 
-CURRENT=`grep User= /etc/systemd/system/octoprint.service | cut -d= -f2`
+CURRENT=$(grep "ALL\=NOPASSWD" /etc/sudoers.d/octoprint-service | cut -d\  -f1)
 
 if [ "$CURRENT" = "pi" -a "$FIRSTUSER" != "pi" ]; then
     # if we get here it means that the first user was renamed but we haven't yet
@@ -24,12 +24,6 @@ if [ "$CURRENT" = "pi" -a "$FIRSTUSER" != "pi" ]; then
         SERVICEUSER=$FIRSTUSER
     fi
 
-    # fix OctoPrint service file
-    echo "Fixing service file"
-    sed -i "s!User=pi!User=$SERVICEUSER!g" /etc/systemd/system/octoprint.service
-    sed -i "s!ExecStart=/home/pi/!ExecStart=$FIRSTUSERHOME/!g" /etc/systemd/system/octoprint.service
-    systemctl daemon-reload
-
     # fix sudoers files
     echo "Fixing sudoers"
     sed -i "s!^pi!$FIRSTUSER!g" /etc/sudoers.d/octoprint-service
@@ -37,15 +31,8 @@ if [ "$CURRENT" = "pi" -a "$FIRSTUSER" != "pi" ]; then
 
     # fix scripts
     echo "Fixing scripts"
-    sed -i "s!/home/pi/!$FIRSTUSERHOME/!g" $FIRSTUSERHOME/scripts/add-octoprint-checkout
-    sed -i "s!/home/pi/!$FIRSTUSERHOME/!g" $FIRSTUSERHOME/scripts/welcome
-    sed -i "s!/home/pi/!$FIRSTUSERHOME/!g" $FIRSTUSERHOME/.bashrc
+    sed -i "s!/home/pi/!$FIRSTUSERHOME/!g" /opt/octopi/scripts/add-octoprint-checkout
     sed -i "s!/home/pi/!$FIRSTUSERHOME/!g" /root/bin/webcamd
-
-    # fix virtualenv
-    echo "Fixing paths in virtual environment"
-    cd $FIRSTUSERHOME/oprint
-    sudo -u $FIRSTUSER $FIRSTUSERHOME/.local/bin/virtualenv-tools --update-path $FIRSTUSERHOME/oprint
 
     # finally, reboot for all of this to actually take affect
     echo "Adjusted scripts to new user, restarting services..."
