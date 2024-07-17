@@ -1,7 +1,7 @@
 #!/bin/bash
-
-OCTOPRINT_FOLDER=/home/pi/OctoPrint
-OCTOPRINT_CONFIG=/home/pi/.octoprint/config.yaml
+USER_NAME=$(id -nu 1000)'
+OCTOPRINT_FOLDER=/home/"${USER_NAME}"/OctoPrint
+OCTOPRINT_CONFIG=/home/"${USER_NAME}"/.octoprint/config.yaml
 
 if [ "${PWD}" == "${OCTOPRINT_FOLDER}" ]; then
     echo "Error: you are in the folder: "${OCTOPRINT_FOLDER}

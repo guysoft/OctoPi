@@ -41,17 +41,24 @@ apt-get -y --allow-change-held-packages install python3 python3-virtualenv pytho
 echo " - Reinstall iputils-ping"
 apt-get -y --force-yes install --reinstall iputils-ping
 
-pushd /home/"${BASE_USER}"
+# Path is hardcoded systemd service, this is not configurable
+OCTOPI_OPT_FOLDER=/opt/octopi
+mkdir -p "${OCTOPI_OPT_FOLDER}"
+chown "${BASE_USER}":"${BASE_USER}" "${OCTOPI_OPT_FOLDER}"
+OCTOPI_OCTOPRINT_FOLDER="${OCTOPI_OPT_FOLDER}"/oprint
+ln -s "${OCTOPI_OCTOPRINT_FOLDER}" /home/"${BASE_USER}"/oprint
+PIP="${OCTOPI_OCTOPRINT_FOLDER}"/bin/pip
+pushd "${OCTOPI_OPT_FOLDER}"
 
   # build virtualenv
   sudo -u "${BASE_USER}" python3 -m virtualenv --python=python3 oprint
-  sudo -u "${BASE_USER}" /home/"${BASE_USER}"/oprint/bin/pip install --upgrade pip
+  sudo -u "${BASE_USER}" "${PIP}" install --upgrade pip
 
   # OctoPrint
   if [ "$OCTOPI_INCLUDE_OCTOPRINT" == "yes" ]
   then
     echo "--- Installing OctoPrint"
-    PIP_DEFAULT_TIMEOUT=60 sudo -u "${BASE_USER}" /home/"${BASE_USER}"/oprint/bin/pip install $OCTOPI_OCTOPRINT_PACKAGE
+    PIP_DEFAULT_TIMEOUT=60 sudo -u "${BASE_USER}" "${PIP}" install $OCTOPI_OCTOPRINT_PACKAGE
   fi
 
   #mjpg-streamer
@@ -240,7 +247,7 @@ EOT
 echo 'exit 0' >> /etc/rc.local
 
 # add a longer welcome text to ~pi/.bashrc / ~${BASE_USER}/.bashrc
-echo "source /home/${BASE_USER}/scripts/welcome" >> /home/${BASE_USER}/.bashrc
+echo "source /opt/octopi/scripts/welcome" >> /home/${BASE_USER}/.bashrc
 
 #unpack root in the end, so etc file are not overwritten, might need to add two roots int he future
 unpack /filesystem/root /

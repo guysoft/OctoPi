@@ -2,7 +2,7 @@
 
 _NAME=$(hostname)
 _IP=$(hostname -I)
-_OCTOPRINT_VERSION=$(/home/pi/oprint/bin/python -c "from octoprint._version import get_versions; print(get_versions()['version'])" || echo "unknown")
+_OCTOPRINT_VERSION=$(/opt/octopi/oprint/bin/python -c "from octoprint._version import get_versions; print(get_versions()['version'])" || echo "unknown")
 _OCTOPI_VERSION=$(cat /etc/octopi_version || echo "unknown")
 
 echo
