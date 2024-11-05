@@ -13,7 +13,7 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt update
-        sudo apt install coreutils p7zip-full qemu-user-static
+        sudo apt install coreutils p7zip-full qemu-user-static python3-git
 
     - name: Checkout CustomPiOS
       uses: actions/checkout@v2
