@@ -215,7 +215,7 @@ sed -i "s@secure_path=\"@secure_path=\"/root/bin:@g" /etc/sudoers
 chmod +x /root/bin/git
 
 # add some "How To" info to boot output
-# Note, this code is also in /filesystem/home/pi/scripts/
+# Note, this code is also in /filesystem/root/opt/octopi/scripts
 sed -i 's@exit 0@@' /etc/rc.local
 cat <<'EOT' >> /etc/rc.local
 
