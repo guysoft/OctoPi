@@ -34,7 +34,7 @@ then
     echo "required for running OctoPrint. If you want a desktop environment you can "
     echo "install it via"
     echo
-    echo "    sudo /home/pi/scripts/install-desktop"
+    echo "    sudo /opt/octopi/scripts/install-desktop"
 fi
 
 echo "------------------------------------------------------------------------------"
