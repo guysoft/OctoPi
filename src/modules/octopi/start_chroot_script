@@ -330,10 +330,6 @@ systemctl_if_exists enable ffmpeg_hls.service
 
 systemctl_if_exists enable wifi_powersave@off.service
 
-### Network monitoring
-
-systemctl_if_exists enable networkcheck.timer
-
 ### Firmare flashing
 
 echo "--- Installing avrdude"

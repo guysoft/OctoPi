@@ -1,8 +1,0 @@
-[Unit]
- Description=Network Monitor
- ConditionPathExists=/usr/local/bin/networkcheck
-
-[Service]
- User=root
- Type=simple
- ExecStart=/usr/local/bin/networkcheck &
