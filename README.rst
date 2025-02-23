@@ -5,7 +5,7 @@ OctoPi
 .. :scale: 50 %
 .. :alt: OctoPi logo
 
-A `Raspberry Pi <http://www.raspberrypi.org/>`_ distribution for 3d printers. It includes the `OctoPrint <http://octoprint.org>`_ host software for 3d printers out of the box and `mjpg-streamer with RaspiCam support <https://github.com/jacksonliam/mjpg-streamer>`_ for live viewing of prints and timelapse video creation.
+A `Raspberry Pi <http://www.raspberrypi.org/>`_ distribution for 3d printers. It includes the `OctoPrint <https://octoprint.org>`_ host software for 3d printers out of the box and `mjpg-streamer with RaspiCam support <https://github.com/jacksonliam/mjpg-streamer>`_ for live viewing of prints and timelapse video creation.
 
 This repository contains the source script to generate the distribution out of an existing `Raspberry Pi OS <https://www.raspberrypi.com/software/>`_ distro image or `Le Potato AML-S905X-CC <https://hub.libre.computer/t/debian-12-bookworm-and-11-bullseye-for-libre-computer-boards/230>`_ (currenly in beta).
 
@@ -21,9 +21,9 @@ Official mirror is `here <https://github.com/guysoft/OctoPi/releases>`_
 
 Second mirror is `here <https://octopi.gnethomelinux.com/Distros/OctoPi/>`_
 
-Nightly builds are available `here <http://unofficialpi.org/Distros/OctoPi/nightly/>`_
+Nightly builds are available `here <https://unofficialpi.org/Distros/OctoPi/nightly/>`_
 
-64bit Nightly builds are available `here <http://unofficialpi.org/Distros/OctoPi/nightly-arm64/>`_
+64bit Nightly builds are available `here <https://unofficialpi.org/Distros/OctoPi/nightly-arm64/>`_
 
 You can also access the nightly builds raspberrypi imager channel by running::
 
@@ -59,8 +59,8 @@ If a USB webcam or the Raspberry Pi camera is detected, MJPG-streamer will be st
 Features
 --------
 
-* `OctoPrint <http://octoprint.org>`_ host software for 3d printers out of the box
-* `Raspbian <http://www.raspbian.org/>`_ tweaked for maximum performance for printing out of the box
+* `OctoPrint <https://octoprint.org>`_ host software for 3d printers out of the box
+* `Raspberry Pi OS <https://www.raspberrypi.com/software/>`_ tweaked for maximum performance for printing out of the box
 * `mjpg-streamer with RaspiCam support <https://github.com/jacksonliam/mjpg-streamer>`_ for live viewing of prints and timelapse video creation.
 
 Developing
@@ -69,19 +69,19 @@ Developing
 Requirements
 ~~~~~~~~~~~~
 
-#. `qemu-arm-static <http://packages.debian.org/sid/qemu-user-static>`_
+#. `qemu-arm-static <https://packages.debian.org/sid/qemu-user-static>`_
 #. `CustomPiOS <https://github.com/guysoft/CustomPiOS>`_
-#. Downloaded `Raspbian <http://www.raspbian.org/>`_ image.
+#. Downloaded `Raspberry Pi OS <https://www.raspberrypi.com/software/>`_ image.
 #. root privileges for chroot
 #. Bash
 #. git
 #. sudo (the script itself calls it, running as root without sudo won't work)
 #. jq (part of CustomPiOS dependencies)
 
-Build OctoPi From within OctoPi / Raspbian / Debian / Ubuntu
+Build OctoPi From within OctoPi / Raspberry Pi OS / Debian / Ubuntu
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-OctoPi can be built from Debian, Ubuntu, Raspbian, or even OctoPi.
+OctoPi can be built from Debian, Ubuntu, Raspberry Pi OS, or even OctoPi.
 Build requires about 2.5 GB of free space available.
 You can build it by issuing the following commands::
 
@@ -148,7 +148,7 @@ To build a variant on the machine simply run::
 Usage
 ~~~~~
 
-#. If needed, override existing config settings by creating a new file ``src/config.local``. You can override all settings found in ``src/modules/octopi/config``. If you need to override the path to the Raspbian image to use for building OctoPi, override the path to be used in ``ZIP_IMG``. By default the most recent file matching ``*-raspbian.zip`` found in ``src/image`` will be used.
+#. If needed, override existing config settings by creating a new file ``src/config.local``. You can override all settings found in ``src/modules/octopi/config``. If you need to override the path to the Raspberry Pi OS image to use for building OctoPi, override the path to be used in ``ZIP_IMG``. By default the most recent file matching ``*-raspios*.xz`` found in ``src/image`` will be used.
 #. Run ``src/build_dist`` as root.
 #. The final image will be created at the ``src/workspace``
 
