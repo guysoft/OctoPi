@@ -7,7 +7,7 @@ OctoPi
 
 A `Raspberry Pi <http://www.raspberrypi.org/>`_ distribution for 3d printers. It includes the `OctoPrint <http://octoprint.org>`_ host software for 3d printers out of the box and `mjpg-streamer with RaspiCam support <https://github.com/jacksonliam/mjpg-streamer>`_ for live viewing of prints and timelapse video creation.
 
-This repository contains the source script to generate the distribution out of an existing `Raspbian <http://www.raspbian.org/>`_ distro image.
+This repository contains the source script to generate the distribution out of an existing `Raspberry Pi OS <https://www.raspberrypi.com/software/>`_ distro image or `Le Potato AML-S905X-CC <https://hub.libre.computer/t/debian-12-bookworm-and-11-bullseye-for-libre-computer-boards/230>`_ (currenly in beta).
 
 Where to get it?
 ----------------
