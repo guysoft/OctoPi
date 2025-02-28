@@ -35,7 +35,7 @@ echo "removing:" $remove_extra
 apt-get remove -y --purge  $remove_extra
 apt-get autoremove -y
 
-apt-get -y --allow-change-held-packages install python3 python3-virtualenv python3-dev git screen subversion cmake cmake-data avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev libatlas3-base unzip
+apt-get -y --allow-change-held-packages install python3 python3-virtualenv python3-dev git screen subversion cmake cmake-data avahi-daemon libavahi-compat-libdnssd1 libffi-dev libssl-dev unzip libopenblas0-pthread libgfortran5
 
 echo " - Reinstall iputils-ping"
 apt-get -y --force-yes install --reinstall iputils-ping
