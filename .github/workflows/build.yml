@@ -37,9 +37,9 @@ jobs:
         cd repository/src
         ../../CustomPiOS/src/update-custompios-paths
     
-    - name: Force apt mirror to work around intermittent mirror hiccups
-      run: |
-        echo "OCTOPI_APTMIRROR=http://mirror.us.leaseweb.net/raspbian/raspbian" > repository/src/config.local
+    # - name: Force apt mirror to work around intermittent mirror hiccups
+    #   run: |
+    #     echo "OCTOPI_APTMIRROR=http://mirror.us.leaseweb.net/raspbian/raspbian" > repository/src/config.local
 
     - name: Build Image
       run: |
