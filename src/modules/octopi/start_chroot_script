@@ -28,7 +28,8 @@ unpack /filesystem/home/pi /home/"${BASE_USER}" "${BASE_USER}"
 unpack /filesystem/home/root /root root
 unpack /filesystem/boot /boot/firmware
 
-apt_update_skip
+# Not using apt_update_skip, forcing an update here because it does not calculate correctly
+apt-get update
 # in case we are building from a regular raspbian image instead of the lite one...
 remove_extra=$(remove_if_installed scratch squeak-plugins-scratch squeak-vm wolfram-engine python-minecraftpi minecraft-pi sonic-pi oracle-java8-jdk bluej libreoffice-common libreoffice-core freepats greenfoot nodered)
 echo "removing:" $remove_extra
