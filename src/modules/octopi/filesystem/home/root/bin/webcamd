@@ -16,14 +16,14 @@ MJPGSTREAMER_INPUT_USB="input_uvc.so"
 MJPGSTREAMER_INPUT_RASPICAM="input_raspicam.so"
 
 CONFIG_FILE=/boot/firmware/octopi.txt
+config_dir="/boot/firmware/octopi.conf.d"
 # Fallback for older images
 if [ ! -f "${CONFIG_FILE}" ] && [ -f "/boot/octopi.txt" ]; then
 CONFIG_FILE=/boot/octopi.txt
+config_dir="/boot/octopi.conf.d"
 fi
 
 brokenfps_usb_devices=("046d:082b" "1908:2310" "0458:708c" "0458:6006" "1e4e:0102" "0471:0311" "038f:6001" "046d:0804" "046d:0994" "0ac8:3450")
-
-config_dir="${CONFIG_FILE}/octopi.conf.d"
 
 echo "Starting up webcamDaemon..."
 echo ""
