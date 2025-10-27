@@ -279,12 +279,13 @@ then
   systemctl_if_exists enable gencert.service
 
   haproxy_version=$(dpkg -s haproxy | grep '^Version:' | awk '{print $2}')
-  if [[ $haproxy_version = 2.* ]]; then
-    mv /etc/haproxy/haproxy.2.x.cfg /etc/haproxy/haproxy.cfg
-    rm /etc/haproxy/haproxy.1.x.cfg
-  else
+  # Use 1.x config only for HAProxy 1.x, otherwise use 2.x+ config (works for 2.x, 3.x+)
+  if [[ $haproxy_version = 1.* ]]; then
     mv /etc/haproxy/haproxy.1.x.cfg /etc/haproxy/haproxy.cfg
     rm /etc/haproxy/haproxy.2.x.cfg
+  else
+    mv /etc/haproxy/haproxy.2.x.cfg /etc/haproxy/haproxy.cfg
+    rm /etc/haproxy/haproxy.1.x.cfg
   fi
 else
   # let's remove the configs for system services we don't need
