@@ -69,3 +69,11 @@ jobs:
         with:
           name: octopi-${{ matrix.arch }}
           path: ${{ steps.copy.outputs.image }}.img
+
+  e2e-test:
+    needs: build
+    uses: guysoft/CustomPiOS/.github/workflows/e2e-test.yml@devel
+    with:
+      image-artifact-name: octopi-arm64
+      distro-name: OctoPi
+      timeout-minutes: 45
