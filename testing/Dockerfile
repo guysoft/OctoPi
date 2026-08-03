@@ -6,11 +6,11 @@ FROM ptrsr/pi-ci:latest
 ENV LIBGUESTFS_BACKEND=direct
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    sshpass openssh-client curl socat imagemagick wget gnupg \
-    dbus dbus-x11 fonts-liberation tesseract-ocr \
-    && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg \
-    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
-    && apt-get update && apt-get install -y --no-install-recommends google-chrome-stable \
+    sshpass openssh-client curl socat imagemagick wget gnupg ca-certificates \
+    dbus dbus-x11 fonts-liberation fonts-noto-cjk tesseract-ocr \
+    software-properties-common \
+    && add-apt-repository -y ppa:mozillateam/ppa \
+    && apt-get update && apt-get install -y --no-install-recommends firefox-esr \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=custompios /CustomPiOS/distro_testing/scripts/ /test/scripts/
