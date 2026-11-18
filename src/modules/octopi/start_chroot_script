@@ -351,6 +351,10 @@ fi
 apt-get clean
 apt-get autoremove -y
 
+# build-only caches (pip wheels, toolchains fetched for source builds);
+# on ARMv6 the Rust toolchain needed to build pydantic-core is ~800MB
+rm -rf /home/"${BASE_USER}"/.cache /root/.cache
+
 if [ -n "$OCTOPI_APTMIRROR" ];
 then
     echo "Reverting /etc/apt/sources.list"

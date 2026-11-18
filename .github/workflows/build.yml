@@ -13,7 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - board: raspberrypiarmhf
+          # Built for the ARMv6 cores of the Raspberry Pi 1 / Zero
+          - board: raspberrypiarmv6
             arch: armhf
           - board: raspberrypiarm64
             arch: arm64
